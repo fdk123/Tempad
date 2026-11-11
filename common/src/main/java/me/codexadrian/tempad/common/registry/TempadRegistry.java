@@ -6,6 +6,9 @@ import com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.items.AdvancedTempadItem;
+import me.codexadrian.tempad.common.items.ChrononBatteryItem;
+import me.codexadrian.tempad.common.items.ChrononCellItem;
+import me.codexadrian.tempad.common.items.ChronometerItem;
 import me.codexadrian.tempad.common.items.LocationCard;
 import me.codexadrian.tempad.common.items.TempadItem;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +24,9 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> TEMPAD = ITEMS.register("tempad", () -> new TempadItem(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> CREATIVE_TEMPAD = ITEMS.register("he_who_remains_tempad", () -> new AdvancedTempadItem(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> LOCATION_CARD = ITEMS.register("location_card", () -> new LocationCard(new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<Item> CHRONON_BATTERY = ITEMS.register("chronon_battery", () -> new ChrononBatteryItem(new Item.Properties(), 1000));
+    public static final RegistryEntry<Item> CHRONON_CELL = ITEMS.register("chronon_cell", () -> new ChrononCellItem(new Item.Properties()));
+    public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));
 
     //the one entity in this mod
     public static final RegistryEntry<EntityType<TimedoorEntity>> TIMEDOOR_ENTITY = ENTITIES.register("timedoor", () -> EntityType.Builder.of(TimedoorEntity::new, MobCategory.MISC).sized(0.4F, 2.3F).noSave().build("timedoor"));
