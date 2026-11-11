@@ -17,7 +17,7 @@ public final class WalletContainer implements Container {
 
     public WalletContainer(ItemStack wallet) {
         this.wallet = wallet;
-        ListTag contents = wallet.getOrCreateTag().getList(CONTENTS, Tag.TAG_COMPOUND);
+        ListTag contents = wallet.hasTag() ? wallet.getTag().getList(CONTENTS, Tag.TAG_COMPOUND) : new ListTag();
         for (int index = 0; index < contents.size(); index++) {
             CompoundTag entry = contents.getCompound(index);
             int slot = entry.getByte("Slot") & 255;
