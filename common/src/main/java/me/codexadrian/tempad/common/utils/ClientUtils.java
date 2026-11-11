@@ -5,6 +5,7 @@ import me.codexadrian.tempad.client.gui.ConsolidatedScreen;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenFavoritedLocationPacket;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenTempadByShortcutPacket;
+import me.codexadrian.tempad.common.network.messages.c2s.OpenWalletByShortcutPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import net.minecraft.client.Minecraft;
 
@@ -33,5 +34,9 @@ public class ClientUtils {
     public static void openFavorited() {
         OpenFavoritedLocationPacket packet = new OpenFavoritedLocationPacket(TempadClientConfig.color);
         NetworkHandler.CHANNEL.sendToServer(packet);
+    }
+
+    public static void openWallet() {
+        NetworkHandler.CHANNEL.sendToServer(new OpenWalletByShortcutPacket());
     }
 }

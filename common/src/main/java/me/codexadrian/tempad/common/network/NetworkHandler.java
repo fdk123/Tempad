@@ -18,6 +18,7 @@ public class NetworkHandler {
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, FavoriteLocationPacket.ID, FavoriteLocationPacket.HANDLER, FavoriteLocationPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, OpenFavoritedLocationPacket.ID, OpenFavoritedLocationPacket.HANDLER, OpenFavoritedLocationPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, OpenTempadByShortcutPacket.ID, OpenTempadByShortcutPacket.HANDLER, OpenTempadByShortcutPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, OpenWalletByShortcutPacket.ID, OpenWalletByShortcutPacket.HANDLER, OpenWalletByShortcutPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, SummonTimedoorPacket.ID, SummonTimedoorPacket.HANDLER, SummonTimedoorPacket.class);
 
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, InitConfigPacket.ID, InitConfigPacket.HANDLER, InitConfigPacket.class);

@@ -47,6 +47,13 @@ public class ForgeTempadClient {
         "category.tempad.keybinds" // The translation key of the keybinding's category.
     );
 
+    private static final KeyMapping WALLET_KEYBIND = new KeyMapping(
+        "key.tempad.wallet",
+        InputConstants.Type.KEYSYM,
+        GLFW.GLFW_KEY_H,
+        "category.tempad.keybinds"
+    );
+
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -70,6 +77,7 @@ public class ForgeTempadClient {
     public static void registerKeyBinding(RegisterKeyMappingsEvent event) {
         event.register(SHORTCUT_KEYBIND);
         event.register(FAVORITED_KEYBIND);
+        event.register(WALLET_KEYBIND);
     }
 
     public static void registerBlurReloader() {
@@ -83,6 +91,9 @@ public class ForgeTempadClient {
             }
             while (FAVORITED_KEYBIND.consumeClick()) {
                 ClientUtils.openFavorited();
+            }
+            while (WALLET_KEYBIND.consumeClick()) {
+                ClientUtils.openWallet();
             }
         }
     }
