@@ -1,6 +1,9 @@
 package me.codexadrian.tempad.common.items;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -20,6 +23,27 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
     @Override
     public int getChrononCapacity(ItemStack stack) {
         return capacity;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack source = player.getItemInHand(hand);
+        if (level.isClientSide) return InteractionResultHolder.sidedSuccess(source, true);
+
+        int available = getChronons(source);
+        if (available <= 0) return InteractionResultHolder.fail(source);
+
+        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
+            ItemStack target = player.getInventory().getItem(slot);
+            if (target == source || !(target.getItem() instanceof ChrononContainerItem container)) continue;
+            int moved = container.insertChronons(target, available);
+            if (moved <= 0) continue;
+            extractChronons(source, moved);
+            player.displayClientMessage(Component.translatable("item.tempad.chronons.transferred", moved), true);
+            break;
+        }
+
+        return InteractionResultHolder.sidedSuccess(source, false);
     }
 
     @Override
