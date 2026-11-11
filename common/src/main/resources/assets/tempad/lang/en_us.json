@@ -4,6 +4,7 @@
   "item.tempad.chronometer": "Chronometer",
   "item.tempad.chronon_generator": "Chronon Generator",
   "item.tempad.metronome": "Metronome",
+  "item.tempad.generator_rate": "Generates %s chronons every %s ticks",
   "item.tempad.chronons": "Chronons: %s/%s",
   "item.tempad.chronons.transferred": "Transferred %s chronons",
   "item.tempad.card_wallet": "Card Wallet",
