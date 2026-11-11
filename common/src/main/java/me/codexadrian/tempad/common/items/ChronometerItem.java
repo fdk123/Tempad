@@ -16,7 +16,7 @@ public class ChronometerItem extends ChrononBatteryItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, level, entity, slot, selected);
-        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % GENERATION_INTERVAL != 0) return;
+        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % GENERATION_INTERVAL != 0 || isClashing(player, stack)) return;
         insertChronons(stack, GENERATION_AMOUNT);
         if (getChronons(stack) <= 0) return;
 
@@ -28,5 +28,14 @@ public class ChronometerItem extends ChrononBatteryItem {
             if (moved > 0) extractChronons(stack, moved);
             if (getChronons(stack) == 0) break;
         }
+    }
+
+    private boolean isClashing(Player player, ItemStack source) {
+        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
+            ItemStack candidate = player.getInventory().getItem(slot);
+            if (candidate.getItem() instanceof ChronometerItem && candidate != source) return true;
+            if (candidate == source) return false;
+        }
+        return false;
     }
 }
