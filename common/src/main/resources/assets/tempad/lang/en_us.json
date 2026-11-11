@@ -2,6 +2,7 @@
   "item.tempad.chronon_battery": "Chronon Battery",
   "item.tempad.chronon_cell": "Chronon Cell",
   "item.tempad.chronometer": "Chronometer",
+  "item.tempad.chronon_generator": "Chronon Generator",
   "item.tempad.chronons": "Chronons: %s/%s",
   "item.tempad.chronons.transferred": "Transferred %s chronons",
   "item.tempad.card_wallet": "Card Wallet",
@@ -72,4 +73,7 @@
   ,"key.tempad.wallet": "Open Card Wallet",
   "config.tempad.chronometer_generation_interval": "Chronometer generation interval",
   "config.tempad.chronometer_generation_amount": "Chronometer generation amount"
+  ,"config.tempad.chronon_generator_capacity": "Chronon Generator capacity"
+  ,"config.tempad.chronon_generator_generation_interval": "Chronon Generator generation interval"
+  ,"config.tempad.chronon_generator_generation_amount": "Chronon Generator generation amount"
 }

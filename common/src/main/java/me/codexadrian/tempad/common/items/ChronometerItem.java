@@ -9,14 +9,18 @@ import me.codexadrian.tempad.common.config.ConfigCache;
 
 public class ChronometerItem extends ChrononBatteryItem {
     public ChronometerItem(Properties properties) {
-        super(properties, 1000);
+        this(properties, 1000);
+    }
+
+    protected ChronometerItem(Properties properties, int capacity) {
+        super(properties, capacity);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, level, entity, slot, selected);
-        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % ConfigCache.chronometerGenerationInterval != 0 || isClashing(player, stack)) return;
-        insertChronons(stack, ConfigCache.chronometerGenerationAmount);
+        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % getGenerationInterval() != 0 || isClashing(player, stack)) return;
+        insertChronons(stack, getGenerationAmount());
         if (getChronons(stack) <= 0) return;
 
         for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
@@ -27,6 +31,14 @@ public class ChronometerItem extends ChrononBatteryItem {
             if (moved > 0) extractChronons(stack, moved);
             if (getChronons(stack) == 0) break;
         }
+    }
+
+    protected int getGenerationInterval() {
+        return ConfigCache.chronometerGenerationInterval;
+    }
+
+    protected int getGenerationAmount() {
+        return ConfigCache.chronometerGenerationAmount;
     }
 
     private boolean isClashing(Player player, ItemStack source) {
