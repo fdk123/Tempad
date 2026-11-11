@@ -3,6 +3,8 @@
   "item.tempad.chronon_cell": "Chronon Cell",
   "item.tempad.chronometer": "Chronometer",
   "item.tempad.chronons": "Chronons: %s/%s",
+  "item.tempad.card_wallet": "Card Wallet",
+  "item.tempad.card_wallet.count": "Stored location cards: %s/%s",
   "gui.tempad.search_field": "Search...",
   "gui.tempad.name_field": "Name...",
   "gui.tempad.new_location": "(+) New Location",
