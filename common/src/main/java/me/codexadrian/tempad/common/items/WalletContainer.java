@@ -56,9 +56,14 @@ public final class WalletContainer implements Container {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (!stack.isEmpty() && !(stack.getItem() instanceof LocationCard) || stack.getCount() > 1) return;
+        if (!canPlaceItem(slot, stack)) return;
         items.set(slot, stack);
         setChanged();
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return stack.isEmpty() || (stack.getCount() == 1 && canStore(stack));
     }
 
     @Override
