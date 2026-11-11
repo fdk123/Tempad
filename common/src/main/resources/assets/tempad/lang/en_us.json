@@ -68,5 +68,7 @@
   "category.tempad.keybinds": "Tempad",
   "key.tempad.favorite": "Open favorited location",
   "key.tempad.shortcut": "Open Tempad screen"
-  ,"key.tempad.wallet": "Open Card Wallet"
+  ,"key.tempad.wallet": "Open Card Wallet",
+  "config.tempad.chronometer_generation_interval": "Chronometer generation interval",
+  "config.tempad.chronometer_generation_amount": "Chronometer generation amount"
 }

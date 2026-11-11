@@ -5,11 +5,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import me.codexadrian.tempad.common.Tempad;
+import me.codexadrian.tempad.common.config.ConfigCache;
 
 public class ChronometerItem extends ChrononBatteryItem {
-    private static final int GENERATION_INTERVAL = 24;
-    private static final int GENERATION_AMOUNT = 1;
-
     public ChronometerItem(Properties properties) {
         super(properties, 1000);
     }
@@ -17,8 +15,8 @@ public class ChronometerItem extends ChrononBatteryItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, level, entity, slot, selected);
-        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % GENERATION_INTERVAL != 0 || isClashing(player, stack)) return;
-        insertChronons(stack, GENERATION_AMOUNT);
+        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % ConfigCache.chronometerGenerationInterval != 0 || isClashing(player, stack)) return;
+        insertChronons(stack, ConfigCache.chronometerGenerationAmount);
         if (getChronons(stack) <= 0) return;
 
         for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
