@@ -44,7 +44,7 @@ public class ChronometerItem extends ChrononBatteryItem {
     private boolean isClashing(Player player, ItemStack source) {
         for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
             ItemStack candidate = player.getInventory().getItem(slot);
-            if (candidate.getItem() instanceof ChronometerItem && candidate != source) return true;
+            if (candidate.is(Tempad.CHRONON_GENERATORS) && candidate != source) return true;
             if (candidate == source) return false;
         }
         return false;
