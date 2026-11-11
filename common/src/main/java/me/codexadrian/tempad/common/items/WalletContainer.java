@@ -51,6 +51,7 @@ public final class WalletContainer implements Container {
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
         ItemStack result = items.set(slot, ItemStack.EMPTY);
+        if (!result.isEmpty()) setChanged();
         return result;
     }
 
