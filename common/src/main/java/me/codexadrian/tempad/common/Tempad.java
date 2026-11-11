@@ -50,6 +50,8 @@ public class Tempad {
         }
 
         CONFIGURATOR.registerConfig(TempadConfig.class);
+        TempadRegistry.BLOCKS.init();
+        TempadRegistry.BLOCK_ENTITIES.init();
         TempadRegistry.ITEMS.init();
         TempadRegistry.ENTITIES.init();
         NetworkHandler.register();

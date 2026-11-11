@@ -11,6 +11,12 @@ import me.codexadrian.tempad.common.items.ChrononCellItem;
 import me.codexadrian.tempad.common.items.ChronometerItem;
 import me.codexadrian.tempad.common.items.ChrononGeneratorItem;
 import me.codexadrian.tempad.common.items.MetronomeItem;
+import me.codexadrian.tempad.common.block.MetronomeBlock;
+import me.codexadrian.tempad.common.block.MetronomeBlockEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.item.BlockItem;
 import me.codexadrian.tempad.common.items.CardWalletItem;
 import me.codexadrian.tempad.common.items.LocationCard;
 import me.codexadrian.tempad.common.items.TempadItem;
@@ -21,6 +27,8 @@ import net.minecraft.world.item.Item;
 
 public class TempadRegistry {
     public static final ResourcefulRegistry<Item> ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, Tempad.MODID);
+    public static final ResourcefulRegistry<Block> BLOCKS = ResourcefulRegistries.create(BuiltInRegistries.BLOCK, Tempad.MODID);
+    public static final ResourcefulRegistry<BlockEntityType<?>> BLOCK_ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Tempad.MODID);
     public static final ResourcefulRegistry<EntityType<?>> ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.ENTITY_TYPE, Tempad.MODID);
 
     //items
@@ -32,7 +40,9 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> CHRONON_CELL = ITEMS.register("chronon_cell", () -> new ChrononCellItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONON_GENERATOR = ITEMS.register("chronon_generator", () -> new ChrononGeneratorItem(new Item.Properties()));
-    public static final RegistryEntry<Item> METRONOME = ITEMS.register("metronome", () -> new MetronomeItem(new Item.Properties()));
+    public static final RegistryEntry<Block> METRONOME_BLOCK = BLOCKS.register("metronome", () -> new MetronomeBlock(BlockBehaviour.Properties.of().strength(3.0F, 1200.0F)));
+    public static final RegistryEntry<Item> METRONOME = ITEMS.register("metronome", () -> new BlockItem(METRONOME_BLOCK.get(), new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<BlockEntityType<MetronomeBlockEntity>> METRONOME_BLOCK_ENTITY = BLOCK_ENTITIES.register("metronome", () -> BlockEntityType.Builder.of(MetronomeBlockEntity::new, METRONOME_BLOCK.get()).build(null));
     public static final RegistryEntry<Item> CARD_WALLET = ITEMS.register("card_wallet", () -> new CardWalletItem(new Item.Properties()));
 
     //the one entity in this mod
