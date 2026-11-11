@@ -10,13 +10,14 @@ public final class ChrononStorage {
     }
 
     public static int get(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(CHRONONS);
+        return Math.max(0, stack.getOrCreateTag().getInt(CHRONONS));
     }
 
     public static int insert(ItemStack stack, int amount, int capacity) {
         if (amount <= 0 || capacity <= 0) return 0;
-        int inserted = Math.min(amount, Math.max(0, capacity - get(stack)));
-        if (inserted > 0) stack.getOrCreateTag().putInt(CHRONONS, get(stack) + inserted);
+        int current = Math.min(get(stack), Math.max(0, capacity));
+        int inserted = Math.min(amount, Math.max(0, capacity - current));
+        if (inserted > 0) stack.getOrCreateTag().putInt(CHRONONS, current + inserted);
         return inserted;
     }
 
