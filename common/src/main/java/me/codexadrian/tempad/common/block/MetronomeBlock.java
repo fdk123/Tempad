@@ -1,6 +1,7 @@
 package me.codexadrian.tempad.common.block;
 
 import me.codexadrian.tempad.common.registry.TempadRegistry;
+import me.codexadrian.tempad.common.utils.MetronomeOpener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -55,6 +56,10 @@ public final class MetronomeBlock extends BaseEntityBlock {
         BlockEntity entity = level.getBlockEntity(pos);
         if (!(entity instanceof MetronomeBlockEntity metronome)) return InteractionResult.PASS;
         ItemStack held = player.getItemInHand(hand);
+        if (!level.isClientSide && held.isEmpty()) {
+            MetronomeOpener.open(player, metronome);
+            return InteractionResult.CONSUME;
+        }
         if (!level.isClientSide && !held.isEmpty() && metronome.receive(held)) {
             player.displayClientMessage(Component.translatable("block.tempad.metronome.charged", metronome.getChronons()), true);
         } else if (!level.isClientSide && held.isEmpty()) {
