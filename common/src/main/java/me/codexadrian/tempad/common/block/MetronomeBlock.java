@@ -14,7 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
+
+import java.util.List;
 
 public final class MetronomeBlock extends BaseEntityBlock {
     public MetronomeBlock(Properties properties) {
@@ -34,6 +38,16 @@ public final class MetronomeBlock extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder);
+        BlockEntity entity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (entity instanceof MetronomeBlockEntity metronome && metronome.getChronons() > 0 && !drops.isEmpty()) {
+            drops.get(0).getOrCreateTag().putInt("Chronons", metronome.getChronons());
+        }
+        return drops;
     }
 
     @Override
