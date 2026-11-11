@@ -10,7 +10,8 @@ public final class ChrononStorage {
     }
 
     public static int get(ItemStack stack) {
-        return Math.max(0, stack.getOrCreateTag().getInt(CHRONONS));
+        if (!stack.hasTag()) return 0;
+        return Math.max(0, stack.getTag().getInt(CHRONONS));
     }
 
     public static int insert(ItemStack stack, int amount, int capacity) {
