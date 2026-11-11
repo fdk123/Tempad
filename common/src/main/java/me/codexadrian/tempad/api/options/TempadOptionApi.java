@@ -17,6 +17,7 @@ public class TempadOptionApi {
         OPTION_REGISTRY.put("tempad:experience_points", new ExperiencePointsOption());
         OPTION_REGISTRY.put("tempad:item", new ItemOption());
         OPTION_REGISTRY.put("tempad:timer", new TimerOption());
+        OPTION_REGISTRY.put("tempad:chronons", new ChrononOption());
     }
 
     public static TempadOption getOption(String id) {

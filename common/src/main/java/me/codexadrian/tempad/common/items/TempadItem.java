@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TempadItem extends Item implements TempadPower {
+public class TempadItem extends Item implements TempadPower, ChrononContainerItem {
     public TempadItem(Properties properties) {
         super(properties);
     }
@@ -45,6 +45,11 @@ public class TempadItem extends Item implements TempadPower {
 
     public int getFuelCapacity() {
         return ConfigCache.tempadFuelCapacityValue;
+    }
+
+    @Override
+    public int getChrononCapacity(ItemStack stack) {
+        return getFuelCapacity();
     }
 
     @Override
