@@ -17,4 +17,7 @@ public class ConfigCache {
     public static int chrononGeneratorCapacity = TempadConfig.chrononGeneratorCapacity;
     public static int chrononGeneratorGenerationInterval = TempadConfig.chrononGeneratorGenerationInterval;
     public static int chrononGeneratorGenerationAmount = TempadConfig.chrononGeneratorGenerationAmount;
+    public static int metronomeCapacity = TempadConfig.metronomeCapacity;
+    public static int metronomeGenerationInterval = TempadConfig.metronomeGenerationInterval;
+    public static int metronomeGenerationAmount = TempadConfig.metronomeGenerationAmount;
 }

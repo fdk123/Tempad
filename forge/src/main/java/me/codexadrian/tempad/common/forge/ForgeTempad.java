@@ -68,7 +68,10 @@ public class ForgeTempad {
                 TempadConfig.chronometerGenerationAmount,
                 TempadConfig.chrononGeneratorCapacity,
                 TempadConfig.chrononGeneratorGenerationInterval,
-                TempadConfig.chrononGeneratorGenerationAmount), event.getEntity());
+                TempadConfig.chrononGeneratorGenerationAmount,
+                TempadConfig.metronomeCapacity,
+                TempadConfig.metronomeGenerationInterval,
+                TempadConfig.metronomeGenerationAmount), event.getEntity());
         });
     }
 

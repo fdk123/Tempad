@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "tempad:chronometer",
-    "tempad:chronon_generator"
+    "tempad:chronon_generator",
+    "tempad:metronome"
   ]
 }

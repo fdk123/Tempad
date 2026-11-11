@@ -10,6 +10,7 @@ import me.codexadrian.tempad.common.items.ChrononBatteryItem;
 import me.codexadrian.tempad.common.items.ChrononCellItem;
 import me.codexadrian.tempad.common.items.ChronometerItem;
 import me.codexadrian.tempad.common.items.ChrononGeneratorItem;
+import me.codexadrian.tempad.common.items.MetronomeItem;
 import me.codexadrian.tempad.common.items.CardWalletItem;
 import me.codexadrian.tempad.common.items.LocationCard;
 import me.codexadrian.tempad.common.items.TempadItem;
@@ -31,6 +32,7 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> CHRONON_CELL = ITEMS.register("chronon_cell", () -> new ChrononCellItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONON_GENERATOR = ITEMS.register("chronon_generator", () -> new ChrononGeneratorItem(new Item.Properties()));
+    public static final RegistryEntry<Item> METRONOME = ITEMS.register("metronome", () -> new MetronomeItem(new Item.Properties()));
     public static final RegistryEntry<Item> CARD_WALLET = ITEMS.register("card_wallet", () -> new CardWalletItem(new Item.Properties()));
 
     //the one entity in this mod

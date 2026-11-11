@@ -22,7 +22,10 @@ public record InitConfigPacket(
     int chronometerGenerationAmount,
     int chrononGeneratorCapacity,
     int chrononGeneratorGenerationInterval,
-    int chrononGeneratorGenerationAmount
+    int chrononGeneratorGenerationAmount,
+    int metronomeCapacity,
+    int metronomeGenerationInterval,
+    int metronomeGenerationAmount
 ) implements Packet<InitConfigPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "sync_config");
@@ -55,6 +58,9 @@ public record InitConfigPacket(
             buffer.writeInt(message.chrononGeneratorCapacity);
             buffer.writeInt(message.chrononGeneratorGenerationInterval);
             buffer.writeInt(message.chrononGeneratorGenerationAmount);
+            buffer.writeInt(message.metronomeCapacity);
+            buffer.writeInt(message.metronomeGenerationInterval);
+            buffer.writeInt(message.metronomeGenerationAmount);
         }
 
         @Override
@@ -67,6 +73,9 @@ public record InitConfigPacket(
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readUtf(),
+                buffer.readInt(),
+                buffer.readInt(),
+                buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
@@ -94,6 +103,9 @@ public record InitConfigPacket(
                 ConfigCache.chrononGeneratorCapacity = message.chrononGeneratorCapacity;
                 ConfigCache.chrononGeneratorGenerationInterval = message.chrononGeneratorGenerationInterval;
                 ConfigCache.chrononGeneratorGenerationAmount = message.chrononGeneratorGenerationAmount;
+                ConfigCache.metronomeCapacity = message.metronomeCapacity;
+                ConfigCache.metronomeGenerationInterval = message.metronomeGenerationInterval;
+                ConfigCache.metronomeGenerationAmount = message.metronomeGenerationAmount;
             };
         }
     }
