@@ -4,6 +4,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import me.codexadrian.tempad.common.Tempad;
 
 public class ChronometerItem extends ChrononBatteryItem {
     private static final int GENERATION_INTERVAL = 24;
@@ -22,7 +23,7 @@ public class ChronometerItem extends ChrononBatteryItem {
 
         for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
             ItemStack target = player.getInventory().getItem(index);
-            if (target == stack || !(target.getItem() instanceof ChrononContainerItem container)) continue;
+            if (target == stack || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
             int available = getChronons(stack);
             int moved = container.insertChronons(target, available);
             if (moved > 0) extractChronons(stack, moved);

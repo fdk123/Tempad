@@ -32,6 +32,7 @@ public class Tempad {
     public static final Configurator CONFIGURATOR = new Configurator();
 
     public static final TagKey<Item> TEMPAD_FUEL_TAG = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "tempad_fuel"));
+    public static final TagKey<Item> CHRONON_AUTO_CHARGE_BLACKLIST = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "auto_charge_blacklist"));
     public static final TagKey<Fluid> TEMPAD_LIQUID_FUEL_TAG = TagKey.create(Registries.FLUID, new ResourceLocation(MODID, "tempad_liquid_fuel"));
     public static final TagKey<Level> TEMPAD_DIMENSION_BLACKLIST = TagKey.create(Registries.DIMENSION, new ResourceLocation(MODID, "tempad_dimension_blacklist"));
     public static final TagKey<EntityType<?>> TEMPAD_ENTITY_BLACKLIST = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(MODID, "tempad_entity_blacklist"));

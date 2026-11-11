@@ -1,5 +1,6 @@
 package me.codexadrian.tempad.common.items;
 
+import me.codexadrian.tempad.common.Tempad;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -35,7 +36,7 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
 
         for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
             ItemStack target = player.getInventory().getItem(slot);
-            if (target == source || !(target.getItem() instanceof ChrononContainerItem container)) continue;
+            if (target == source || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
             int moved = container.insertChronons(target, available);
             if (moved <= 0) continue;
             extractChronons(source, moved);
