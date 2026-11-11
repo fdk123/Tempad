@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iTi",
+    "CAC",
+    "iTi"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "T": {
+      "item": "tempad:time_steel"
+    },
+    "C": {
+      "item": "tempad:chronon_cell"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "result": {
+    "item": "tempad:chronon_battery",
+    "count": 1
+  }
+}

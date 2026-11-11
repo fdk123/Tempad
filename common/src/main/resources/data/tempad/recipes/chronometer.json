@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "TKT",
+    " B "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:tinted_glass"
+    },
+    "T": {
+      "item": "tempad:time_steel"
+    },
+    "K": {
+      "item": "minecraft:clock"
+    },
+    "B": {
+      "item": "tempad:chronon_battery"
+    }
+  },
+  "result": {
+    "item": "tempad:chronometer",
+    "count": 1
+  }
+}

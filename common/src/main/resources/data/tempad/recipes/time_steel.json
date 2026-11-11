@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "si",
+    "is"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:netherite_scrap"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "tempad:time_steel",
+    "count": 2
+  }
+}

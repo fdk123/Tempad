@@ -58,6 +58,7 @@
   "tempad_option.tempad.chronons": "Chronons: %s/%s",
 
   "item.tempad.location_card": "Location Card",
+  "item.tempad.time_steel": "Time Steel",
   "item.tempad.location_card.creator_toolip": "Created by %s",
   "item.tempad.location_card.shift_toolip": "Hold [%s] for more info",
   "item.tempad.location_card.added_location": "Added location: %s",
