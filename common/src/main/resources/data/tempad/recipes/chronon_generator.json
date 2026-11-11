@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " g ",
+    "iKi",
+    " C "
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glass"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "K": {
+      "item": "minecraft:clock"
+    },
+    "C": {
+      "item": "tempad:chronon_cell"
+    }
+  },
+  "result": {
+    "item": "tempad:chronon_generator",
+    "count": 1
+  }
+}
