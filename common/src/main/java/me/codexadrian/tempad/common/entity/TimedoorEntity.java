@@ -5,6 +5,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
+import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -96,7 +97,8 @@ public class TimedoorEntity extends Entity {
         if (getLocation() != null) {
             Predicate<Entity> b = (entity) -> ((entity instanceof LivingEntity || entity instanceof ItemEntity) && !entity.getType().is(Tempad.TEMPAD_ENTITY_BLACKLIST)) || entity.getType().is(Tempad.TEMPAD_ENTITY_WHITELIST);
             List<Entity> entities = this.level().getEntitiesOfClass(Entity.class, box, b);
-            if (!entities.isEmpty() && !level().isClientSide()) {
+            boolean destinationAllowed = !TeleportUtils.isDimensionBlacklisted(this.level(), getLocation().getLevelKey());
+            if (destinationAllowed && !entities.isEmpty() && !level().isClientSide()) {
                 ServerLevel destinationLevel = Objects.requireNonNull(level().getServer()).getLevel(getLocation().getLevelKey());
                 entities.stream().flatMap(entity -> entity.getRootVehicle().getSelfAndPassengers()).distinct().forEach(entity -> {
                     entity.ejectPassengers();

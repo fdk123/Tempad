@@ -20,16 +20,19 @@ public class TeleportUtils {
 
     public static boolean mayTeleport(ResourceKey<Level> level, Player player) {
         if (player.isCreative()) return true;
-        var lookup = player.level().registryAccess().lookup(Registries.DIMENSION);
+        if (isDimensionBlacklisted(player.level(), level)) return false;
+        return level.equals(player.level().dimension()) || (player.level().isClientSide() ? ConfigCache.allowInterdimensionalTravel : TempadConfig.allowInterdimensionalTravel);
+    }
+
+    public static boolean isDimensionBlacklisted(Level sourceLevel, ResourceKey<Level> level) {
+        var lookup = sourceLevel.registryAccess().lookup(Registries.DIMENSION);
         if (lookup.isPresent()) {
             var levelReference = lookup.get().get(level);
             if (levelReference.isPresent()) {
-                if (levelReference.get().is(Tempad.TEMPAD_DIMENSION_BLACKLIST)) {
-                    return false;
-                };
+                return levelReference.get().is(Tempad.TEMPAD_DIMENSION_BLACKLIST);
             }
         }
-        return level.equals(player.level().dimension()) || (player.level().isClientSide() ? ConfigCache.allowInterdimensionalTravel : TempadConfig.allowInterdimensionalTravel);
+        return false;
     }
 
     public static ItemStack findAndReplaceTempad(Player player, @Nullable ItemStack replacementTempad) {
