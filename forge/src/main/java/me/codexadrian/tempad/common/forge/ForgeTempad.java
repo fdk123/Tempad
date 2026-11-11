@@ -63,7 +63,12 @@ public class ForgeTempad {
                 TempadConfig.tempadFuelCapacityValue,
                 TempadConfig.advancedTempadFuelType,
                 TempadConfig.advancedTempadfuelConsumptionValue,
-                TempadConfig.advancedTempadfuelCapacityValue), event.getEntity());
+                TempadConfig.advancedTempadfuelCapacityValue,
+                TempadConfig.chronometerGenerationInterval,
+                TempadConfig.chronometerGenerationAmount,
+                TempadConfig.chrononGeneratorCapacity,
+                TempadConfig.chrononGeneratorGenerationInterval,
+                TempadConfig.chrononGeneratorGenerationAmount), event.getEntity());
         });
     }
 
