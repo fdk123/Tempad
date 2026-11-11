@@ -39,9 +39,8 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
         for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
             ItemStack target = player.getInventory().getItem(slot);
             if (target == source || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
-            int moved = container.insertChronons(target, available);
+            int moved = ChrononStorage.transfer(source, target, container, available);
             if (moved <= 0) continue;
-            extractChronons(source, moved);
             player.displayClientMessage(Component.translatable("item.tempad.chronons.transferred", moved), true);
             break;
         }
@@ -55,8 +54,7 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
         ItemStack target = slot.getItem();
         if (target == source || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) return false;
         if (!player.level().isClientSide) {
-            int moved = container.insertChronons(target, getChronons(source));
-            if (moved > 0) extractChronons(source, moved);
+            ChrononStorage.transfer(source, target, container, getChronons(source));
         }
         return true;
     }

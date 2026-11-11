@@ -28,4 +28,11 @@ public final class ChrononStorage {
         if (extracted > 0) stack.getOrCreateTag().putInt(CHRONONS, get(stack) - extracted);
         return extracted;
     }
+
+    public static int transfer(ItemStack source, ItemStack target, ChrononContainerItem targetContainer, int amount) {
+        if (source == target || amount <= 0) return 0;
+        int moved = targetContainer.insertChronons(target, Math.min(amount, get(source)));
+        if (moved > 0) extract(source, moved);
+        return moved;
+    }
 }

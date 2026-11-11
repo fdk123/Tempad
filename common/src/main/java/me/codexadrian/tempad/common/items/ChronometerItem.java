@@ -27,8 +27,7 @@ public class ChronometerItem extends ChrononBatteryItem {
             ItemStack target = player.getInventory().getItem(index);
             if (target == stack || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
             int available = getChronons(stack);
-            int moved = container.insertChronons(target, available);
-            if (moved > 0) extractChronons(stack, moved);
+            ChrononStorage.transfer(stack, target, container, available);
             if (getChronons(stack) == 0) break;
         }
     }
