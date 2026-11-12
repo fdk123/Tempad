@@ -20,4 +20,5 @@ public class ConfigCache {
     public static int metronomeCapacity = TempadConfig.metronomeCapacity;
     public static int metronomeGenerationInterval = TempadConfig.metronomeGenerationInterval;
     public static int metronomeGenerationAmount = TempadConfig.metronomeGenerationAmount;
+    public static int metronomeDistributionRange = TempadConfig.metronomeDistributionRange;
 }

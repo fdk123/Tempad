@@ -37,7 +37,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
 
     private void distribute(Level level) {
         if (chronons <= 0) return;
-        for (Player player : level.getEntitiesOfClass(Player.class, new net.minecraft.world.phys.AABB(worldPosition).inflate(8))) {
+        for (Player player : level.getEntitiesOfClass(Player.class, new net.minecraft.world.phys.AABB(worldPosition).inflate(ConfigCache.metronomeDistributionRange))) {
             if (owner != null && !owner.equals(player.getUUID())) continue;
             for (int slot = 0; slot < player.getInventory().getContainerSize() && chronons > 0; slot++) {
                 ItemStack target = player.getInventory().getItem(slot);

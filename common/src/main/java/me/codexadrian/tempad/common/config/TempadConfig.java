@@ -117,6 +117,11 @@ public final class TempadConfig {
     @IntRange(min = 1, max = 1000)
     public static int metronomeGenerationAmount = 1;
 
+    @ConfigEntry(id = "metronomeDistributionRange", type = EntryType.INTEGER, translation = "config.tempad.metronome_distribution_range")
+    @Comment("The radius in blocks in which a Metronome can charge its owner.")
+    @IntRange(min = 1, max = 64)
+    public static int metronomeDistributionRange = 8;
+
     @ConfigEntry(id = "timedoorFuelType", type = EntryType.STRING, translation = "config.tempad.timedoor_fuel_type")
     @Comment("The type of fuel that the timedoor will consume.")
     public static String tempadFuelType = "tempad:timer";
