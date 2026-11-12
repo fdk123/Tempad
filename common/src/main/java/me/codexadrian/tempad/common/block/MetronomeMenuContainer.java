@@ -5,7 +5,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public final class MetronomeMenuContainer implements Container {
     private final MetronomeBlockEntity metronome;
@@ -13,11 +12,10 @@ public final class MetronomeMenuContainer implements Container {
 
     public MetronomeMenuContainer(MetronomeBlockEntity metronome) {
         this.metronome = metronome;
-        items.set(4, new ItemStack(Items.CLOCK));
     }
 
     @Override public int getContainerSize() { return items.size(); }
-    @Override public boolean isEmpty() { return false; }
+    @Override public boolean isEmpty() { return true; }
     @Override public ItemStack getItem(int slot) { return items.get(slot); }
     @Override public ItemStack removeItem(int slot, int amount) { return ItemStack.EMPTY; }
     @Override public ItemStack removeItemNoUpdate(int slot) { return ItemStack.EMPTY; }
