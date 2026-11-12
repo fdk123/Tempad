@@ -38,6 +38,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
     private void distribute(Level level) {
         if (chronons <= 0) return;
         for (Player player : level.getEntitiesOfClass(Player.class, new net.minecraft.world.phys.AABB(worldPosition).inflate(8))) {
+            if (owner != null && !owner.equals(player.getUUID())) continue;
             for (int slot = 0; slot < player.getInventory().getContainerSize() && chronons > 0; slot++) {
                 ItemStack target = player.getInventory().getItem(slot);
                 if (target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
@@ -63,6 +64,18 @@ public final class MetronomeBlockEntity extends BlockEntity {
 
     public void claim(Player player) {
         if (owner == null) owner = player.getUUID();
+    }
+
+    public void restoreIdentity(ItemStack stack) {
+        if (!stack.hasTag()) return;
+        CompoundTag tag = stack.getTag();
+        owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : owner;
+        locked = tag.getBoolean("Locked");
+    }
+
+    public void writeIdentity(ItemStack stack) {
+        if (owner != null) stack.getOrCreateTag().putUUID("Owner", owner);
+        stack.getOrCreateTag().putBoolean("Locked", locked);
     }
 
     public boolean toggleLock(Player player) {
