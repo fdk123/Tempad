@@ -55,6 +55,20 @@ public final class MetronomeBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (!(entity instanceof MetronomeBlockEntity metronome)) return InteractionResult.PASS;
+        if (!level.isClientSide) {
+            metronome.claim(player);
+            if (!metronome.canAccess(player)) {
+                player.displayClientMessage(Component.translatable("block.tempad.metronome.locked"), true);
+                return InteractionResult.FAIL;
+            }
+            if (player.isShiftKeyDown() && metronome.toggleLock(player)) {
+                player.displayClientMessage(Component.translatable("block.tempad.metronome.lock_enabled"), true);
+                return InteractionResult.CONSUME;
+            } else if (player.isShiftKeyDown()) {
+                player.displayClientMessage(Component.translatable("block.tempad.metronome.lock_disabled"), true);
+                return InteractionResult.CONSUME;
+            }
+        }
         ItemStack held = player.getItemInHand(hand);
         if (!level.isClientSide && held.isEmpty()) {
             MetronomeOpener.open(player, metronome);

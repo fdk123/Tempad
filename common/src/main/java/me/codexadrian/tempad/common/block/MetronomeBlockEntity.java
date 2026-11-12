@@ -13,11 +13,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import java.util.UUID;
 
 public final class MetronomeBlockEntity extends BlockEntity {
     private static final String CHRONONS = "Chronons";
     private int chronons;
     private int ticks;
+    private UUID owner;
+    private boolean locked;
 
     public MetronomeBlockEntity(BlockPos pos, BlockState state) {
         super(TempadRegistry.METRONOME_BLOCK_ENTITY.get(), pos, state);
@@ -54,6 +57,21 @@ public final class MetronomeBlockEntity extends BlockEntity {
         return true;
     }
 
+    public boolean canAccess(Player player) {
+        return !locked || owner == null || owner.equals(player.getUUID());
+    }
+
+    public void claim(Player player) {
+        if (owner == null) owner = player.getUUID();
+    }
+
+    public boolean toggleLock(Player player) {
+        if (owner == null || !owner.equals(player.getUUID())) return false;
+        locked = !locked;
+        setChanged();
+        return locked;
+    }
+
     public int getChronons() {
         return chronons;
     }
@@ -67,6 +85,8 @@ public final class MetronomeBlockEntity extends BlockEntity {
         super.saveAdditional(tag);
         tag.putInt(CHRONONS, chronons);
         tag.putInt("Ticks", ticks);
+        if (owner != null) tag.putUUID("Owner", owner);
+        tag.putBoolean("Locked", locked);
     }
 
     @Override
@@ -74,5 +94,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
         super.load(tag);
         chronons = Math.max(0, Math.min(tag.getInt(CHRONONS), getCapacity()));
         ticks = Math.max(0, tag.getInt("Ticks"));
+        owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null;
+        locked = tag.getBoolean("Locked");
     }
 }
