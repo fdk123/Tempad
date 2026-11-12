@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -47,6 +48,13 @@ public class ForgeTempad {
         TempadImpl.SOUND_EVENTS.register(bus);
         NetworkHandler.register();
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.addListener((BlockEvent.BreakEvent event) -> {
+            if (event.getState().getBlock() != TempadRegistry.METRONOME_BLOCK.get()) return;
+            if (event.getLevel().getBlockEntity(event.getPos()) instanceof me.codexadrian.tempad.common.block.MetronomeBlockEntity metronome
+                && !metronome.canAccess(event.getPlayer())) {
+                event.setCanceled(true);
+            }
+        });
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ForgeTempadClient::registerBlurReloader);
         bus.addListener(this::setup);
 
