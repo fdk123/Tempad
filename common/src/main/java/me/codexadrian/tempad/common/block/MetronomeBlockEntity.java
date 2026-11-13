@@ -32,7 +32,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
         entity.ticks = 0;
         entity.chronons = Math.min(entity.getCapacity(), entity.chronons + ConfigCache.metronomeGenerationAmount);
         entity.distribute(level);
-        entity.setChanged();
+        entity.markChargeChanged();
     }
 
     private void distribute(Level level) {
@@ -54,8 +54,13 @@ public final class MetronomeBlockEntity extends BlockEntity {
         if (moved <= 0) return false;
         container.extractChronons(source, moved);
         chronons += moved;
-        setChanged();
+        markChargeChanged();
         return true;
+    }
+
+    private void markChargeChanged() {
+        setChanged();
+        if (level != null) level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
     }
 
     public boolean canAccess(Player player) {
