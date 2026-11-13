@@ -16,6 +16,6 @@ public final class WorkstationOpenerImpl {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider(
             (id, inventory, ignored) -> new ChestMenu(MenuType.GENERIC_9x1, id, inventory, new WorkstationMenuContainer(serverPlayer, workstation), 1),
-            Component.translatable("block.tempad.workstation.menu", workstation.getTempad().isEmpty() ? 0 : 1, workstation.isLocked())));
+            Component.translatable("block.tempad.workstation.menu", workstation.getTempad().isEmpty() ? 0 : 1, workstation.isLocked(), Component.translatable("block.tempad.workstation.status." + workstation.getStatus()))));
     }
 }

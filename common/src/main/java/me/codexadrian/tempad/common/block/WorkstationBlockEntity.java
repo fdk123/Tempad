@@ -9,6 +9,7 @@ import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,6 +27,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
     private boolean powered;
     private UUID timedoorId;
     private int activationCooldown;
+    private String status = "idle";
 
     public WorkstationBlockEntity(BlockPos pos, BlockState state) { super(TempadRegistry.WORKSTATION_BLOCK_ENTITY.get(), pos, state); }
     public ItemStack getTempad() { return tempad; }
@@ -48,27 +50,35 @@ public final class WorkstationBlockEntity extends BlockEntity {
         if (!signal) {
             if (workstation.powered) { workstation.powered = false; workstation.refreshState(); }
             workstation.activationCooldown = 0;
+            workstation.setStatus("idle");
             if (timedoor != null) workstation.closeTimedoor(timedoor);
             return;
         }
         if (!workstation.powered) { workstation.powered = true; workstation.refreshState(); }
-        if (timedoor != null || workstation.activationCooldown > 0) { if (workstation.activationCooldown > 0) workstation.activationCooldown--; return; }
+        if (timedoor != null) { workstation.setStatus("active"); return; }
+        if (workstation.activationCooldown > 0) { workstation.activationCooldown--; workstation.setStatus("waiting"); return; }
         workstation.activationCooldown = 20;
         workstation.setChanged();
-        if (workstation.owner == null || workstation.tempad.isEmpty()) return;
-        if (!(serverLevel.getPlayerByUUID(workstation.owner) instanceof ServerPlayer player)) return;
-        if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) return;
+        if (workstation.owner == null) { workstation.setStatus("no_owner"); return; }
+        if (workstation.tempad.isEmpty()) { workstation.setStatus("no_tempad"); return; }
+        if (!(serverLevel.getPlayerByUUID(workstation.owner) instanceof ServerPlayer player)) { workstation.setStatus("owner_offline"); return; }
+        if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) { workstation.setStatus("invalid_tempad"); return; }
         LocationData location = TempadLocationHandler.getLocation(serverLevel, player.getUUID(), TempadLocationHandler.getFavorite(serverLevel, player.getUUID()));
-        if (location == null || !TeleportUtils.mayTeleport(location.getLevelKey(), player) || !tempad.getOption().canTimedoorOpen(player, workstation.tempad)) return;
+        if (location == null) { workstation.setStatus("no_favorite"); return; }
+        if (!TeleportUtils.mayTeleport(location.getLevelKey(), player)) { workstation.setStatus("blocked"); return; }
+        if (!tempad.getOption().canTimedoorOpen(player, workstation.tempad)) { workstation.setStatus("no_fuel"); return; }
         if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player, workstation.tempad);
         TimedoorEntity opened = TempadItem.summonTimeDoor(location, player, 0, pos, state.getValue(WorkstationBlock.FACING));
         workstation.timedoorId = opened.getUUID();
+        workstation.setStatus("active");
         workstation.setChanged();
     }
+    public String getStatus() { return status; }
+    private void setStatus(String next) { if (status.equals(next)) return; status = next; setChanged(); if (level != null) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); }
     private TimedoorEntity getTimedoor(ServerLevel level) { if (timedoorId == null) return null; if (level.getEntity(timedoorId) instanceof TimedoorEntity timedoor && !timedoor.isRemoved()) return timedoor; timedoorId = null; return null; }
     private void closeTimedoor(TimedoorEntity timedoor) { timedoor.setClosingTime(timedoor.tickCount); if (timedoor.getLinkedPortalEntity() != null) timedoor.getLinkedPortalEntity().setClosingTime(timedoor.getLinkedPortalEntity().tickCount); timedoorId = null; setChanged(); }
     @Override public CompoundTag getUpdateTag() { CompoundTag tag = new CompoundTag(); saveAdditional(tag); return tag; }
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
-    @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); if (!tempad.isEmpty()) tag.put("Tempad", tempad.save(new CompoundTag())); if (owner != null) tag.putUUID("Owner", owner); if (timedoorId != null) tag.putUUID("Timedoor", timedoorId); tag.putInt("ActivationCooldown", activationCooldown); tag.putBoolean("Locked", locked); tag.putBoolean("Powered", powered); }
-    @Override public void load(CompoundTag tag) { super.load(tag); tempad = tag.contains("Tempad") ? ItemStack.of(tag.getCompound("Tempad")) : ItemStack.EMPTY; owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null; timedoorId = tag.hasUUID("Timedoor") ? tag.getUUID("Timedoor") : null; activationCooldown = Math.max(0, tag.getInt("ActivationCooldown")); locked = tag.getBoolean("Locked"); powered = tag.getBoolean("Powered"); }
+    @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); if (!tempad.isEmpty()) tag.put("Tempad", tempad.save(new CompoundTag())); if (owner != null) tag.putUUID("Owner", owner); if (timedoorId != null) tag.putUUID("Timedoor", timedoorId); tag.putString("Status", status); tag.putInt("ActivationCooldown", activationCooldown); tag.putBoolean("Locked", locked); tag.putBoolean("Powered", powered); }
+    @Override public void load(CompoundTag tag) { super.load(tag); tempad = tag.contains("Tempad") ? ItemStack.of(tag.getCompound("Tempad")) : ItemStack.EMPTY; owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null; timedoorId = tag.hasUUID("Timedoor") ? tag.getUUID("Timedoor") : null; status = tag.contains("Status") ? tag.getString("Status") : "idle"; activationCooldown = Math.max(0, tag.getInt("ActivationCooldown")); locked = tag.getBoolean("Locked"); powered = tag.getBoolean("Powered"); }
 }
