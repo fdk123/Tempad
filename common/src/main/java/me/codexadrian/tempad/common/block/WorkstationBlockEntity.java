@@ -25,6 +25,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
     private boolean locked;
     private boolean powered;
     private UUID timedoorId;
+    private int activationCooldown;
 
     public WorkstationBlockEntity(BlockPos pos, BlockState state) { super(TempadRegistry.WORKSTATION_BLOCK_ENTITY.get(), pos, state); }
     public ItemStack getTempad() { return tempad; }
@@ -46,12 +47,15 @@ public final class WorkstationBlockEntity extends BlockEntity {
         TimedoorEntity timedoor = workstation.getTimedoor(serverLevel);
         if (!signal) {
             if (workstation.powered) { workstation.powered = false; workstation.refreshState(); }
+            workstation.activationCooldown = 0;
             if (timedoor != null) workstation.closeTimedoor(timedoor);
             return;
         }
-        if (timedoor != null || workstation.powered || workstation.owner == null || workstation.tempad.isEmpty()) return;
-        workstation.powered = true;
-        workstation.refreshState();
+        if (!workstation.powered) { workstation.powered = true; workstation.refreshState(); }
+        if (timedoor != null || workstation.activationCooldown > 0) { if (workstation.activationCooldown > 0) workstation.activationCooldown--; return; }
+        workstation.activationCooldown = 20;
+        workstation.setChanged();
+        if (workstation.owner == null || workstation.tempad.isEmpty()) return;
         if (!(serverLevel.getPlayerByUUID(workstation.owner) instanceof ServerPlayer player)) return;
         if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) return;
         LocationData location = TempadLocationHandler.getLocation(serverLevel, player.getUUID(), TempadLocationHandler.getFavorite(serverLevel, player.getUUID()));
@@ -65,6 +69,6 @@ public final class WorkstationBlockEntity extends BlockEntity {
     private void closeTimedoor(TimedoorEntity timedoor) { timedoor.setClosingTime(timedoor.tickCount); if (timedoor.getLinkedPortalEntity() != null) timedoor.getLinkedPortalEntity().setClosingTime(timedoor.getLinkedPortalEntity().tickCount); timedoorId = null; setChanged(); }
     @Override public CompoundTag getUpdateTag() { CompoundTag tag = new CompoundTag(); saveAdditional(tag); return tag; }
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
-    @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); if (!tempad.isEmpty()) tag.put("Tempad", tempad.save(new CompoundTag())); if (owner != null) tag.putUUID("Owner", owner); if (timedoorId != null) tag.putUUID("Timedoor", timedoorId); tag.putBoolean("Locked", locked); tag.putBoolean("Powered", powered); }
-    @Override public void load(CompoundTag tag) { super.load(tag); tempad = tag.contains("Tempad") ? ItemStack.of(tag.getCompound("Tempad")) : ItemStack.EMPTY; owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null; timedoorId = tag.hasUUID("Timedoor") ? tag.getUUID("Timedoor") : null; locked = tag.getBoolean("Locked"); powered = tag.getBoolean("Powered"); }
+    @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); if (!tempad.isEmpty()) tag.put("Tempad", tempad.save(new CompoundTag())); if (owner != null) tag.putUUID("Owner", owner); if (timedoorId != null) tag.putUUID("Timedoor", timedoorId); tag.putInt("ActivationCooldown", activationCooldown); tag.putBoolean("Locked", locked); tag.putBoolean("Powered", powered); }
+    @Override public void load(CompoundTag tag) { super.load(tag); tempad = tag.contains("Tempad") ? ItemStack.of(tag.getCompound("Tempad")) : ItemStack.EMPTY; owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null; timedoorId = tag.hasUUID("Timedoor") ? tag.getUUID("Timedoor") : null; activationCooldown = Math.max(0, tag.getInt("ActivationCooldown")); locked = tag.getBoolean("Locked"); powered = tag.getBoolean("Powered"); }
 }
