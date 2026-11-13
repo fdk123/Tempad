@@ -6,6 +6,7 @@
   "item.tempad.metronome": "Metronome",
   "item.tempad.generator_rate": "Generates %s chronons every %s ticks",
   "block.tempad.metronome": "Metronome",
+  "block.tempad.metronome.menu": "Metronome: %s/%s (locked: %s)",
   "block.tempad.metronome.charged": "Metronome charge: %s",
   "block.tempad.metronome.status": "Metronome charge: %s/%s",
   "block.tempad.metronome.locked": "This Metronome is locked",

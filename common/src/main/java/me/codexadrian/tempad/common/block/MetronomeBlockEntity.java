@@ -62,6 +62,10 @@ public final class MetronomeBlockEntity extends BlockEntity {
         return !locked || owner == null || owner.equals(player.getUUID());
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
+
     public void claim(Player player) {
         if (owner == null) owner = player.getUUID();
     }

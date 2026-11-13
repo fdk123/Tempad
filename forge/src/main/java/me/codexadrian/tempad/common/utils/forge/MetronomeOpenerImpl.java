@@ -17,6 +17,6 @@ public final class MetronomeOpenerImpl {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider(
             (id, inventory, ignored) -> new ChestMenu(MenuType.GENERIC_9x1, id, inventory, new MetronomeMenuContainer(metronome), 1),
-            Component.translatable("block.tempad.metronome")));
+            Component.translatable("block.tempad.metronome.menu", metronome.getChronons(), metronome.getCapacity(), metronome.isLocked())));
     }
 }
