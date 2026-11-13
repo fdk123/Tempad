@@ -76,15 +76,15 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         }
     }
 
-    public static void summonTimeDoor(LocationData locationData, Player player, int color) {
-        summonTimeDoor(locationData, player, color, player.position(), player.getDirection());
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color) {
+        return summonTimeDoor(locationData, player, color, player.position(), player.getDirection());
     }
 
-    public static void summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin, Direction direction) {
-        summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction);
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin, Direction direction) {
+        return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction);
     }
 
-    public static void summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin, Direction direction) {
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin, Direction direction) {
         TimedoorEntity timedoor = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), player.level());
         timedoor.setColor(color);
         timedoor.setLocation(locationData);
@@ -93,6 +93,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         timedoor.setYRot(direction.getOpposite().toYRot());
         player.level().addFreshEntity(timedoor);
         timedoor.playSound(Tempad.TIMEDOOR_SOUND.get());
+        return timedoor;
     }
 
     @Override
