@@ -20,14 +20,15 @@ public final class WorkstationMenuContainer implements Container {
     @Override public int getContainerSize() { return 9; }
     @Override public boolean isEmpty() { return workstation.getTempad().isEmpty(); }
     @Override public ItemStack getItem(int slot) { return slot == 4 ? workstation.getTempad() : ItemStack.EMPTY; }
-    @Override public ItemStack removeItem(int slot, int amount) { return slot == 4 && amount > 0 ? workstation.eject() : ItemStack.EMPTY; }
-    @Override public ItemStack removeItemNoUpdate(int slot) { return slot == 4 ? workstation.eject() : ItemStack.EMPTY; }
+    private boolean canOperate() { return !workstation.isRemoved() && workstation.canAccess(player); }
+    @Override public ItemStack removeItem(int slot, int amount) { return slot == 4 && amount > 0 && canOperate() ? workstation.eject() : ItemStack.EMPTY; }
+    @Override public ItemStack removeItemNoUpdate(int slot) { return slot == 4 && canOperate() ? workstation.eject() : ItemStack.EMPTY; }
     @Override public void setItem(int slot, ItemStack stack) {
-        if (slot == 4 && workstation.getTempad().isEmpty() && stack.getItem() instanceof TempadItem && workstation.insert(player, stack)) stack.shrink(1);
+        if (slot == 4 && canOperate() && workstation.getTempad().isEmpty() && stack.getItem() instanceof TempadItem && workstation.insert(player, stack)) stack.shrink(1);
     }
     @Override public int getMaxStackSize() { return 1; }
     @Override public boolean canPlaceItem(int slot, ItemStack stack) { return slot == 4 && stack.getItem() instanceof TempadItem && workstation.getTempad().isEmpty() && workstation.canAccess(player); }
     @Override public void setChanged() { workstation.setChanged(); }
-    @Override public boolean stillValid(Player player) { return workstation.canAccess(player) && player.distanceToSqr(workstation.getBlockPos().getX() + 0.5, workstation.getBlockPos().getY() + 0.5, workstation.getBlockPos().getZ() + 0.5) <= 64; }
-    @Override public void clearContent() { if (!workstation.getTempad().isEmpty()) workstation.eject(); }
+    @Override public boolean stillValid(Player player) { return canOperate() && player.distanceToSqr(workstation.getBlockPos().getX() + 0.5, workstation.getBlockPos().getY() + 0.5, workstation.getBlockPos().getZ() + 0.5) <= 64; }
+    @Override public void clearContent() { }
 }
