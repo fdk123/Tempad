@@ -18,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public final class WorkstationBlock extends BaseEntityBlock {
     public WorkstationBlock(Properties properties) { super(properties); }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new WorkstationBlockEntity(pos, state); }
-    @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) { return null; }
+    @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) { return level.isClientSide ? null : type == me.codexadrian.tempad.common.registry.TempadRegistry.WORKSTATION_BLOCK_ENTITY.get() ? (level1, pos, state1, entity) -> WorkstationBlockEntity.tick(level1, pos, state1, (WorkstationBlockEntity) entity) : null; }
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation)) return InteractionResult.PASS;
