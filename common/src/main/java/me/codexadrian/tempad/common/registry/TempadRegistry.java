@@ -13,6 +13,8 @@ import me.codexadrian.tempad.common.items.ChrononGeneratorItem;
 import me.codexadrian.tempad.common.items.MetronomeItem;
 import me.codexadrian.tempad.common.block.MetronomeBlock;
 import me.codexadrian.tempad.common.block.MetronomeBlockEntity;
+import me.codexadrian.tempad.common.block.WorkstationBlock;
+import me.codexadrian.tempad.common.block.WorkstationBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -29,6 +31,9 @@ public class TempadRegistry {
     public static final ResourcefulRegistry<Item> ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, Tempad.MODID);
     public static final ResourcefulRegistry<Block> BLOCKS = ResourcefulRegistries.create(BuiltInRegistries.BLOCK, Tempad.MODID);
     public static final ResourcefulRegistry<BlockEntityType<?>> BLOCK_ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Tempad.MODID);
+    public static final RegistryEntry<Block> WORKSTATION_BLOCK = BLOCKS.register("workstation", () -> new WorkstationBlock(BlockBehaviour.Properties.of().strength(3.0F, 1200.0F)));
+    public static final RegistryEntry<Item> WORKSTATION = ITEMS.register("workstation", () -> new BlockItem(WORKSTATION_BLOCK.get(), new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<BlockEntityType<WorkstationBlockEntity>> WORKSTATION_BLOCK_ENTITY = BLOCK_ENTITIES.register("workstation", () -> BlockEntityType.Builder.of(WorkstationBlockEntity::new, WORKSTATION_BLOCK.get()).build(null));
     public static final ResourcefulRegistry<EntityType<?>> ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.ENTITY_TYPE, Tempad.MODID);
 
     //items

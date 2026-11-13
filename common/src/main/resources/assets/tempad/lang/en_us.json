@@ -12,6 +12,8 @@
   "block.tempad.metronome.locked": "This Metronome is locked",
   "block.tempad.metronome.lock_enabled": "Metronome locked",
   "block.tempad.metronome.lock_disabled": "Metronome unlocked",
+  "block.tempad.workstation": "Workstation",
+  "block.tempad.workstation.locked": "This Workstation is locked",
   "item.tempad.chronons": "Chronons: %s/%s",
   "item.tempad.chronons.transferred": "Transferred %s chronons",
   "item.tempad.card_wallet": "Card Wallet",
