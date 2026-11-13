@@ -44,6 +44,7 @@ public class TimedoorEntity extends Entity {
     private UUID owner = null;
     private UUID linkedPortalId = null;
     private TimedoorEntity linkedPortalEntity = null;
+    private int lifetimeTicks = TempadConfig.timedoorWait;
 
     public TimedoorEntity(EntityType<TimedoorEntity> entityType, Level level) {
         super(entityType, level);
@@ -60,6 +61,7 @@ public class TimedoorEntity extends Entity {
         if (compoundTag.contains("location"))
             this.setLocation(LocationData.fromTag(compoundTag.getCompound("location")));
         this.setClosingTime(compoundTag.getInt("closing_time"));
+        lifetimeTicks = compoundTag.contains("lifetime_ticks") ? Math.max(1, compoundTag.getInt("lifetime_ticks")) : TempadConfig.timedoorWait;
         if (compoundTag.hasUUID("owner")) this.setOwner(compoundTag.getUUID("owner"));
         this.setColor(compoundTag.getInt("outline_color"));
         if (compoundTag.contains("linked_portal")) {
@@ -73,6 +75,7 @@ public class TimedoorEntity extends Entity {
             compoundTag.put("location", locationData.toTag());
         }
         compoundTag.putInt("closing_time", getClosingTime());
+        compoundTag.putInt("lifetime_ticks", lifetimeTicks);
         if (owner != null) compoundTag.putUUID("owner", getOwner());
         compoundTag.putInt("outline_color", getColor());
         if (getLinkedPortalId() != null) {
@@ -126,6 +129,7 @@ public class TimedoorEntity extends Entity {
                         recipientPortal.setClosingTime(TempadConfig.timedoorAddWaitTime);
                         recipientPortal.setLocation(null);
                         recipientPortal.setColor(this.getColor());
+                        recipientPortal.setLifetimeTicks(lifetimeTicks);
                         var position = getLocation().getBlockPos().relative(this.getDirection(), 1);
                         recipientPortal.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
                         recipientPortal.setYRot(this.getYRot());
@@ -209,7 +213,12 @@ public class TimedoorEntity extends Entity {
 
     public void resetClosingTime() {
         if (getClosingTime() != -1) {
-            this.setClosingTime(this.tickCount + TempadConfig.timedoorWait);
+            this.setClosingTime(this.tickCount + lifetimeTicks);
         }
+    }
+
+    public void setLifetimeTicks(int ticks) {
+        lifetimeTicks = Math.max(1, ticks);
+        resetClosingTime();
     }
 }

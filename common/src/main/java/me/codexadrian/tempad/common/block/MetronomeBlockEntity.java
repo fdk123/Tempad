@@ -35,7 +35,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
     public static void tick(Level level, BlockPos pos, BlockState state, MetronomeBlockEntity entity) {
         if (level.isClientSide) return;
         if (ConfigCache.metronomeRedstonePause && level.hasNeighborSignal(pos)) return;
-        if (entity.distributeToWorkstations(level)) entity.markChargeChanged();
+        if (entity.distributeToAdjacentDevices(level)) entity.markChargeChanged();
         if (++entity.ticks < ConfigCache.metronomeGenerationInterval) return;
         entity.ticks = 0;
         entity.chronons = Math.min(entity.getCapacity(), entity.chronons + ConfigCache.metronomeGenerationAmount);
@@ -56,7 +56,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
         }
     }
 
-    private boolean distributeToWorkstations(Level level) {
+    private boolean distributeToAdjacentDevices(Level level) {
         if (chronons <= 0 || owner == null) return false;
         Set<BlockPos> visited = new HashSet<>();
         boolean transferred = false;
@@ -67,9 +67,12 @@ public final class MetronomeBlockEntity extends BlockEntity {
                 Direction facing = level.getBlockState(neighbor).getValue(BlockStateProperties.HORIZONTAL_FACING);
                 targetPos = neighbor.relative(facing.getClockWise());
             }
-            if (!visited.add(targetPos) || !(level.getBlockEntity(targetPos) instanceof WorkstationBlockEntity workstation)
-                    || !workstation.acceptsChrononsFrom(owner)) continue;
-            int moved = workstation.receiveChronons(Math.min(chronons, Math.max(1, TempadConfig.metronomeTransferRate)));
+            if (!visited.add(targetPos)) continue;
+            int moved = 0;
+            BlockEntity adjacent = level.getBlockEntity(targetPos);
+            int amount = Math.min(chronons, Math.max(1, TempadConfig.metronomeTransferRate));
+            if (adjacent instanceof WorkstationBlockEntity workstation && workstation.acceptsChrononsFrom(owner)) moved = workstation.receiveChronons(amount);
+            if (adjacent instanceof TimedoorProjectorBlockEntity projector && projector.acceptsChrononsFrom(owner)) moved = projector.receiveChronons(amount);
             if (moved > 0) {
                 chronons -= moved;
                 transferred = true;

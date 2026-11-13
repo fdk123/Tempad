@@ -1,0 +1,1 @@
+{"multipart":[{"when":{"triggered":"false"},"apply":{"model":"tempad:block/timedoor_projector"}},{"when":{"triggered":"true"},"apply":{"model":"tempad:block/timedoor_projector_active"}},{"when":{"has_card":"true"},"apply":{"model":"tempad:block/timedoor_projector_card"}}]}

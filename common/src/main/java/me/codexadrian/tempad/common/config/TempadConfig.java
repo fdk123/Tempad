@@ -26,6 +26,21 @@ public final class TempadConfig {
     @ConfigEntry(id = "requireNewLocationUpgrade", type = EntryType.BOOLEAN, translation = "config.tempad.require_new_location_upgrade")
     @Comment("Require the New Location upgrade to save locations on a Tempad. Disabled by default for existing worlds.")
     public static boolean requireNewLocationUpgrade = false;
+
+    @ConfigEntry(id = "projectorCapacity", type = EntryType.INTEGER, translation = "config.tempad.projector_capacity")
+    @Comment("Chronon capacity of the portable and placed Timedoor Projector.")
+    @IntRange(min = 1, max = 100000)
+    public static int projectorCapacity = 4000;
+
+    @ConfigEntry(id = "projectorDoorCost", type = EntryType.INTEGER, translation = "config.tempad.projector_door_cost")
+    @Comment("Chronons spent by a Timedoor Projector for each portal.")
+    @IntRange(min = 0, max = 100000)
+    public static int projectorDoorCost = 1000;
+
+    @ConfigEntry(id = "projectorDoorDuration", type = EntryType.INTEGER, translation = "config.tempad.projector_door_duration")
+    @Comment("Timedoor Projector portal duration in ticks.")
+    @IntRange(min = 1, max = 72000)
+    public static int projectorDoorDuration = 200;
     @ConfigEntry(id = "distanceFromPlayer", type = EntryType.INTEGER, translation = "config.tempad.distance_from_player")
     @Comment("The distance from the player that the Tempad is summoned.")
     @IntRange(min = 1, max = 10)

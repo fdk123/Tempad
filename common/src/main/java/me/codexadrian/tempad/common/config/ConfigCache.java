@@ -1,6 +1,9 @@
 package me.codexadrian.tempad.common.config;
 
 public class ConfigCache {
+    public static int projectorCapacity = TempadConfig.projectorCapacity;
+    public static int projectorDoorCost = TempadConfig.projectorDoorCost;
+    public static int projectorDoorDuration = TempadConfig.projectorDoorDuration;
     public static boolean allowInterdimensionalTravel = TempadConfig.allowInterdimensionalTravel;
     public static boolean allowExporting = TempadConfig.allowExporting;
     public static boolean consumeCooldown = TempadConfig.consumeCooldown;

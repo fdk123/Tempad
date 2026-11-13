@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","pattern":["UU ","GEC","III"],"key":{"U":{"item":"minecraft:copper_ingot"},"G":{"item":"minecraft:glass"},"E":{"item":"minecraft:ender_pearl"},"C":{"item":"tempad:chronon_cell"},"I":{"item":"minecraft:iron_block"}},"result":{"item":"tempad:timedoor_projector"}}

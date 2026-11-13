@@ -56,6 +56,24 @@ The Knowledge Repository crafting recipe uses a Chronometer in place of the
 `player_teleport_upgrade` is deliberately absent because the 1.21 branch does
 not register a matching install recipe or application for it.
 
+### Timedoor Projector block (Forge 1.20.1)
+
+The 3.0 Timedoor Projector is now available as both an item and a placeable
+block. A filled Location Card installs its target; an empty hand removes the
+card from the placed block, while sneaking with an empty hand picks up the
+projector. Portable card attachment and removal use secondary inventory clicks.
+The portable item opens a door on use and places the block on sneak-use. The
+placed block opens a door on a rising redstone signal and has a comparator
+output based on charge. A battery or adjacent same-owner Metronome can charge
+it. Charge, target and owner persist across block drops and placement.
+
+The capacity (4000), portal cost (1000) and duration (200 ticks) match the
+3.0 defaults and are configurable. The 1.20.1 timedoor entity uses the
+projector-specific duration for both ends of the portal. Opening from a placed
+projector requires its owner to be online because the existing 1.20.1 portal
+API needs a player. The models are new, simple geometry with vanilla textures;
+no 3.0 artwork has been copied.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |

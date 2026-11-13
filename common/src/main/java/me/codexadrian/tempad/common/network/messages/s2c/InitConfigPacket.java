@@ -27,7 +27,10 @@ public record InitConfigPacket(
     int metronomeGenerationInterval,
     int metronomeGenerationAmount,
     int metronomeDistributionRange,
-    boolean metronomeRedstonePause
+    boolean metronomeRedstonePause,
+    int projectorCapacity,
+    int projectorDoorCost,
+    int projectorDoorDuration
 ) implements Packet<InitConfigPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "sync_config");
@@ -65,6 +68,9 @@ public record InitConfigPacket(
             buffer.writeInt(message.metronomeGenerationAmount);
             buffer.writeInt(message.metronomeDistributionRange);
             buffer.writeBoolean(message.metronomeRedstonePause);
+            buffer.writeInt(message.projectorCapacity);
+            buffer.writeInt(message.projectorDoorCost);
+            buffer.writeInt(message.projectorDoorDuration);
         }
 
         @Override
@@ -88,7 +94,10 @@ public record InitConfigPacket(
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
-                buffer.readBoolean()
+                buffer.readBoolean(),
+                buffer.readInt(),
+                buffer.readInt(),
+                buffer.readInt()
             );
         }
 
@@ -114,6 +123,9 @@ public record InitConfigPacket(
                 ConfigCache.metronomeGenerationAmount = message.metronomeGenerationAmount;
                 ConfigCache.metronomeDistributionRange = message.metronomeDistributionRange;
                 ConfigCache.metronomeRedstonePause = message.metronomeRedstonePause;
+                ConfigCache.projectorCapacity = message.projectorCapacity;
+                ConfigCache.projectorDoorCost = message.projectorDoorCost;
+                ConfigCache.projectorDoorDuration = message.projectorDoorDuration;
             };
         }
     }

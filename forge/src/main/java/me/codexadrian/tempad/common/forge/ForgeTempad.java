@@ -81,7 +81,10 @@ public class ForgeTempad {
                 TempadConfig.metronomeGenerationInterval,
                 TempadConfig.metronomeGenerationAmount,
                 TempadConfig.metronomeDistributionRange,
-                TempadConfig.metronomeRedstonePause), event.getEntity());
+                TempadConfig.metronomeRedstonePause,
+                TempadConfig.projectorCapacity,
+                TempadConfig.projectorDoorCost,
+                TempadConfig.projectorDoorDuration), event.getEntity());
         });
     }
 

@@ -16,6 +16,9 @@ import me.codexadrian.tempad.common.block.MetronomeBlockEntity;
 import me.codexadrian.tempad.common.block.WorkstationBlock;
 import me.codexadrian.tempad.common.block.WorkstationBlockEntity;
 import me.codexadrian.tempad.common.block.WorkstationChildBlock;
+import me.codexadrian.tempad.common.block.TimedoorProjectorBlock;
+import me.codexadrian.tempad.common.block.TimedoorProjectorBlockEntity;
+import me.codexadrian.tempad.common.items.TimedoorProjectorItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -43,6 +46,9 @@ public class TempadRegistry {
     public static final RegistryEntry<Block> WORKSTATION_CHILD_BLOCK = BLOCKS.register("workstation_child", () -> new WorkstationChildBlock(BlockBehaviour.Properties.of().strength(3.0F, 1200.0F).noOcclusion()));
     public static final RegistryEntry<Item> WORKSTATION = ITEMS.register("workstation", () -> new BlockItem(WORKSTATION_BLOCK.get(), new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<BlockEntityType<WorkstationBlockEntity>> WORKSTATION_BLOCK_ENTITY = BLOCK_ENTITIES.register("workstation", () -> BlockEntityType.Builder.of(WorkstationBlockEntity::new, WORKSTATION_BLOCK.get()).build(null));
+    public static final RegistryEntry<Block> TIMEDOOR_PROJECTOR_BLOCK = BLOCKS.register("timedoor_projector", () -> new TimedoorProjectorBlock(BlockBehaviour.Properties.of().strength(3.0F, 6.0F).noOcclusion()));
+    public static final RegistryEntry<Item> TIMEDOOR_PROJECTOR = ITEMS.register("timedoor_projector", () -> new TimedoorProjectorItem((TimedoorProjectorBlock) TIMEDOOR_PROJECTOR_BLOCK.get(), new Item.Properties()));
+    public static final RegistryEntry<BlockEntityType<TimedoorProjectorBlockEntity>> TIMEDOOR_PROJECTOR_BLOCK_ENTITY = BLOCK_ENTITIES.register("timedoor_projector", () -> BlockEntityType.Builder.of(TimedoorProjectorBlockEntity::new, TIMEDOOR_PROJECTOR_BLOCK.get()).build(null));
     public static final ResourcefulRegistry<EntityType<?>> ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.ENTITY_TYPE, Tempad.MODID);
 
     //items

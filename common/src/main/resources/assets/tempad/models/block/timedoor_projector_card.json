@@ -1,0 +1,1 @@
+{"textures":{"card":"minecraft:block/white_wool"},"elements":[{"from":[5,4,5],"to":[11,4.5,11],"faces":{"up":{"texture":"#card"},"north":{"texture":"#card"},"south":{"texture":"#card"},"east":{"texture":"#card"},"west":{"texture":"#card"}}}]}
