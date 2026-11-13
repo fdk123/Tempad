@@ -24,6 +24,11 @@ public class ExperiencePointsOption extends TempadOption {
     }
 
     @Override
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        player.giveExperiencePoints(-TempadOptionApi.getFuelCost(stack));
+    }
+
+    @Override
     public void addToolTip(ItemStack stack, Level level, List<Component> components, TooltipFlag flag) {
         components.add(Component.translatable("tooltip.tempad.experience_points_cost", TempadOptionApi.getFuelCost(stack)));
     }

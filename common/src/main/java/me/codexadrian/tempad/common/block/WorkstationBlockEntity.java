@@ -42,7 +42,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
         if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) return;
         LocationData location = TempadLocationHandler.getLocation(serverLevel, player.getUUID(), TempadLocationHandler.getFavorite(serverLevel, player.getUUID()));
         if (location == null || !TeleportUtils.mayTeleport(location.getLevelKey(), player) || !tempad.getOption().canTimedoorOpen(player, workstation.tempad)) return;
-        if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player);
+        if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player, workstation.tempad);
         TempadItem.summonTimeDoor(location, player, 0);
     }
     @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); if (!tempad.isEmpty()) tag.put("Tempad", tempad.save(new CompoundTag())); if (owner != null) tag.putUUID("Owner", owner); tag.putBoolean("Locked", locked); tag.putBoolean("Powered", powered); }

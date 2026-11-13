@@ -50,6 +50,11 @@ public class ItemOption extends TempadOption {
     }
 
     @Override
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        onTimedoorOpen(player);
+    }
+
+    @Override
     public void addToolTip(ItemStack stack, Level level, List<Component> components, TooltipFlag flag) {
         components.add(Component.translatable("tooltip.tempad.item_option_info"));
     }

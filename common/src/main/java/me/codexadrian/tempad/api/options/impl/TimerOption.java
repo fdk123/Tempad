@@ -33,6 +33,11 @@ public class TimerOption extends TempadOption {
     }
 
     @Override
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        stack.getOrCreateTag().putLong(ID, TempadOptionApi.getFuelCost(stack) * 20L);
+    }
+
+    @Override
     public void addToolTip(ItemStack stack, Level level, List<Component> components, TooltipFlag flag) {
         long cooldown = timeLeft(stack);
         if (cooldown > 0) {

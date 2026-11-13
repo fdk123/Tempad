@@ -19,6 +19,11 @@ public abstract class TempadOption {
     public void onTimedoorOpen(Player player) {
     }
 
+    /** Consumes the cost from the specific Tempad being opened. */
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        onTimedoorOpen(player);
+    }
+
     public abstract void addToolTip(ItemStack stack, Level level, List<Component> components, TooltipFlag flag);
 
     public abstract boolean isDurabilityBarVisible(ItemStack stack);

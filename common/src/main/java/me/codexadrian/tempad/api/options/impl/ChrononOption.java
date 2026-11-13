@@ -26,6 +26,11 @@ public final class ChrononOption extends TempadOption {
     }
 
     @Override
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        ChrononStorage.extract(stack, TempadOptionApi.getFuelCost(stack));
+    }
+
+    @Override
     public void addToolTip(ItemStack stack, Level level, List<Component> components, TooltipFlag flag) {
         components.add(Component.translatable("tempad_option.tempad.chronons",
                 ChrononStorage.get(stack), TempadOptionApi.getFuelCapacity(stack)));
