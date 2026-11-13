@@ -23,6 +23,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,7 +55,19 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
 
     @Override
     public int getChrononCapacity(ItemStack stack) {
-        return getFuelCapacity();
+        return getFuelCapacity() + (TimeTwisterData.equipped(stack) ? TempadConfig.timeTwisterCapacity : 0);
+    }
+
+    @Override public int getChronons(ItemStack stack) { return ChrononStorage.get(stack) + TimeTwisterData.reserve(stack); }
+
+    @Override public int insertChronons(ItemStack stack, int amount) {
+        int main = ChrononStorage.insert(stack, amount, getFuelCapacity());
+        return main + TimeTwisterData.insert(stack, amount - main);
+    }
+
+    @Override public int extractChronons(ItemStack stack, int amount) {
+        int main = ChrononStorage.extract(stack, amount);
+        return main + TimeTwisterData.extract(stack, amount - main);
     }
 
     @Override
@@ -60,7 +75,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         ItemStack stack = player.getItemInHand(interactionHand);
         if (!player.isShiftKeyDown()) {
             if (!level.isClientSide) {
-                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()), TempadUpgrades.canSaveLocations(player), TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY));
+                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()), TempadUpgrades.canSaveLocations(player), TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack));
                 NetworkHandler.CHANNEL.sendToPlayer(packet, player);
                 return InteractionResultHolder.success(stack);
             } else {
@@ -112,6 +127,27 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
             net.minecraft.resources.ResourceLocation upgrade = net.minecraft.resources.ResourceLocation.tryParse(installed.getString(i));
             if (upgrade != null) components.add(Component.translatable("upgrade." + upgrade.getNamespace() + "." + upgrade.getPath()));
         }
+        if (TimeTwisterData.equipped(stack)) components.add(Component.translatable("item.tempad.time_twister.installed", TimeTwisterData.reserve(stack), ConfigCache.timeTwisterCapacity));
+    }
+
+    @Override public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
+        if (action != ClickAction.SECONDARY) return false;
+        if (TimeTwisterData.equipped(stack) && !slot.hasItem()) {
+            slot.set(TimeTwisterData.uninstall(stack));
+            return true;
+        }
+        if (!TimeTwisterData.equipped(stack) && slot.getItem().getItem() instanceof TimeTwisterItem) {
+            if (TimeTwisterData.install(stack, slot.getItem())) { slot.set(ItemStack.EMPTY); return true; }
+        }
+        return false;
+    }
+
+    @Override public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack other, Slot slot, ClickAction action, Player player, SlotAccess access) {
+        if (action != ClickAction.SECONDARY || !(other.getItem() instanceof TimeTwisterItem)) return false;
+        if (!TimeTwisterData.install(stack, other)) return false;
+        access.set(ItemStack.EMPTY);
+        slot.setChanged();
+        return true;
     }
 
     @Override

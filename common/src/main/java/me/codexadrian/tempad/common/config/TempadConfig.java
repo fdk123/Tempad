@@ -41,6 +41,21 @@ public final class TempadConfig {
     @Comment("Timedoor Projector portal duration in ticks.")
     @IntRange(min = 1, max = 72000)
     public static int projectorDoorDuration = 200;
+
+    @ConfigEntry(id = "timeTwisterCapacity", type = EntryType.INTEGER, translation = "config.tempad.time_twister_capacity")
+    @Comment("Chronon capacity of the Time Twister, including its separate reserve when installed in a Tempad.")
+    @IntRange(min = 1, max = 100000)
+    public static int timeTwisterCapacity = 3000;
+
+    @ConfigEntry(id = "timeTwisterBacktrackCost", type = EntryType.INTEGER, translation = "config.tempad.time_twister_backtrack_cost")
+    @Comment("Chronons consumed for each Time Twister backtrack.")
+    @IntRange(min = 0, max = 100000)
+    public static int timeTwisterBacktrackCost = 500;
+
+    @ConfigEntry(id = "maxHistorySize", type = EntryType.INTEGER, translation = "config.tempad.max_history_size")
+    @Comment("Maximum number of travel history entries stored per player.")
+    @IntRange(min = 1, max = 4096)
+    public static int maxHistorySize = 512;
     @ConfigEntry(id = "distanceFromPlayer", type = EntryType.INTEGER, translation = "config.tempad.distance_from_player")
     @Comment("The distance from the player that the Tempad is summoned.")
     @IntRange(min = 1, max = 10)

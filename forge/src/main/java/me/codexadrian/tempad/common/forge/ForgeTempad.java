@@ -48,6 +48,7 @@ public class ForgeTempad {
         TempadImpl.SOUND_EVENTS.register(bus);
         NetworkHandler.register();
         MinecraftForge.EVENT_BUS.register(this);
+        ForgeTravelHistoryEvents.register();
         MinecraftForge.EVENT_BUS.addListener((BlockEvent.BreakEvent event) -> {
             if (event.getState().getBlock() != TempadRegistry.METRONOME_BLOCK.get()) return;
             if (event.getLevel().getBlockEntity(event.getPos()) instanceof me.codexadrian.tempad.common.block.MetronomeBlockEntity metronome
@@ -84,7 +85,10 @@ public class ForgeTempad {
                 TempadConfig.metronomeRedstonePause,
                 TempadConfig.projectorCapacity,
                 TempadConfig.projectorDoorCost,
-                TempadConfig.projectorDoorDuration), event.getEntity());
+                TempadConfig.projectorDoorDuration,
+                TempadConfig.timeTwisterCapacity,
+                TempadConfig.timeTwisterBacktrackCost,
+                TempadConfig.maxHistorySize), event.getEntity());
         });
     }
 

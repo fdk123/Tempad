@@ -7,6 +7,7 @@ import me.codexadrian.tempad.common.network.messages.c2s.*;
 import me.codexadrian.tempad.common.network.messages.s2c.InitConfigPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenMarkerScreenPacket;
+import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
 
 
 public class NetworkHandler {
@@ -22,9 +23,12 @@ public class NetworkHandler {
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, OpenWalletByShortcutPacket.ID, OpenWalletByShortcutPacket.HANDLER, OpenWalletByShortcutPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, SummonTimedoorPacket.ID, SummonTimedoorPacket.HANDLER, SummonTimedoorPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, UpdateMarkerPacket.ID, UpdateMarkerPacket.HANDLER, UpdateMarkerPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, RequestTimeTwisterPacket.ID, RequestTimeTwisterPacket.HANDLER, RequestTimeTwisterPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, BacktrackPacket.ID, BacktrackPacket.HANDLER, BacktrackPacket.class);
 
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, InitConfigPacket.ID, InitConfigPacket.HANDLER, InitConfigPacket.class);
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenTempadScreenPacket.ID, OpenTempadScreenPacket.HANDLER, OpenTempadScreenPacket.class);
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenMarkerScreenPacket.ID, OpenMarkerScreenPacket.HANDLER, OpenMarkerScreenPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenTimeTwisterPacket.ID, OpenTimeTwisterPacket.HANDLER, OpenTimeTwisterPacket.class);
     }
 }

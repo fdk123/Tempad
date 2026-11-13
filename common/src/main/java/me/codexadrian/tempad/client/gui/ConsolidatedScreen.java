@@ -45,6 +45,7 @@ public class ConsolidatedScreen extends Screen {
     private UUID favorite;
     private final boolean canSaveLocations;
     private final boolean hasKnowledgeRepository;
+    private final boolean hasTimeTwister;
     private LocationData selectedLocation;
     private SelectionList<TextEntry> informationPanel;
     private SelectionList<TextEntry> locationPanel;
@@ -54,12 +55,13 @@ public class ConsolidatedScreen extends Screen {
     private Button deleteButton;
     private Button teleportButton;
 
-    public ConsolidatedScreen(List<LocationData> locations, UUID favorite, boolean canSaveLocations, boolean hasKnowledgeRepository) {
+    public ConsolidatedScreen(List<LocationData> locations, UUID favorite, boolean canSaveLocations, boolean hasKnowledgeRepository, boolean hasTimeTwister) {
         super(Component.nullToEmpty(""));
         this.locations = locations;
         this.favorite = favorite;
         this.canSaveLocations = canSaveLocations;
         this.hasKnowledgeRepository = hasKnowledgeRepository;
+        this.hasTimeTwister = hasTimeTwister;
     }
 
     @Override
@@ -152,6 +154,10 @@ public class ConsolidatedScreen extends Screen {
         teleportButton.visible = false;
         if (canSaveLocations) addRenderableWidget(new TempadButton(cornerX + 208, cornerY + 14, 12, 12, Component.translatable("gui." + Tempad.MODID + ".add_location"), (button) -> openNewLocationModal(), 5)).setTooltip(Tooltip.create(Component.translatable("gui." + Tempad.MODID + ".add_location")));
         if (hasKnowledgeRepository) addRenderableWidget(Button.builder(Component.literal("?"), button -> minecraft.setScreen(new KnowledgeRepositoryScreen(this))).bounds(cornerX + 111, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("app.tempad.knowledge_repository"))).build());
+        if (hasTimeTwister) addRenderableWidget(Button.builder(Component.literal("T"), button -> {
+            NetworkHandler.CHANNEL.sendToServer(new RequestTimeTwisterPacket());
+            minecraft.setScreen(null);
+        }).bounds(cornerX + 91, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("screen.tempad.time_twister.title"))).build());
     }
 
     private void favoriteAction() {

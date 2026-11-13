@@ -95,6 +95,23 @@ available; upstream's extended PlayerAccess providers are not present in the
 1.20.1 backport yet. The block and item models use vanilla textures and new
 geometry.
 
+### Time Twister and travel history (Forge 1.20.1)
+
+Travel history is recorded every 1200 ticks of player movement and at death,
+respawn and dimension transitions. It is stored per player in overworld SavedData
+with the 3.0 default limit of 512 entries, so death and rejoining do not erase
+it. The Time Twister opens the eight latest marked events and can return to one
+for the configurable default cost of 500 chronons. The server validates the
+history entry, charge source, cooldown, dimension and world border before
+backtracking, then discards history from the selected point onward.
+
+The Twister can be installed into a Tempad through secondary inventory clicks
+and later removed without losing its charge or item metadata. It has a separate
+chronon reserve; batteries and Metronomes fill the Tempad's main store first,
+then the Twister reserve. An installed Twister adds a Timeline button to the
+Tempad screen. The timeline uses a compact text interface in this backport;
+the 3.0 radial artwork is not included.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |

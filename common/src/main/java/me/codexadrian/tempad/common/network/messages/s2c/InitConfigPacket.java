@@ -30,7 +30,10 @@ public record InitConfigPacket(
     boolean metronomeRedstonePause,
     int projectorCapacity,
     int projectorDoorCost,
-    int projectorDoorDuration
+    int projectorDoorDuration,
+    int timeTwisterCapacity,
+    int timeTwisterBacktrackCost,
+    int maxHistorySize
 ) implements Packet<InitConfigPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "sync_config");
@@ -71,6 +74,9 @@ public record InitConfigPacket(
             buffer.writeInt(message.projectorCapacity);
             buffer.writeInt(message.projectorDoorCost);
             buffer.writeInt(message.projectorDoorDuration);
+            buffer.writeInt(message.timeTwisterCapacity);
+            buffer.writeInt(message.timeTwisterBacktrackCost);
+            buffer.writeInt(message.maxHistorySize);
         }
 
         @Override
@@ -95,6 +101,9 @@ public record InitConfigPacket(
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readBoolean(),
+                buffer.readInt(),
+                buffer.readInt(),
+                buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt()
@@ -126,6 +135,9 @@ public record InitConfigPacket(
                 ConfigCache.projectorCapacity = message.projectorCapacity;
                 ConfigCache.projectorDoorCost = message.projectorDoorCost;
                 ConfigCache.projectorDoorDuration = message.projectorDoorDuration;
+                ConfigCache.timeTwisterCapacity = message.timeTwisterCapacity;
+                ConfigCache.timeTwisterBacktrackCost = message.timeTwisterBacktrackCost;
+                ConfigCache.maxHistorySize = message.maxHistorySize;
             };
         }
     }
