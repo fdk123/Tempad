@@ -1,1 +1,1 @@
-{"variants":{"":{"model":"tempad:block/workstation"}}}
+{"variants":{"facing=north":{"model":"tempad:block/workstation"},"facing=east":{"model":"tempad:block/workstation","y":90},"facing=south":{"model":"tempad:block/workstation","y":180},"facing=west":{"model":"tempad:block/workstation","y":270}}}

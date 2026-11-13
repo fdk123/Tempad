@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"tempad:block/workstation_child"},"facing=east":{"model":"tempad:block/workstation_child","y":90},"facing=south":{"model":"tempad:block/workstation_child","y":180},"facing=west":{"model":"tempad:block/workstation_child","y":270}}}
