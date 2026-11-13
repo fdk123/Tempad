@@ -8,6 +8,7 @@ import me.codexadrian.tempad.common.registry.TempadRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -61,7 +62,22 @@ public final class MetronomeBlockEntity extends BlockEntity {
 
     private void markChargeChanged() {
         setChanged();
-        if (level != null) level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
+        if (level != null) {
+            level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag);
+        return tag;
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public boolean canAccess(Player player) {
