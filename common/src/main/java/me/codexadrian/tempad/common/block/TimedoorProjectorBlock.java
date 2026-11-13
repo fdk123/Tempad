@@ -80,8 +80,8 @@ public final class TimedoorProjectorBlock extends BaseEntityBlock {
         if (held.getItem() instanceof LocationCard) {
             LocationData target = ProjectorData.cardTarget(held);
             if (target != null) {
-                if (projector.getTarget() != null) player.getInventory().placeItemBackInInventory(ProjectorData.cardFor(projector.getTarget()));
-                projector.setTarget(target);
+                if (projector.getTarget() != null) player.getInventory().placeItemBackInInventory(ProjectorData.cardFor(projector.getTarget(), projector.getMarkerLink()));
+                projector.setTarget(target, ProjectorData.markerId(held));
                 if (!player.getAbilities().instabuild) held.shrink(1);
                 return InteractionResult.CONSUME;
             }
@@ -98,8 +98,8 @@ public final class TimedoorProjectorBlock extends BaseEntityBlock {
                 level.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 35);
                 player.getInventory().placeItemBackInInventory(portable);
             } else if (projector.getTarget() != null) {
-                player.getInventory().placeItemBackInInventory(ProjectorData.cardFor(projector.getTarget()));
-                projector.setTarget(null);
+                player.getInventory().placeItemBackInInventory(ProjectorData.cardFor(projector.getTarget(), projector.getMarkerLink()));
+                projector.setTarget(null, null);
             } else player.displayClientMessage(Component.translatable("block.tempad.timedoor_projector.charge", projector.getChronons(), projector.getCapacity()), true);
             return InteractionResult.CONSUME;
         }

@@ -6,6 +6,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.network.messages.c2s.*;
 import me.codexadrian.tempad.common.network.messages.s2c.InitConfigPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
+import me.codexadrian.tempad.common.network.messages.s2c.OpenMarkerScreenPacket;
 
 
 public class NetworkHandler {
@@ -20,8 +21,10 @@ public class NetworkHandler {
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, OpenTempadByShortcutPacket.ID, OpenTempadByShortcutPacket.HANDLER, OpenTempadByShortcutPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, OpenWalletByShortcutPacket.ID, OpenWalletByShortcutPacket.HANDLER, OpenWalletByShortcutPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, SummonTimedoorPacket.ID, SummonTimedoorPacket.HANDLER, SummonTimedoorPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, UpdateMarkerPacket.ID, UpdateMarkerPacket.HANDLER, UpdateMarkerPacket.class);
 
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, InitConfigPacket.ID, InitConfigPacket.HANDLER, InitConfigPacket.class);
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenTempadScreenPacket.ID, OpenTempadScreenPacket.HANDLER, OpenTempadScreenPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenMarkerScreenPacket.ID, OpenMarkerScreenPacket.HANDLER, OpenMarkerScreenPacket.class);
     }
 }

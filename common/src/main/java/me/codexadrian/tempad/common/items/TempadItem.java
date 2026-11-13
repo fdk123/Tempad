@@ -94,7 +94,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
 
     private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin, Direction direction, Level sourceLevel) {
         TimedoorEntity timedoor = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), sourceLevel);
-        timedoor.setColor(color);
+        timedoor.setColor(locationData.getPortalColor() >= 0 ? locationData.getPortalColor() : color);
         timedoor.setLocation(locationData);
         timedoor.setOwner(player.getUUID());
         timedoor.setPos(origin.x() + direction.getStepX() * TempadConfig.distanceFromPlayer, origin.y(), origin.z() + direction.getStepZ() * TempadConfig.distanceFromPlayer);

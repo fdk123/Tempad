@@ -7,6 +7,8 @@ import me.codexadrian.tempad.common.compat.waystones.WaystoneLocationGetter;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
+import me.codexadrian.tempad.api.locations.LocationsApi;
+import me.codexadrian.tempad.common.data.MarkerIndex;
 import me.codexadrian.tempad.common.utils.PlatformUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -56,6 +58,7 @@ public class Tempad {
         TempadRegistry.ENTITIES.init();
         TempadRegistry.RECIPE_SERIALIZERS.init();
         TempadRegistry.RECIPE_TYPES.init();
+        LocationsApi.registerLocationGetter("tempad:markers", MarkerIndex::visibleLocations);
         NetworkHandler.register();
 
         if (PlatformUtils.isModLoaded("botarium")) {

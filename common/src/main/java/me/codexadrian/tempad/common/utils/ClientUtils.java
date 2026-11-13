@@ -2,6 +2,8 @@ package me.codexadrian.tempad.common.utils;
 
 import me.codexadrian.tempad.client.config.TempadClientConfig;
 import me.codexadrian.tempad.client.gui.ConsolidatedScreen;
+import me.codexadrian.tempad.client.gui.MarkerEditScreen;
+import me.codexadrian.tempad.common.network.messages.s2c.OpenMarkerScreenPacket;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenFavoritedLocationPacket;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenTempadByShortcutPacket;
@@ -12,6 +14,10 @@ import net.minecraft.client.Minecraft;
 public class ClientUtils {
     public static void openScreen(OpenTempadScreenPacket packet) {
         Minecraft.getInstance().setScreen(new ConsolidatedScreen(packet.locationData(), packet.favorite(), packet.canSaveLocations(), packet.hasKnowledgeRepository()));
+    }
+
+    public static void openMarkerScreen(OpenMarkerScreenPacket packet) {
+        Minecraft.getInstance().setScreen(new MarkerEditScreen(packet));
     }
 
     public static int darkenColor(int color) {

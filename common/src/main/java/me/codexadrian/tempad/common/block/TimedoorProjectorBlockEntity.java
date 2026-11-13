@@ -3,6 +3,7 @@ package me.codexadrian.tempad.common.block;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.MarkerIndex;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.items.ChrononContainerItem;
 import me.codexadrian.tempad.common.items.ProjectorData;
@@ -27,6 +28,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
     private int chronons;
     private UUID owner;
     private LocationData target;
+    private UUID markerLink;
     private UUID timedoorId;
 
     public TimedoorProjectorBlockEntity(BlockPos pos, BlockState state) { super(TempadRegistry.TIMEDOOR_PROJECTOR_BLOCK_ENTITY.get(), pos, state); }
@@ -34,6 +36,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
     public int getCapacity() { return Math.max(1, TempadConfig.projectorCapacity); }
     public UUID getOwner() { return owner; }
     @Nullable public LocationData getTarget() { return target; }
+    @Nullable public UUID getMarkerLink() { return markerLink; }
     public boolean canAccess(Player player) { return owner == null || owner.equals(player.getUUID()); }
     public boolean acceptsChrononsFrom(UUID sourceOwner) { return owner != null && owner.equals(sourceOwner); }
     public void claim(Player player) { if (owner == null) { owner = player.getUUID(); markChanged(); } }
@@ -52,24 +55,27 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
         return moved;
     }
 
-    public void setTarget(@Nullable LocationData location) {
+    public void setTarget(@Nullable LocationData location, @Nullable UUID markerLink) {
         if (target != null) stopTimedoor();
         target = location;
+        this.markerLink = markerLink;
         if (level != null && !level.isClientSide) level.setBlock(worldPosition, getBlockState().setValue(TimedoorProjectorBlock.HAS_CARD, target != null), 3);
         markChanged();
     }
 
     public void openTimedoor() {
-        if (!(level instanceof ServerLevel serverLevel) || owner == null || target == null || target.getLevelKey() == null || !target.isTeleportable()) return;
+        if (!(level instanceof ServerLevel serverLevel) || owner == null) return;
+        LocationData destination = markerLink != null ? MarkerIndex.resolve(level, owner, markerLink) : target;
+        if (destination == null || destination.getLevelKey() == null || !destination.isTeleportable()) return;
         if (!(serverLevel.getPlayerByUUID(owner) instanceof ServerPlayer player)) return;
-        if (!player.getAbilities().instabuild && (TeleportUtils.isDimensionBlacklisted(serverLevel, target.getLevelKey())
-                || (!TempadConfig.allowInterdimensionalTravel && !serverLevel.dimension().equals(target.getLevelKey())))) return;
-        if (serverLevel.getServer().getLevel(target.getLevelKey()) == null) return;
+        if (!player.getAbilities().instabuild && (TeleportUtils.isDimensionBlacklisted(serverLevel, destination.getLevelKey())
+                || (!TempadConfig.allowInterdimensionalTravel && !serverLevel.dimension().equals(destination.getLevelKey())))) return;
+        if (serverLevel.getServer().getLevel(destination.getLevelKey()) == null) return;
         if (timedoorId != null && serverLevel.getEntity(timedoorId) instanceof TimedoorEntity existing && !existing.isRemoved()) return;
         timedoorId = null;
         int cost = Math.max(0, TempadConfig.projectorDoorCost);
         if (chronons < cost) return;
-        TimedoorEntity opened = TempadItem.summonTimeDoor(target, player, Tempad.ORANGE, worldPosition, getBlockState().getValue(TimedoorProjectorBlock.FACING), serverLevel);
+        TimedoorEntity opened = TempadItem.summonTimeDoor(destination, player, Tempad.ORANGE, worldPosition, getBlockState().getValue(TimedoorProjectorBlock.FACING), serverLevel);
         if (opened == null) return;
         opened.setLifetimeTicks(Math.max(1, TempadConfig.projectorDoorDuration));
         chronons -= cost;
@@ -92,6 +98,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
         chronons = Math.max(0, Math.min(getCapacity(), tag.getInt("Chronons")));
         owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : owner;
         target = ProjectorData.getTarget(stack);
+        markerLink = ProjectorData.markerId(stack);
         markChanged();
     }
 
@@ -99,6 +106,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
         if (chronons > 0) stack.getOrCreateTag().putInt("Chronons", chronons);
         if (owner != null) stack.getOrCreateTag().putUUID("Owner", owner);
         ProjectorData.setTarget(stack, target);
+        if (markerLink != null) stack.getOrCreateTag().putUUID("MarkerId", markerLink);
     }
 
     private void markChanged() {
@@ -114,6 +122,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
         tag.putInt("Chronons", chronons);
         if (owner != null) tag.putUUID("Owner", owner);
         if (target != null) tag.put("PortalTarget", target.toTag());
+        if (markerLink != null) tag.putUUID("MarkerId", markerLink);
     }
 
     @Override public void load(CompoundTag tag) {
@@ -125,6 +134,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
         } catch (RuntimeException malformed) {
             target = null;
         }
+        markerLink = tag.hasUUID("MarkerId") ? tag.getUUID("MarkerId") : null;
         timedoorId = null;
     }
 

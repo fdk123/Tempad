@@ -11,16 +11,23 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 public class TempadTeleporter implements ITeleporter {
-    private final BlockPos position;
+    private final Vec3 position;
+    private final Float yaw;
 
     public TempadTeleporter(BlockPos pos) {
-        this.position = pos;
+        this.position = Vec3.atCenterOf(pos);
+        this.yaw = null;
+    }
+
+    public TempadTeleporter(Vec3 position, float yaw) {
+        this.position = position;
+        this.yaw = yaw;
     }
 
     @Nullable
     @Override
     public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
-        return new PortalInfo(Vec3.atCenterOf(this.position), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot());
+        return new PortalInfo(position, entity.getDeltaMovement(), yaw == null ? entity.getYRot() : yaw, entity.getXRot());
     }
 
     @Override

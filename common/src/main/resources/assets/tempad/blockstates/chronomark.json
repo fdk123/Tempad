@@ -1,0 +1,1 @@
+{"multipart":[{"when":{"ceiling":"false"},"apply":{"model":"tempad:block/chronomark"}},{"when":{"ceiling":"true"},"apply":{"model":"tempad:block/chronomark","x":180}}]}

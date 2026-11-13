@@ -19,6 +19,9 @@ import me.codexadrian.tempad.common.block.WorkstationChildBlock;
 import me.codexadrian.tempad.common.block.TimedoorProjectorBlock;
 import me.codexadrian.tempad.common.block.TimedoorProjectorBlockEntity;
 import me.codexadrian.tempad.common.items.TimedoorProjectorItem;
+import me.codexadrian.tempad.common.block.TimedoorMarkerBlock;
+import me.codexadrian.tempad.common.block.TimedoorMarkerBlockEntity;
+import me.codexadrian.tempad.common.items.MarkerBlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -49,6 +52,11 @@ public class TempadRegistry {
     public static final RegistryEntry<Block> TIMEDOOR_PROJECTOR_BLOCK = BLOCKS.register("timedoor_projector", () -> new TimedoorProjectorBlock(BlockBehaviour.Properties.of().strength(3.0F, 6.0F).noOcclusion()));
     public static final RegistryEntry<Item> TIMEDOOR_PROJECTOR = ITEMS.register("timedoor_projector", () -> new TimedoorProjectorItem((TimedoorProjectorBlock) TIMEDOOR_PROJECTOR_BLOCK.get(), new Item.Properties()));
     public static final RegistryEntry<BlockEntityType<TimedoorProjectorBlockEntity>> TIMEDOOR_PROJECTOR_BLOCK_ENTITY = BLOCK_ENTITIES.register("timedoor_projector", () -> BlockEntityType.Builder.of(TimedoorProjectorBlockEntity::new, TIMEDOOR_PROJECTOR_BLOCK.get()).build(null));
+    public static final RegistryEntry<Block> TIMEDOOR_MARKER_BLOCK = BLOCKS.register("timedoor_marker", () -> new TimedoorMarkerBlock(BlockBehaviour.Properties.of().strength(3.0F, 6.0F).noOcclusion()));
+    public static final RegistryEntry<Block> CHRONOMARK_BLOCK = BLOCKS.register("chronomark", () -> new TimedoorMarkerBlock(BlockBehaviour.Properties.of().strength(3.0F, 6.0F).noOcclusion()));
+    public static final RegistryEntry<Item> TIMEDOOR_MARKER = ITEMS.register("timedoor_marker", () -> new MarkerBlockItem(TIMEDOOR_MARKER_BLOCK.get(), new Item.Properties()));
+    public static final RegistryEntry<Item> CHRONOMARK = ITEMS.register("chronomark", () -> new MarkerBlockItem(CHRONOMARK_BLOCK.get(), new Item.Properties()));
+    public static final RegistryEntry<BlockEntityType<TimedoorMarkerBlockEntity>> MARKER_BLOCK_ENTITY = BLOCK_ENTITIES.register("timedoor_marker", () -> BlockEntityType.Builder.of(TimedoorMarkerBlockEntity::new, TIMEDOOR_MARKER_BLOCK.get(), CHRONOMARK_BLOCK.get()).build(null));
     public static final ResourcefulRegistry<EntityType<?>> ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.ENTITY_TYPE, Tempad.MODID);
 
     //items

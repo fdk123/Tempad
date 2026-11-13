@@ -56,7 +56,7 @@ public final class TimedoorProjectorItem extends BlockItem implements ChrononCon
     }
 
     private static void open(Player player, ItemStack stack) {
-        LocationData target = ProjectorData.getTarget(stack);
+        LocationData target = ProjectorData.resolveTarget(stack, player.level(), player.getUUID());
         if (target == null || target.getLevelKey() == null || !target.isTeleportable()) {
             player.displayClientMessage(Component.translatable("item.tempad.timedoor_projector.no_target"), true);
             return;
@@ -82,14 +82,14 @@ public final class TimedoorProjectorItem extends BlockItem implements ChrononCon
         if (action != ClickAction.SECONDARY) return false;
         LocationData current = ProjectorData.getTarget(stack);
         if (current != null && !slot.hasItem()) {
-            slot.set(ProjectorData.cardFor(current));
+            slot.set(ProjectorData.cardFor(current, ProjectorData.markerId(stack)));
             ProjectorData.setTarget(stack, null);
             return true;
         }
         if (current == null && slot.hasItem() && slot.getItem().getItem() instanceof LocationCard) {
             LocationData target = ProjectorData.cardTarget(slot.getItem());
             if (target == null) return false;
-            ProjectorData.setTarget(stack, target);
+            ProjectorData.setFromCard(stack, slot.getItem());
             slot.remove(1);
             slot.setChanged();
             return true;
@@ -101,7 +101,7 @@ public final class TimedoorProjectorItem extends BlockItem implements ChrononCon
         if (action != ClickAction.SECONDARY || ProjectorData.getTarget(stack) != null || !(other.getItem() instanceof LocationCard)) return false;
         LocationData target = ProjectorData.cardTarget(other);
         if (target == null) return false;
-        ProjectorData.setTarget(stack, target);
+        ProjectorData.setFromCard(stack, other);
         ItemStack remainder = other.copy();
         remainder.shrink(1);
         access.set(remainder);

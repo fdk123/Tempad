@@ -10,4 +10,8 @@ public class TimedoorEntityImpl {
     public static void teleportEntity(ServerLevel destinationLevel, BlockPos pos, Vec3 deltaMovement, Entity entity) {
         entity.changeDimension(destinationLevel, new TempadTeleporter(pos));
     }
+
+    public static void teleportEntityPrecise(ServerLevel destinationLevel, Vec3 pos, float yaw, Vec3 deltaMovement, Entity entity) {
+        entity.changeDimension(destinationLevel, new TempadTeleporter(pos, yaw));
+    }
 }

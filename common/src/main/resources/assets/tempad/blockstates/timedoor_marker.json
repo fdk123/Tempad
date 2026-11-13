@@ -1,0 +1,1 @@
+{"multipart":[{"when":{"ceiling":"false"},"apply":{"model":"tempad:block/timedoor_marker"}},{"when":{"ceiling":"true"},"apply":{"model":"tempad:block/timedoor_marker","x":180}}]}

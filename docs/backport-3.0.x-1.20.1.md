@@ -74,6 +74,27 @@ projector requires its owner to be online because the existing 1.20.1 portal
 API needs a player. The models are new, simple geometry with vanilla textures;
 no 3.0 artwork has been copied.
 
+### Timedoor Marker and Chronomark (Forge 1.20.1)
+
+Both 3.0 marker types are placeable, configurable destinations in the Tempad.
+Their shared cross-dimensional index is saved in the overworld and keeps
+locations visible even while their chunks are unloaded. Each marker keeps its
+identity, owner, name, color and access settings when broken and placed again.
+The regular marker uses a position adjacent to the block; Chronomark adds a
+configurable height offset and arrival angle. Timedoor travel now preserves
+these precise coordinates and the portal color in the same dimension and
+across dimensions. Old Location Cards and saved locations retain their old
+arrival behavior.
+
+Use a Location Card on a marker to bind it to the marker ID. Cards exported
+from the Tempad retain the link, and Projectors carrying those cards resolve
+the current marker position every time they open a portal. Removing the marker
+invalidates its link. The marker settings screen and network handler validate
+distance and edit access on the server. Owner-only and public access are
+available; upstream's extended PlayerAccess providers are not present in the
+1.20.1 backport yet. The block and item models use vanilla textures and new
+geometry.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |

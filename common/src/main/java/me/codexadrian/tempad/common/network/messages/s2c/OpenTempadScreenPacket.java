@@ -44,6 +44,15 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
                 buf.writeBoolean(locationData.isTeleportable());
                 buf.writeBoolean(locationData.isDeletable());
                 buf.writeBoolean(locationData.isDownloadable());
+                buf.writeBoolean(locationData.hasPreciseArrival());
+                if (locationData.hasPreciseArrival()) {
+                    var arrival = locationData.getArrivalPosition();
+                    buf.writeDouble(arrival.x);
+                    buf.writeDouble(arrival.y);
+                    buf.writeDouble(arrival.z);
+                    buf.writeFloat(locationData.getArrivalYaw());
+                }
+                buf.writeInt(locationData.getPortalColor());
             });
             buffer.writeOptional(Optional.ofNullable(message.favorite), FriendlyByteBuf::writeUUID);
             buffer.writeBoolean(message.canSaveLocations);
@@ -60,7 +69,10 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
                 boolean teleportable = buf.readBoolean();
                 boolean deletable = buf.readBoolean();
                 boolean downloadable = buf.readBoolean();
-                return new LocationData(name, levelResourceKey, pos, id, teleportable, deletable, downloadable);
+                net.minecraft.world.phys.Vec3 arrival = buf.readBoolean() ? new net.minecraft.world.phys.Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble()) : null;
+                float yaw = arrival == null ? 0.0F : buf.readFloat();
+                int color = buf.readInt();
+                return new LocationData(name, levelResourceKey, pos, id, teleportable, deletable, downloadable, arrival, yaw, color);
             }), buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null), buffer.readBoolean(), buffer.readBoolean());
         }
 

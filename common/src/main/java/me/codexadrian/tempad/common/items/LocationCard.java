@@ -3,6 +3,7 @@ package me.codexadrian.tempad.common.items;
 import com.teamresourceful.resourcefullib.common.utils.CommonUtils;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
+import me.codexadrian.tempad.common.data.MarkerIndex;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -27,12 +28,19 @@ public class LocationCard extends Item {
     public static void setLocation(ItemStack stack, LocationData locationData, String creator) {
         stack.getOrCreateTag().put("Location", locationData.toTag());
         stack.getOrCreateTag().putString("Creator", creator);
+        stack.getOrCreateTag().remove("MarkerId");
     }
 
     @Nullable
     public static LocationData getLocation(ItemStack stack) {
         if (!stack.hasTag() || !stack.getTag().contains("Location")) return null;
         return LocationData.fromTag(stack.getOrCreateTag().getCompound("Location"));
+    }
+
+    @Nullable public static LocationData resolveLocation(ItemStack stack, Level level, UUID player) {
+        if (stack.hasTag() && stack.getTag().hasUUID("MarkerId") && !level.isClientSide)
+            return MarkerIndex.resolve(level, player, stack.getTag().getUUID("MarkerId"));
+        return getLocation(stack);
     }
 
     @Override
@@ -64,7 +72,11 @@ public class LocationCard extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (!level.isClientSide) {
-            var location = getLocation(player.getItemInHand(usedHand));
+            var location = resolveLocation(player.getItemInHand(usedHand), level, player.getUUID());
+            if (location == null && player.getItemInHand(usedHand).hasTag() && player.getItemInHand(usedHand).getTag().hasUUID("MarkerId")) {
+                player.displayClientMessage(Component.translatable("item.tempad.location_card.marker_unavailable"), true);
+                return InteractionResultHolder.fail(player.getItemInHand(usedHand));
+            }
             if (location != null) {
                 TempadLocationHandler.addLocation(level, player.getUUID(), location);
                 player.getItemInHand(usedHand).shrink(1);

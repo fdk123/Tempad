@@ -6,6 +6,7 @@ import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.MarkerIndex;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.items.LocationCard;
 import me.codexadrian.tempad.common.items.TempadItem;
@@ -48,16 +49,17 @@ public record ExportLocationPacket(UUID location) implements Packet<ExportLocati
             return (player, level) -> {
                 if (!TeleportUtils.hasTempad(player)) return;
                 ItemStack itemInHand = TeleportUtils.findTempad(player);
-                if ((itemInHand.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(player, itemInHand))) {
-                    if (!player.getAbilities().instabuild)
-                        tempadItem.getOption().onTimedoorOpen(player);
-                    LocationData locationData = TempadLocationHandler.getLocation(level, player.getUUID(), message.location);
-                    if (locationData.isDownloadable() && TempadConfig.allowExporting) {
-                        ItemStack stack = new ItemStack(TempadRegistry.LOCATION_CARD.get());
-                        LocationCard.setLocation(stack, locationData, player.getDisplayName().getString());
-                        player.getInventory().placeItemBackInInventory(stack);
-                    }
+                LocationData locationData = TempadLocationHandler.getLocation(level, player.getUUID(), message.location);
+                if (locationData == null || !locationData.isDownloadable() || !TempadConfig.allowExporting
+                        || !(itemInHand.getItem() instanceof TempadItem tempadItem)
+                        || !tempadItem.getOption().canTimedoorOpen(player, itemInHand)) return;
+                if (!player.getAbilities().instabuild) tempadItem.getOption().onTimedoorOpen(player);
+                ItemStack stack = new ItemStack(TempadRegistry.LOCATION_CARD.get());
+                LocationCard.setLocation(stack, locationData, player.getDisplayName().getString());
+                if (MarkerIndex.resolve(level, player.getUUID(), locationData.getId()) != null) {
+                    stack.getOrCreateTag().putUUID("MarkerId", locationData.getId());
                 }
+                player.getInventory().placeItemBackInInventory(stack);
             };
         }
     }

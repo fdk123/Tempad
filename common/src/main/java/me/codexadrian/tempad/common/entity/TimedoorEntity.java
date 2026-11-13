@@ -108,10 +108,13 @@ public class TimedoorEntity extends Entity {
                         entity.ejectPassengers();
                         Vec3 deltaMovement = entity.getDeltaMovement();
                         var pos = getLocation().getBlockPos();
+                        Vec3 arrival = getLocation().getArrivalPosition();
                         if (!getLocation().getLevelKey().location().equals(this.level().dimension().location())) {
-                            teleportEntity(destinationLevel, pos, deltaMovement, entity);
+                            if (getLocation().hasPreciseArrival()) teleportEntityPrecise(destinationLevel, arrival, getLocation().getArrivalYaw(), deltaMovement, entity);
+                            else teleportEntity(destinationLevel, pos, deltaMovement, entity);
                         } else {
-                            entity.teleportToWithTicket(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+                            if (getLocation().hasPreciseArrival()) entity.setYRot(getLocation().getArrivalYaw());
+                            entity.teleportToWithTicket(arrival.x, arrival.y, arrival.z);
                             entity.setDeltaMovement(deltaMovement);
                             entity.hasImpulse = true;
                         }
@@ -130,8 +133,13 @@ public class TimedoorEntity extends Entity {
                         recipientPortal.setLocation(null);
                         recipientPortal.setColor(this.getColor());
                         recipientPortal.setLifetimeTicks(lifetimeTicks);
-                        var position = getLocation().getBlockPos().relative(this.getDirection(), 1);
-                        recipientPortal.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
+                        if (getLocation().hasPreciseArrival()) {
+                            Vec3 arrival = getLocation().getArrivalPosition();
+                            recipientPortal.setPos(arrival.x + this.getDirection().getStepX(), arrival.y, arrival.z + this.getDirection().getStepZ());
+                        } else {
+                            var position = getLocation().getBlockPos().relative(this.getDirection(), 1);
+                            recipientPortal.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
+                        }
                         recipientPortal.setYRot(this.getYRot());
                         if (destinationLevel.addFreshEntity(recipientPortal)) {
                             this.setLinkedPortalId(recipientPortal.getUUID());
@@ -180,6 +188,11 @@ public class TimedoorEntity extends Entity {
 
     @ExpectPlatform
     public static void teleportEntity(ServerLevel destinationLevel, BlockPos pos, Vec3 deltaMovement, Entity entity) {
+        throw new NotImplementedException();
+    }
+
+    @ExpectPlatform
+    public static void teleportEntityPrecise(ServerLevel destinationLevel, Vec3 pos, float yaw, Vec3 deltaMovement, Entity entity) {
         throw new NotImplementedException();
     }
 

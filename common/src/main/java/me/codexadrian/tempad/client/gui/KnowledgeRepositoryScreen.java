@@ -11,7 +11,7 @@ import java.util.List;
 
 /** Text-only guide for the Knowledge Repository upgrade; uses no protected 3.0 artwork. */
 public final class KnowledgeRepositoryScreen extends Screen {
-    private static final int PAGE_COUNT = 5;
+    private static final int PAGE_COUNT = 6;
     private final Screen parent;
     private int page;
 
