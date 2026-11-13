@@ -26,6 +26,9 @@ public final class MetronomeMenuContainer implements Container {
     }
     @Override public boolean canPlaceItem(int slot, ItemStack stack) { return slot == 4 && stack.getItem() instanceof ChrononContainerItem; }
     @Override public void setChanged() { metronome.setChanged(); }
-    @Override public boolean stillValid(Player player) { return player.distanceToSqr(metronome.getBlockPos().getX() + 0.5, metronome.getBlockPos().getY() + 0.5, metronome.getBlockPos().getZ() + 0.5) <= 64; }
+    @Override public boolean stillValid(Player player) {
+        return metronome.canAccess(player)
+            && player.distanceToSqr(metronome.getBlockPos().getX() + 0.5, metronome.getBlockPos().getY() + 0.5, metronome.getBlockPos().getZ() + 0.5) <= 64;
+    }
     @Override public void clearContent() { }
 }
