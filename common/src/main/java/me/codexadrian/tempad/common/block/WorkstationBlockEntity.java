@@ -10,6 +10,7 @@ import me.codexadrian.tempad.common.items.ChrononStorage;
 import me.codexadrian.tempad.api.options.impl.TimerOption;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +61,16 @@ public final class WorkstationBlockEntity extends BlockEntity {
             timer.tick(workstation.tempad, null);
             if (level.getGameTime() % 20 == 0) workstation.setChanged();
         }
-        boolean signal = level.hasNeighborSignal(pos);
+        Direction facing = state.getValue(WorkstationBlock.FACING);
+        BlockPos childPos = pos.relative(facing.getCounterClockWise());
+        BlockState childState = level.getBlockState(childPos);
+        if (!childState.is(TempadRegistry.WORKSTATION_CHILD_BLOCK.get())
+                || childState.getValue(WorkstationBlock.FACING) != facing) {
+            serverLevel.destroyBlock(pos, true);
+            return;
+        }
+        boolean signal = level.hasNeighborSignal(pos)
+            || level.hasNeighborSignal(childPos);
         TimedoorEntity timedoor = workstation.getTimedoor(serverLevel);
         if (!signal) {
             if (workstation.powered) { workstation.powered = false; workstation.refreshState(); }

@@ -22,10 +22,10 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.Block;
 import me.codexadrian.tempad.common.utils.WorkstationOpener;
@@ -35,10 +35,10 @@ public final class WorkstationBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty HAS_TEMPAD = BooleanProperty.create("has_tempad");
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    private static final VoxelShape NORTH_SHAPE = Block.box(0, 0, 1, 14, 4, 15);
-    private static final VoxelShape SOUTH_SHAPE = Block.box(2, 0, 1, 16, 4, 15);
-    private static final VoxelShape WEST_SHAPE = Block.box(1, 0, 2, 15, 4, 16);
-    private static final VoxelShape EAST_SHAPE = Block.box(1, 0, 0, 15, 4, 14);
+    private static final VoxelShape NORTH_SHAPE = Shapes.or(Block.box(0, 0, 1, 14, 2, 15), Block.box(0, 2, 1, 14, 4, 5));
+    private static final VoxelShape SOUTH_SHAPE = Shapes.or(Block.box(2, 0, 1, 16, 2, 15), Block.box(2, 2, 11, 16, 4, 15));
+    private static final VoxelShape WEST_SHAPE = Shapes.or(Block.box(1, 0, 2, 15, 2, 16), Block.box(1, 2, 2, 5, 4, 16));
+    private static final VoxelShape EAST_SHAPE = Shapes.or(Block.box(1, 0, 0, 15, 2, 14), Block.box(11, 2, 0, 15, 4, 14));
     public WorkstationBlock(Properties properties) { super(properties); }
     { registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_TEMPAD, false).setValue(POWERED, false)); }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new WorkstationBlockEntity(pos, state); }
@@ -48,7 +48,9 @@ public final class WorkstationBlock extends BaseEntityBlock {
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection();
         BlockPos child = childPos(context.getClickedPos(), facing);
-        return context.getLevel().getBlockState(child).canBeReplaced(context) ? defaultBlockState().setValue(FACING, facing) : null;
+        return context.getLevel().getWorldBorder().isWithinBounds(child)
+            && context.getLevel().getBlockState(child).canBeReplaced(context)
+            ? defaultBlockState().setValue(FACING, facing) : null;
     }
     private static BlockPos childPos(BlockPos pos, Direction facing) { return pos.relative(facing.getCounterClockWise()); }
     @Override public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
@@ -59,17 +61,28 @@ public final class WorkstationBlock extends BaseEntityBlock {
     @Override public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) { case SOUTH -> SOUTH_SHAPE; case WEST -> WEST_SHAPE; case EAST -> EAST_SHAPE; default -> NORTH_SHAPE; };
     }
-    @Override public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        if (direction == state.getValue(FACING).getCounterClockWise() && !facingState.is(TempadRegistry.WORKSTATION_CHILD_BLOCK.get())) return net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
-        return super.updateShape(state, direction, facingState, level, pos, neighborPos);
-    }
     @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && !level.isClientSide) {
             if (level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation) workstation.stopTimedoor();
-            BlockPos child = childPos(pos, state.getValue(FACING));
-            if (level.getBlockState(child).is(TempadRegistry.WORKSTATION_CHILD_BLOCK.get())) level.setBlock(child, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 35);
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
+        if (!state.is(newState.getBlock()) && !level.isClientSide) {
+            BlockPos child = childPos(pos, state.getValue(FACING));
+            BlockState childState = level.getBlockState(child);
+            if (childState.is(TempadRegistry.WORKSTATION_CHILD_BLOCK.get())
+                    && childState.getValue(FACING) == state.getValue(FACING)) {
+                level.setBlock(child, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 35);
+            }
+        }
+    }
+
+    @Override public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()
+                && level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation
+                && !workstation.getTempad().isEmpty()) {
+            Block.popResource(level, pos, workstation.eject());
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
     @Override public java.util.List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         java.util.List<ItemStack> drops = super.getDrops(state, builder);
