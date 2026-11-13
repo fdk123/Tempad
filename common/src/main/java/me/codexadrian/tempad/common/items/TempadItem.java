@@ -24,6 +24,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,14 +77,20 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
     }
 
     public static void summonTimeDoor(LocationData locationData, Player player, int color) {
+        summonTimeDoor(locationData, player, color, player.position(), player.getDirection());
+    }
+
+    public static void summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin, Direction direction) {
+        summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction);
+    }
+
+    public static void summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin, Direction direction) {
         TimedoorEntity timedoor = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), player.level());
-        var dir = player.getDirection();
         timedoor.setColor(color);
         timedoor.setLocation(locationData);
         timedoor.setOwner(player.getUUID());
-        var position = player.position();
-        timedoor.setPos(position.x() + dir.getStepX() * TempadConfig.distanceFromPlayer, position.y(), position.z() + dir.getStepZ() * TempadConfig.distanceFromPlayer);
-        timedoor.setYRot(dir.getOpposite().toYRot());
+        timedoor.setPos(origin.x() + direction.getStepX() * TempadConfig.distanceFromPlayer, origin.y(), origin.z() + direction.getStepZ() * TempadConfig.distanceFromPlayer);
+        timedoor.setYRot(direction.getOpposite().toYRot());
         player.level().addFreshEntity(timedoor);
         timedoor.playSound(Tempad.TIMEDOOR_SOUND.get());
     }

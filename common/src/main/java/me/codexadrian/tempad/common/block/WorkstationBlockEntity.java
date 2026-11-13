@@ -50,7 +50,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
         LocationData location = TempadLocationHandler.getLocation(serverLevel, player.getUUID(), TempadLocationHandler.getFavorite(serverLevel, player.getUUID()));
         if (location == null || !TeleportUtils.mayTeleport(location.getLevelKey(), player) || !tempad.getOption().canTimedoorOpen(player, workstation.tempad)) return;
         if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player, workstation.tempad);
-        TempadItem.summonTimeDoor(location, player, 0);
+        TempadItem.summonTimeDoor(location, player, 0, pos, state.getValue(WorkstationBlock.FACING));
     }
     @Override public CompoundTag getUpdateTag() { CompoundTag tag = new CompoundTag(); saveAdditional(tag); return tag; }
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
