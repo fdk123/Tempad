@@ -26,6 +26,7 @@
   "block.tempad.workstation.status.no_favorite": "no favorite location",
   "block.tempad.workstation.status.blocked": "teleport blocked",
   "block.tempad.workstation.status.no_fuel": "not enough fuel",
+  "block.tempad.workstation.status.no_chronons": "not enough chronons to sustain portal",
   "item.tempad.chronons": "Chronons: %s/%s",
   "item.tempad.chronons.transferred": "Transferred %s chronons",
   "item.tempad.card_wallet": "Card Wallet",
@@ -104,4 +105,5 @@
   ,"config.tempad.metronome_generation_amount": "Metronome generation amount"
   ,"config.tempad.metronome_distribution_range": "Metronome distribution range"
   ,"config.tempad.metronome_redstone_pause": "Pause Metronome on redstone signal"
+  ,"config.tempad.workstation_portal_sustain_cost": "Workstation chronons per second"
 }

@@ -65,6 +65,7 @@ public final class WorkstationBlock extends BaseEntityBlock {
     }
     @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && !level.isClientSide) {
+            if (level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation) workstation.stopTimedoor();
             BlockPos child = childPos(pos, state.getValue(FACING));
             if (level.getBlockState(child).is(TempadRegistry.WORKSTATION_CHILD_BLOCK.get())) level.setBlock(child, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 35);
         }

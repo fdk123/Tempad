@@ -60,7 +60,7 @@ public class TimerOption extends TempadOption {
 
     public static long timeLeft(ItemStack stack) {
         if (stack.getTag() != null && stack.getTag().contains(ID)) {
-            return stack.getTag().getInt(ID) / 20;
+            return stack.getTag().getLong(ID) / 20;
         }
         return 0;
     }
@@ -70,7 +70,7 @@ public class TimerOption extends TempadOption {
         // tick the timer
         if (stack.getTag() != null && stack.getTag().contains(ID)) {
             long cooldownTimeTag = stack.getTag().getLong(ID);
-            if (cooldownTimeTag == 0) {
+            if (cooldownTimeTag <= 1) {
                 stack.getTag().remove(ID);
             } else {
                 stack.getTag().putLong(ID, cooldownTimeTag - 1);

@@ -100,42 +100,40 @@ public class TimedoorEntity extends Entity {
             boolean destinationAllowed = !TeleportUtils.isDimensionBlacklisted(this.level(), getLocation().getLevelKey());
             if (destinationAllowed && !entities.isEmpty() && !level().isClientSide()) {
                 ServerLevel destinationLevel = Objects.requireNonNull(level().getServer()).getLevel(getLocation().getLevelKey());
-                entities.stream().flatMap(entity -> entity.getRootVehicle().getSelfAndPassengers()).distinct().forEach(entity -> {
-                    entity.ejectPassengers();
-                    Vec3 deltaMovement = entity.getDeltaMovement();
-                    var pos = getLocation().getBlockPos();
-                    if (destinationLevel != null) {
+                if (destinationLevel != null) {
+                    entities.stream().flatMap(entity -> entity.getRootVehicle().getSelfAndPassengers()).distinct().forEach(entity -> {
+                        entity.ejectPassengers();
+                        Vec3 deltaMovement = entity.getDeltaMovement();
+                        var pos = getLocation().getBlockPos();
                         if (!getLocation().getLevelKey().location().equals(this.level().dimension().location())) {
                             teleportEntity(destinationLevel, pos, deltaMovement, entity);
                         } else {
                             entity.teleportToWithTicket(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                             entity.setDeltaMovement(deltaMovement);
                             entity.hasImpulse = true;
-                            //good code i promise
                         }
-                    }
-                    if (getLinkedPortalEntity() != null) getLinkedPortalEntity().resetClosingTime();
-                    this.resetClosingTime();
-                    if (entity instanceof Player player) {
-                        if (player.getUUID().equals(getOwner())) {
+                        TimedoorEntity linked = getLinkedPortalEntity();
+                        if (linked != null) linked.resetClosingTime();
+                        this.resetClosingTime();
+                        if (entity instanceof Player player && player.getUUID().equals(getOwner())) {
                             this.setClosingTime(this.tickCount + TempadConfig.timedoorAddWaitTime);
-                            if (getLinkedPortalEntity() != null)
-                                this.getLinkedPortalEntity().setClosingTime(getLinkedPortalEntity().tickCount + TempadConfig.timedoorAddWaitTime);
+                            if (linked != null) linked.setClosingTime(linked.tickCount + TempadConfig.timedoorAddWaitTime);
+                        }
+                    });
+                    if (getLinkedPortalEntity() == null) {
+                        TimedoorEntity recipientPortal = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), destinationLevel);
+                        recipientPortal.setOwner(this.getOwner());
+                        recipientPortal.setClosingTime(TempadConfig.timedoorAddWaitTime);
+                        recipientPortal.setLocation(null);
+                        recipientPortal.setColor(this.getColor());
+                        var position = getLocation().getBlockPos().relative(this.getDirection(), 1);
+                        recipientPortal.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
+                        recipientPortal.setYRot(this.getYRot());
+                        if (destinationLevel.addFreshEntity(recipientPortal)) {
+                            this.setLinkedPortalId(recipientPortal.getUUID());
+                            recipientPortal.setLinkedPortalId(this.getUUID());
                         }
                     }
-                });
-                if (getLinkedPortalEntity() == null) {
-                    TimedoorEntity recipientPortal = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), destinationLevel);
-                    recipientPortal.setOwner(this.getOwner());
-                    recipientPortal.setClosingTime(TempadConfig.timedoorAddWaitTime);
-                    recipientPortal.setLocation(null);
-                    recipientPortal.setColor(this.getColor());
-                    this.setLinkedPortalId(recipientPortal.getUUID());
-                    recipientPortal.setLinkedPortalId(this.getUUID());
-                    var position = getLocation().getBlockPos().relative(this.getDirection(), 1);
-                    recipientPortal.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
-                    recipientPortal.setYRot(this.getYRot());
-                    this.level().addFreshEntity(recipientPortal);
                 }
             }
         }
@@ -182,9 +180,16 @@ public class TimedoorEntity extends Entity {
     }
 
     public TimedoorEntity getLinkedPortalEntity() {
-        if (!level().isClientSide() && linkedPortalEntity == null) {
-            ServerLevel serverLevel = (ServerLevel) level();
-            linkedPortalEntity = (TimedoorEntity) serverLevel.getEntity(linkedPortalId);
+        if (linkedPortalId == null || level().isClientSide()) return null;
+        if (linkedPortalEntity != null && !linkedPortalEntity.isRemoved()) return linkedPortalEntity;
+        linkedPortalEntity = null;
+        if (level().getServer() != null) {
+            for (ServerLevel serverLevel : level().getServer().getAllLevels()) {
+                if (serverLevel.getEntity(linkedPortalId) instanceof TimedoorEntity portal) {
+                    linkedPortalEntity = portal;
+                    break;
+                }
+            }
         }
         return linkedPortalEntity;
     }

@@ -55,6 +55,17 @@ public class FluidOption extends TempadOption {
     }
 
     @Override
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        ItemStackHolder holder = new ItemStackHolder(stack);
+        ItemFluidContainer fluidStorage = FluidApi.getItemFluidContainer(holder);
+        if (fluidStorage == null) return;
+        FluidHolder fluid = fluidStorage.getFluids().get(0);
+        fluid.setAmount(TempadOptionApi.getFuelCost(stack));
+        fluidStorage.extractFluid(fluid, false);
+        if (holder.isDirty()) stack.setTag(holder.getStack().getTag());
+    }
+
+    @Override
     public boolean isDurabilityBarVisible(ItemStack stack) {
         return true;
     }

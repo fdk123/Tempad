@@ -46,6 +46,15 @@ public class EnergyOption extends TempadOption {
     }
 
     @Override
+    public void onTimedoorOpen(Player player, ItemStack stack) {
+        ItemStackHolder holder = new ItemStackHolder(stack);
+        EnergyContainer energyStorage = EnergyApi.getItemEnergyContainer(holder);
+        if (energyStorage == null) return;
+        energyStorage.internalExtract(TempadOptionApi.getFuelCost(stack), false);
+        if (holder.isDirty()) stack.setTag(holder.getStack().getTag());
+    }
+
+    @Override
     public boolean isDurabilityBarVisible(ItemStack stack) {
         return true;
     }

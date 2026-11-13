@@ -126,6 +126,11 @@ public final class TempadConfig {
     @Comment("Whether a redstone signal pauses Metronome generation.")
     public static boolean metronomeRedstonePause = true;
 
+    @ConfigEntry(id = "workstationPortalSustainCost", type = EntryType.INTEGER, translation = "config.tempad.workstation_portal_sustain_cost")
+    @Comment("Chronons consumed from the installed Tempad every second while a Workstation holds a Timedoor open.")
+    @IntRange(min = 0, max = 1000)
+    public static int workstationPortalSustainCost = 1;
+
     @ConfigEntry(id = "timedoorFuelType", type = EntryType.STRING, translation = "config.tempad.timedoor_fuel_type")
     @Comment("The type of fuel that the timedoor will consume.")
     public static String tempadFuelType = "tempad:timer";
