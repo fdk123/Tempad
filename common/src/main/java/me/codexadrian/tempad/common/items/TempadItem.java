@@ -60,7 +60,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         ItemStack stack = player.getItemInHand(interactionHand);
         if (!player.isShiftKeyDown()) {
             if (!level.isClientSide) {
-                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()));
+                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()), TempadUpgrades.canSaveLocations(player), TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY));
                 NetworkHandler.CHANNEL.sendToPlayer(packet, player);
                 return InteractionResultHolder.success(stack);
             } else {
@@ -107,6 +107,11 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag flag) {
         this.getOption().addToolTip(stack, level, components, flag);
+        var installed = TempadUpgrades.installed(stack);
+        for (int i = 0; i < installed.size(); i++) {
+            net.minecraft.resources.ResourceLocation upgrade = net.minecraft.resources.ResourceLocation.tryParse(installed.getString(i));
+            if (upgrade != null) components.add(Component.translatable("upgrade." + upgrade.getNamespace() + "." + upgrade.getPath()));
+        }
     }
 
     @Override

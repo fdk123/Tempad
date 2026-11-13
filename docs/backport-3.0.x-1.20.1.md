@@ -34,6 +34,28 @@ license metadata.
 
 ## Compatibility decisions
 
+### Upgrade download block (Forge 1.20.1)
+
+The Workstation now accepts data driven `tempad:upgrade` recipes. A right click
+with a matching upgrade item consumes one item and starts an 80 tick download.
+Progress, the pending upgrade, the installed Tempad and the station owner are
+saved in block NBT and on the dropped Workstation item. The Tempad cannot be
+removed through the menu during a download. Completed upgrades are stored on
+the Tempad item itself and appear in its tooltip.
+
+The New Location upgrade can gate location saving when
+`requireNewLocationUpgrade` is enabled. It defaults to disabled to preserve
+existing 1.20.1 worlds and match the upstream unflagged behavior. Locations in
+this branch are still player scoped, so any carried upgraded Tempad grants
+access to saving locations. The Knowledge Repository upgrade opens a compact
+text guide from the Tempad screen. Its guide text and item models use only new
+text and vanilla Minecraft textures; the 1.21 guide artwork is not included.
+
+The Knowledge Repository crafting recipe uses a Chronometer in place of the
+1.21 Knowledge Projector, which has not been ported. The upstream
+`player_teleport_upgrade` is deliberately absent because the 1.21 branch does
+not register a matching install recipe or application for it.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |

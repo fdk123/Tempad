@@ -25,8 +25,8 @@ public final class WorkstationMenuContainer implements Container {
             && player.distanceToSqr(workstation.getBlockPos().getX() + 0.5,
                 workstation.getBlockPos().getY() + 0.5, workstation.getBlockPos().getZ() + 0.5) <= 64;
     }
-    @Override public ItemStack removeItem(int slot, int amount) { return slot == 4 && amount > 0 && canOperate() ? workstation.eject() : ItemStack.EMPTY; }
-    @Override public ItemStack removeItemNoUpdate(int slot) { return slot == 4 && canOperate() ? workstation.eject() : ItemStack.EMPTY; }
+    @Override public ItemStack removeItem(int slot, int amount) { return slot == 4 && amount > 0 && canOperate() && !workstation.isInstallingUpgrade() ? workstation.eject() : ItemStack.EMPTY; }
+    @Override public ItemStack removeItemNoUpdate(int slot) { return slot == 4 && canOperate() && !workstation.isInstallingUpgrade() ? workstation.eject() : ItemStack.EMPTY; }
     @Override public void setItem(int slot, ItemStack stack) {
         if (slot == 4 && canOperate() && workstation.getTempad().isEmpty() && stack.getItem() instanceof TempadItem) workstation.insert(player, stack);
     }

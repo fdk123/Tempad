@@ -23,6 +23,9 @@ import me.codexadrian.tempad.common.Tempad;
         }
 )
 public final class TempadConfig {
+    @ConfigEntry(id = "requireNewLocationUpgrade", type = EntryType.BOOLEAN, translation = "config.tempad.require_new_location_upgrade")
+    @Comment("Require the New Location upgrade to save locations on a Tempad. Disabled by default for existing worlds.")
+    public static boolean requireNewLocationUpgrade = false;
     @ConfigEntry(id = "distanceFromPlayer", type = EntryType.INTEGER, translation = "config.tempad.distance_from_player")
     @Comment("The distance from the player that the Tempad is summoned.")
     @IntRange(min = 1, max = 10)

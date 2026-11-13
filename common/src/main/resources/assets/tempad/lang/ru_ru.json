@@ -1,0 +1,17 @@
+{
+  "item.tempad.new_location_upgrade": "Улучшение сохранения точек",
+  "item.tempad.knowledge_repository_upgrade": "Улучшение справочника",
+  "upgrade.tempad.new_location": "Сохранение точек",
+  "upgrade.tempad.knowledge_repository": "Справочник",
+  "app.tempad.knowledge_repository": "Справочник",
+  "config.tempad.require_new_location_upgrade": "Требовать улучшение для сохранения точек",
+  "block.tempad.workstation.installing": "Установка улучшения: %s/%s тиков",
+  "guide.tempad.page.0.title": "Tempad",
+  "guide.tempad.page.0.body": "Откройте Tempad, чтобы просмотреть сохранённые точки. Выберите точку для открытия временной двери. Устройству нужны хрононы или настроенное топливо и доступное назначение.",
+  "guide.tempad.page.1.title": "Сохранённые точки",
+  "guide.tempad.page.1.body": "Сохраните текущую позицию кнопкой «плюс». Избранная точка используется для быстрого доступа и портала рабочей станции. Экспортируйте точку на карту, чтобы поделиться ею.",
+  "guide.tempad.page.2.title": "Хрононы",
+  "guide.tempad.page.2.body": "Заряжайте Tempad от батареи или метронома. Метроном также заряжает соседнюю рабочую станцию того же владельца. Сигнал редстоуна открывает портал станции к избранной точке.",
+  "guide.tempad.page.3.title": "Улучшения",
+  "guide.tempad.page.3.body": "Поместите Tempad в рабочую станцию и примените к ней предмет улучшения. Дождитесь завершения загрузки, прежде чем забрать устройство. Установленные улучшения сохраняются на Tempad."
+}

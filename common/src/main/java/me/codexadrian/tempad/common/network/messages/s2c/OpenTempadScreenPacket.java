@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public record OpenTempadScreenPacket(List<LocationData> locationData,
-                                     UUID favorite) implements Packet<OpenTempadScreenPacket> {
+                                     UUID favorite, boolean canSaveLocations, boolean hasKnowledgeRepository) implements Packet<OpenTempadScreenPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "open_screen");
 
@@ -46,6 +46,8 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
                 buf.writeBoolean(locationData.isDownloadable());
             });
             buffer.writeOptional(Optional.ofNullable(message.favorite), FriendlyByteBuf::writeUUID);
+            buffer.writeBoolean(message.canSaveLocations);
+            buffer.writeBoolean(message.hasKnowledgeRepository);
         }
 
         @Override
@@ -59,7 +61,7 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
                 boolean deletable = buf.readBoolean();
                 boolean downloadable = buf.readBoolean();
                 return new LocationData(name, levelResourceKey, pos, id, teleportable, deletable, downloadable);
-            }), buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null));
+            }), buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null), buffer.readBoolean(), buffer.readBoolean());
         }
 
         @Override

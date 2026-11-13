@@ -80,7 +80,13 @@ public final class WorkstationBlock extends BaseEntityBlock {
         if (!level.isClientSide && player.isCreative()
                 && level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation
                 && !workstation.getTempad().isEmpty()) {
-            Block.popResource(level, pos, workstation.eject());
+            if (workstation.isInstallingUpgrade()) {
+                ItemStack drop = new ItemStack(TempadRegistry.WORKSTATION.get());
+                workstation.writeIdentity(drop);
+                Block.popResource(level, pos, drop);
+            } else {
+                Block.popResource(level, pos, workstation.eject());
+            }
         }
         super.playerWillDestroy(level, pos, state, player);
     }
@@ -101,7 +107,12 @@ public final class WorkstationBlock extends BaseEntityBlock {
         if (!workstation.canAccess(player)) { player.displayClientMessage(Component.translatable("block.tempad.workstation.locked"), true); return InteractionResult.FAIL; }
         if (player.isShiftKeyDown() && !workstation.getTempad().isEmpty()) { workstation.toggleLock(player); return InteractionResult.CONSUME; }
         ItemStack held = player.getItemInHand(hand);
+        if (workstation.isInstallingUpgrade() && !held.isEmpty()) {
+            player.displayClientMessage(Component.translatable("block.tempad.workstation.installing", workstation.getMaxDownloadTime() - workstation.getDownloadTime(), workstation.getMaxDownloadTime()), true);
+            return InteractionResult.CONSUME;
+        }
         if (!held.isEmpty() && !workstation.getTempad().isEmpty()) {
+            if (workstation.startUpgrade(player, held)) return InteractionResult.CONSUME;
             int moved = workstation.receiveFrom(held);
             if (moved > 0) {
                 player.displayClientMessage(Component.translatable("item.tempad.chronons.transferred", moved), true);

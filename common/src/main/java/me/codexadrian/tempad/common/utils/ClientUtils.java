@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 
 public class ClientUtils {
     public static void openScreen(OpenTempadScreenPacket packet) {
-        Minecraft.getInstance().setScreen(new ConsolidatedScreen(packet.locationData(), packet.favorite()));
+        Minecraft.getInstance().setScreen(new ConsolidatedScreen(packet.locationData(), packet.favorite(), packet.canSaveLocations(), packet.hasKnowledgeRepository()));
     }
 
     public static int darkenColor(int color) {

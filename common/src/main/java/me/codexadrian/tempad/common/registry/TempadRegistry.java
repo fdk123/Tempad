@@ -27,11 +27,18 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import me.codexadrian.tempad.common.recipe.TempadUpgradeRecipe;
 
 public class TempadRegistry {
     public static final ResourcefulRegistry<Item> ITEMS = ResourcefulRegistries.create(BuiltInRegistries.ITEM, Tempad.MODID);
     public static final ResourcefulRegistry<Block> BLOCKS = ResourcefulRegistries.create(BuiltInRegistries.BLOCK, Tempad.MODID);
     public static final ResourcefulRegistry<BlockEntityType<?>> BLOCK_ENTITIES = ResourcefulRegistries.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Tempad.MODID);
+    public static final ResourcefulRegistry<RecipeSerializer<?>> RECIPE_SERIALIZERS = ResourcefulRegistries.create(BuiltInRegistries.RECIPE_SERIALIZER, Tempad.MODID);
+    public static final ResourcefulRegistry<RecipeType<?>> RECIPE_TYPES = ResourcefulRegistries.create(BuiltInRegistries.RECIPE_TYPE, Tempad.MODID);
+    public static final RegistryEntry<RecipeSerializer<TempadUpgradeRecipe>> UPGRADE_SERIALIZER = RECIPE_SERIALIZERS.register("upgrade", TempadUpgradeRecipe.Serializer::new);
+    public static final RegistryEntry<RecipeType<TempadUpgradeRecipe>> UPGRADE_TYPE = RECIPE_TYPES.register("upgrade", () -> new RecipeType<>() {});
     public static final RegistryEntry<Block> WORKSTATION_BLOCK = BLOCKS.register("workstation", () -> new WorkstationBlock(BlockBehaviour.Properties.of().strength(3.0F, 1200.0F)));
     public static final RegistryEntry<Block> WORKSTATION_CHILD_BLOCK = BLOCKS.register("workstation_child", () -> new WorkstationChildBlock(BlockBehaviour.Properties.of().strength(3.0F, 1200.0F).noOcclusion()));
     public static final RegistryEntry<Item> WORKSTATION = ITEMS.register("workstation", () -> new BlockItem(WORKSTATION_BLOCK.get(), new Item.Properties().stacksTo(1)));
@@ -43,6 +50,8 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> CREATIVE_TEMPAD = ITEMS.register("he_who_remains_tempad", () -> new AdvancedTempadItem(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> LOCATION_CARD = ITEMS.register("location_card", () -> new LocationCard(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> TIME_STEEL = ITEMS.register("time_steel", () -> new Item(new Item.Properties()));
+    public static final RegistryEntry<Item> NEW_LOCATION_UPGRADE = ITEMS.register("new_location_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<Item> KNOWLEDGE_REPOSITORY_UPGRADE = ITEMS.register("knowledge_repository_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> CHRONON_BATTERY = ITEMS.register("chronon_battery", () -> new ChrononBatteryItem(new Item.Properties(), 1000));
     public static final RegistryEntry<Item> CHRONON_CELL = ITEMS.register("chronon_cell", () -> new ChrononCellItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));

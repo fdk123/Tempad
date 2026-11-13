@@ -54,6 +54,8 @@ public class Tempad {
         TempadRegistry.BLOCK_ENTITIES.init();
         TempadRegistry.ITEMS.init();
         TempadRegistry.ENTITIES.init();
+        TempadRegistry.RECIPE_SERIALIZERS.init();
+        TempadRegistry.RECIPE_TYPES.init();
         NetworkHandler.register();
 
         if (PlatformUtils.isModLoaded("botarium")) {

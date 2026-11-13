@@ -43,6 +43,8 @@ public class ConsolidatedScreen extends Screen {
     protected final List<TemporaryWidget> temporaryWidgets = new ArrayList<>();
     private final List<LocationData> locations;
     private UUID favorite;
+    private final boolean canSaveLocations;
+    private final boolean hasKnowledgeRepository;
     private LocationData selectedLocation;
     private SelectionList<TextEntry> informationPanel;
     private SelectionList<TextEntry> locationPanel;
@@ -52,10 +54,12 @@ public class ConsolidatedScreen extends Screen {
     private Button deleteButton;
     private Button teleportButton;
 
-    public ConsolidatedScreen(List<LocationData> locations, UUID favorite) {
+    public ConsolidatedScreen(List<LocationData> locations, UUID favorite, boolean canSaveLocations, boolean hasKnowledgeRepository) {
         super(Component.nullToEmpty(""));
         this.locations = locations;
         this.favorite = favorite;
+        this.canSaveLocations = canSaveLocations;
+        this.hasKnowledgeRepository = hasKnowledgeRepository;
     }
 
     @Override
@@ -146,7 +150,8 @@ public class ConsolidatedScreen extends Screen {
         deleteButton.visible = false;
         teleportButton = addRenderableWidget(new TempadButton(cornerX + 94, cornerY + 110, 14, 14, Component.translatable("gui." + Tempad.MODID + ".teleport"), (button) -> teleportAction(), 4));
         teleportButton.visible = false;
-        addRenderableWidget(new TempadButton(cornerX + 208, cornerY + 14, 12, 12, Component.translatable("gui." + Tempad.MODID + ".add_location"), (button) -> openNewLocationModal(), 5)).setTooltip(Tooltip.create(Component.translatable("gui." + Tempad.MODID + ".add_location")));
+        if (canSaveLocations) addRenderableWidget(new TempadButton(cornerX + 208, cornerY + 14, 12, 12, Component.translatable("gui." + Tempad.MODID + ".add_location"), (button) -> openNewLocationModal(), 5)).setTooltip(Tooltip.create(Component.translatable("gui." + Tempad.MODID + ".add_location")));
+        if (hasKnowledgeRepository) addRenderableWidget(Button.builder(Component.literal("?"), button -> minecraft.setScreen(new KnowledgeRepositoryScreen(this))).bounds(cornerX + 111, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("app.tempad.knowledge_repository"))).build());
     }
 
     private void favoriteAction() {

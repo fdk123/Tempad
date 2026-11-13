@@ -8,6 +8,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
+import me.codexadrian.tempad.common.items.TempadUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +44,7 @@ public record AddLocationPacket(String name) implements Packet<AddLocationPacket
         @Override
         public PacketContext handle(AddLocationPacket message) {
             return (player, level) -> {
-                if (!TeleportUtils.hasTempad(player)) return;
+                if (!TeleportUtils.hasTempad(player) || !TempadUpgrades.canSaveLocations(player)) return;
                 UUID uuid = CommonUtils.generate(id -> !TempadLocationHandler.containsLocation(level, player.getUUID(), id), UUID::randomUUID);
                 var tempadLocation = new LocationData(message.name, player.level().dimension(), BlockPos.containing(player.getX(), Math.ceil(player.getY()), player.getZ()), uuid);
                 TempadLocationHandler.addLocation(level, player.getUUID(), tempadLocation);

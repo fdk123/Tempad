@@ -10,6 +10,7 @@ import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
+import me.codexadrian.tempad.common.items.TempadUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -46,7 +47,8 @@ public record OpenTempadByShortcutPacket() implements Packet<OpenTempadByShortcu
         public PacketContext handle(OpenTempadByShortcutPacket message) {
             return (player, level) -> {
                 if (!TeleportUtils.hasTempad(player)) return;
-                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()));
+                var stack = TeleportUtils.findTempad(player);
+                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()), TempadUpgrades.canSaveLocations(player), TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY));
                 NetworkHandler.CHANNEL.sendToPlayer(packet, player);
             };
         }

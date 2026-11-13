@@ -15,6 +15,8 @@ public final class WorkstationOpenerImpl {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider(
             (id, inventory, ignored) -> new WorkstationMenu(id, inventory, new WorkstationMenuContainer(serverPlayer, workstation)),
-            Component.translatable("block.tempad.workstation.menu", workstation.getTempad().isEmpty() ? 0 : 1, workstation.isLocked(), Component.translatable("block.tempad.workstation.status." + workstation.getStatus()))));
+            Component.translatable("block.tempad.workstation.menu", workstation.getTempad().isEmpty() ? 0 : 1, workstation.isLocked(), workstation.isInstallingUpgrade()
+                ? Component.translatable("block.tempad.workstation.installing", workstation.getMaxDownloadTime() - workstation.getDownloadTime(), workstation.getMaxDownloadTime())
+                : Component.translatable("block.tempad.workstation.status." + workstation.getStatus()))));
     }
 }
