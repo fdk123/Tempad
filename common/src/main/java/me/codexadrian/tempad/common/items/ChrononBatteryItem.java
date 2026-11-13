@@ -54,7 +54,7 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
         ItemStack target = slot.getItem();
         if (target == source || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) return false;
         if (!player.level().isClientSide) {
-            ChrononStorage.transfer(source, target, container, getChronons(source));
+            if (ChrononStorage.transfer(source, target, container, getChronons(source)) > 0) slot.setChanged();
         }
         return true;
     }

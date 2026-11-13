@@ -122,6 +122,11 @@ public final class TempadConfig {
     @IntRange(min = 1, max = 64)
     public static int metronomeDistributionRange = 8;
 
+    @ConfigEntry(id = "metronomeTransferRate", type = EntryType.INTEGER, translation = "config.tempad.metronome_transfer_rate")
+    @Comment("Maximum chronons transferred per tick to each adjacent Workstation.")
+    @IntRange(min = 1, max = 1000)
+    public static int metronomeTransferRate = 20;
+
     @ConfigEntry(id = "metronomeRedstonePause", type = EntryType.BOOLEAN, translation = "config.tempad.metronome_redstone_pause")
     @Comment("Whether a redstone signal pauses Metronome generation.")
     public static boolean metronomeRedstonePause = true;

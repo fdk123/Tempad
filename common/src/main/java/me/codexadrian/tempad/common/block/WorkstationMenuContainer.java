@@ -32,7 +32,7 @@ public final class WorkstationMenuContainer implements Container {
     }
     @Override public int getMaxStackSize() { return 1; }
     @Override public boolean canPlaceItem(int slot, ItemStack stack) { return slot == 4 && stack.getItem() instanceof TempadItem && workstation.getTempad().isEmpty() && canOperate(); }
-    @Override public void setChanged() { workstation.setChanged(); }
+    @Override public void setChanged() { workstation.notifyTempadChanged(); }
     @Override public boolean stillValid(Player player) { return this.player == player && canOperate(); }
     @Override public void clearContent() { }
 }

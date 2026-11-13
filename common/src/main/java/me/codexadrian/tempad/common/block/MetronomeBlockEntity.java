@@ -2,10 +2,12 @@ package me.codexadrian.tempad.common.block;
 
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.ConfigCache;
+import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.items.ChrononContainerItem;
 import me.codexadrian.tempad.common.items.ChrononStorage;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -14,6 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public final class MetronomeBlockEntity extends BlockEntity {
@@ -30,6 +35,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
     public static void tick(Level level, BlockPos pos, BlockState state, MetronomeBlockEntity entity) {
         if (level.isClientSide) return;
         if (ConfigCache.metronomeRedstonePause && level.hasNeighborSignal(pos)) return;
+        if (entity.distributeToWorkstations(level)) entity.markChargeChanged();
         if (++entity.ticks < ConfigCache.metronomeGenerationInterval) return;
         entity.ticks = 0;
         entity.chronons = Math.min(entity.getCapacity(), entity.chronons + ConfigCache.metronomeGenerationAmount);
@@ -48,6 +54,29 @@ public final class MetronomeBlockEntity extends BlockEntity {
                 chronons -= moved;
             }
         }
+    }
+
+    private boolean distributeToWorkstations(Level level) {
+        if (chronons <= 0 || owner == null) return false;
+        Set<BlockPos> visited = new HashSet<>();
+        boolean transferred = false;
+        for (Direction direction : Direction.values()) {
+            BlockPos neighbor = worldPosition.relative(direction);
+            BlockPos targetPos = neighbor;
+            if (level.getBlockState(neighbor).is(TempadRegistry.WORKSTATION_CHILD_BLOCK.get())) {
+                Direction facing = level.getBlockState(neighbor).getValue(BlockStateProperties.HORIZONTAL_FACING);
+                targetPos = neighbor.relative(facing.getClockWise());
+            }
+            if (!visited.add(targetPos) || !(level.getBlockEntity(targetPos) instanceof WorkstationBlockEntity workstation)
+                    || !workstation.acceptsChrononsFrom(owner)) continue;
+            int moved = workstation.receiveChronons(Math.min(chronons, Math.max(1, TempadConfig.metronomeTransferRate)));
+            if (moved > 0) {
+                chronons -= moved;
+                transferred = true;
+            }
+            if (chronons <= 0) break;
+        }
+        return transferred;
     }
 
     public boolean receive(ItemStack source) {

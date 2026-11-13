@@ -7,6 +7,7 @@ import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.items.ChrononStorage;
+import me.codexadrian.tempad.common.items.ChrononContainerItem;
 import me.codexadrian.tempad.api.options.impl.TimerOption;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.core.BlockPos;
@@ -35,10 +36,27 @@ public final class WorkstationBlockEntity extends BlockEntity {
 
     public WorkstationBlockEntity(BlockPos pos, BlockState state) { super(TempadRegistry.WORKSTATION_BLOCK_ENTITY.get(), pos, state); }
     public ItemStack getTempad() { return tempad; }
+    public UUID getOwner() { return owner; }
     public boolean isLocked() { return locked; }
     public boolean canAccess(Player player) { return !locked || owner == null || owner.equals(player.getUUID()); }
+    public boolean acceptsChrononsFrom(UUID sourceOwner) {
+        return owner != null && owner.equals(sourceOwner);
+    }
+    public int receiveChronons(int amount) {
+        if (level == null || level.isClientSide || amount <= 0 || !(tempad.getItem() instanceof ChrononContainerItem container)) return 0;
+        int moved = container.insertChronons(tempad, amount);
+        if (moved > 0) markChanged();
+        return moved;
+    }
+    public int receiveFrom(ItemStack source) {
+        if (level == null || level.isClientSide || source == tempad || !(source.getItem() instanceof ChrononContainerItem)
+                || !(tempad.getItem() instanceof ChrononContainerItem container)) return 0;
+        int moved = ChrononStorage.transfer(source, tempad, container, ChrononStorage.get(source));
+        if (moved > 0) markChanged();
+        return moved;
+    }
     public boolean insert(Player player, ItemStack stack) {
-        if (!tempad.isEmpty() || !(stack.getItem() instanceof TempadItem)) return false;
+        if (!canAccess(player) || !tempad.isEmpty() || !(stack.getItem() instanceof TempadItem)) return false;
         tempad = stack.copyWithCount(1); owner = player.getUUID(); markChanged(); return true;
     }
     public ItemStack eject() {
@@ -51,6 +69,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
     }
     public boolean toggleLock(Player player) { if (owner == null || !owner.equals(player.getUUID())) return false; locked = !locked; markChanged(); return locked; }
     private void markChanged() { setChanged(); refreshState(); if (level != null) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock()); } }
+    public void notifyTempadChanged() { markChanged(); }
     public void refreshState() { if (level == null || level.isClientSide) return; BlockState current = getBlockState(); BlockState updated = current.setValue(WorkstationBlock.HAS_TEMPAD, !tempad.isEmpty()).setValue(WorkstationBlock.POWERED, powered); if (updated != current) level.setBlock(worldPosition, updated, 3); }
     public void restoreIdentity(ItemStack stack) { if (!stack.hasTag()) return; CompoundTag tag = stack.getTag(); owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : owner; locked = tag.getBoolean("Locked"); if (tag.contains("Tempad")) tempad = ItemStack.of(tag.getCompound("Tempad")); refreshState(); }
     public void writeIdentity(ItemStack stack) { if (owner != null) stack.getOrCreateTag().putUUID("Owner", owner); stack.getOrCreateTag().putBoolean("Locked", locked); if (!tempad.isEmpty()) stack.getOrCreateTag().put("Tempad", tempad.save(new CompoundTag())); }
