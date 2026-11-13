@@ -34,15 +34,17 @@ public final class WorkstationBlockEntity extends BlockEntity {
     }
     public ItemStack eject() { ItemStack result = tempad; tempad = ItemStack.EMPTY; markChanged(); return result; }
     public boolean toggleLock(Player player) { if (owner == null || !owner.equals(player.getUUID())) return false; locked = !locked; markChanged(); return locked; }
-    private void markChanged() { setChanged(); if (level != null) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock()); } }
-    public void restoreIdentity(ItemStack stack) { if (!stack.hasTag()) return; CompoundTag tag = stack.getTag(); owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : owner; locked = tag.getBoolean("Locked"); if (tag.contains("Tempad")) tempad = ItemStack.of(tag.getCompound("Tempad")); }
+    private void markChanged() { setChanged(); refreshState(); if (level != null) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock()); } }
+    public void refreshState() { if (level == null || level.isClientSide) return; BlockState current = getBlockState(); BlockState updated = current.setValue(WorkstationBlock.HAS_TEMPAD, !tempad.isEmpty()).setValue(WorkstationBlock.POWERED, powered); if (updated != current) level.setBlock(worldPosition, updated, 3); }
+    public void restoreIdentity(ItemStack stack) { if (!stack.hasTag()) return; CompoundTag tag = stack.getTag(); owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : owner; locked = tag.getBoolean("Locked"); if (tag.contains("Tempad")) tempad = ItemStack.of(tag.getCompound("Tempad")); refreshState(); }
     public void writeIdentity(ItemStack stack) { if (owner != null) stack.getOrCreateTag().putUUID("Owner", owner); stack.getOrCreateTag().putBoolean("Locked", locked); if (!tempad.isEmpty()) stack.getOrCreateTag().put("Tempad", tempad.save(new CompoundTag())); }
     public static void tick(Level level, BlockPos pos, BlockState state, WorkstationBlockEntity workstation) {
         if (!(level instanceof ServerLevel serverLevel)) return;
         boolean signal = level.hasNeighborSignal(pos);
-        if (!signal) { workstation.powered = false; return; }
+        if (!signal) { if (workstation.powered) { workstation.powered = false; workstation.refreshState(); } return; }
         if (workstation.powered || workstation.owner == null || workstation.tempad.isEmpty()) return;
         workstation.powered = true;
+        workstation.refreshState();
         if (!(serverLevel.getPlayerByUUID(workstation.owner) instanceof ServerPlayer player)) return;
         if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) return;
         LocationData location = TempadLocationHandler.getLocation(serverLevel, player.getUUID(), TempadLocationHandler.getFavorite(serverLevel, player.getUUID()));

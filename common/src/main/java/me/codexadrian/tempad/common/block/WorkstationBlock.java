@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -32,16 +33,18 @@ import me.codexadrian.tempad.common.registry.TempadRegistry;
 
 public final class WorkstationBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty HAS_TEMPAD = BooleanProperty.create("has_tempad");
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     private static final VoxelShape NORTH_SHAPE = Block.box(0, 0, 1, 14, 4, 15);
     private static final VoxelShape SOUTH_SHAPE = Block.box(2, 0, 1, 16, 4, 15);
     private static final VoxelShape WEST_SHAPE = Block.box(1, 0, 2, 15, 4, 16);
     private static final VoxelShape EAST_SHAPE = Block.box(1, 0, 0, 15, 4, 14);
     public WorkstationBlock(Properties properties) { super(properties); }
-    { registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH)); }
+    { registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_TEMPAD, false).setValue(POWERED, false)); }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new WorkstationBlockEntity(pos, state); }
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) { return level.isClientSide ? null : type == me.codexadrian.tempad.common.registry.TempadRegistry.WORKSTATION_BLOCK_ENTITY.get() ? (level1, pos, state1, entity) -> WorkstationBlockEntity.tick(level1, pos, state1, (WorkstationBlockEntity) entity) : null; }
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING); }
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING, HAS_TEMPAD, POWERED); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection();
         BlockPos child = childPos(context.getClickedPos(), facing);
