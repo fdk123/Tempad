@@ -7,6 +7,7 @@ import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,10 +29,13 @@ public final class WorkstationBlockEntity extends BlockEntity {
     public boolean canAccess(Player player) { return !locked || owner == null || owner.equals(player.getUUID()); }
     public boolean insert(Player player, ItemStack stack) {
         if (!tempad.isEmpty() || !(stack.getItem() instanceof TempadItem)) return false;
-        tempad = stack.copyWithCount(1); owner = player.getUUID(); setChanged(); return true;
+        tempad = stack.copyWithCount(1); owner = player.getUUID(); markChanged(); return true;
     }
-    public ItemStack eject() { ItemStack result = tempad; tempad = ItemStack.EMPTY; setChanged(); return result; }
-    public boolean toggleLock(Player player) { if (owner == null || !owner.equals(player.getUUID())) return false; locked = !locked; setChanged(); return locked; }
+    public ItemStack eject() { ItemStack result = tempad; tempad = ItemStack.EMPTY; markChanged(); return result; }
+    public boolean toggleLock(Player player) { if (owner == null || !owner.equals(player.getUUID())) return false; locked = !locked; markChanged(); return locked; }
+    private void markChanged() { setChanged(); if (level != null) { level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3); level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock()); } }
+    public void restoreIdentity(ItemStack stack) { if (!stack.hasTag()) return; CompoundTag tag = stack.getTag(); owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : owner; locked = tag.getBoolean("Locked"); if (tag.contains("Tempad")) tempad = ItemStack.of(tag.getCompound("Tempad")); }
+    public void writeIdentity(ItemStack stack) { if (owner != null) stack.getOrCreateTag().putUUID("Owner", owner); stack.getOrCreateTag().putBoolean("Locked", locked); if (!tempad.isEmpty()) stack.getOrCreateTag().put("Tempad", tempad.save(new CompoundTag())); }
     public static void tick(Level level, BlockPos pos, BlockState state, WorkstationBlockEntity workstation) {
         if (!(level instanceof ServerLevel serverLevel)) return;
         boolean signal = level.hasNeighborSignal(pos);
@@ -45,6 +49,8 @@ public final class WorkstationBlockEntity extends BlockEntity {
         if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player, workstation.tempad);
         TempadItem.summonTimeDoor(location, player, 0);
     }
+    @Override public CompoundTag getUpdateTag() { CompoundTag tag = new CompoundTag(); saveAdditional(tag); return tag; }
+    @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
     @Override protected void saveAdditional(CompoundTag tag) { super.saveAdditional(tag); if (!tempad.isEmpty()) tag.put("Tempad", tempad.save(new CompoundTag())); if (owner != null) tag.putUUID("Owner", owner); tag.putBoolean("Locked", locked); tag.putBoolean("Powered", powered); }
     @Override public void load(CompoundTag tag) { super.load(tag); tempad = tag.contains("Tempad") ? ItemStack.of(tag.getCompound("Tempad")) : ItemStack.EMPTY; owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null; locked = tag.getBoolean("Locked"); powered = tag.getBoolean("Powered"); }
 }
