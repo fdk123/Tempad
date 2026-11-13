@@ -26,6 +26,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
 
     public WorkstationBlockEntity(BlockPos pos, BlockState state) { super(TempadRegistry.WORKSTATION_BLOCK_ENTITY.get(), pos, state); }
     public ItemStack getTempad() { return tempad; }
+    public boolean isLocked() { return locked; }
     public boolean canAccess(Player player) { return !locked || owner == null || owner.equals(player.getUUID()); }
     public boolean insert(Player player, ItemStack stack) {
         if (!tempad.isEmpty() || !(stack.getItem() instanceof TempadItem)) return false;

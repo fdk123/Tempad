@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.Block;
+import me.codexadrian.tempad.common.utils.WorkstationOpener;
 
 public final class WorkstationBlock extends BaseEntityBlock {
     public WorkstationBlock(Properties properties) { super(properties); }
@@ -45,8 +46,8 @@ public final class WorkstationBlock extends BaseEntityBlock {
         if (!workstation.canAccess(player)) { player.displayClientMessage(Component.translatable("block.tempad.workstation.locked"), true); return InteractionResult.FAIL; }
         if (player.isShiftKeyDown() && !workstation.getTempad().isEmpty()) { workstation.toggleLock(player); return InteractionResult.CONSUME; }
         ItemStack held = player.getItemInHand(hand);
+        if (held.isEmpty()) { WorkstationOpener.open(player, workstation); return InteractionResult.CONSUME; }
         if (workstation.getTempad().isEmpty() && workstation.insert(player, held)) { held.shrink(1); return InteractionResult.CONSUME; }
-        if (held.isEmpty() && !workstation.getTempad().isEmpty()) { player.setItemInHand(hand, workstation.eject()); return InteractionResult.CONSUME; }
         return InteractionResult.PASS;
     }
 }
