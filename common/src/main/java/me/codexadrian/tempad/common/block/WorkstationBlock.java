@@ -14,12 +14,25 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.block.Block;
 
 public final class WorkstationBlock extends BaseEntityBlock {
     public WorkstationBlock(Properties properties) { super(properties); }
     @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) { return new WorkstationBlockEntity(pos, state); }
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) { return level.isClientSide ? null : type == me.codexadrian.tempad.common.registry.TempadRegistry.WORKSTATION_BLOCK_ENTITY.get() ? (level1, pos, state1, entity) -> WorkstationBlockEntity.tick(level1, pos, state1, (WorkstationBlockEntity) entity) : null; }
     @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+    @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && !level.isClientSide && level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation) {
+            ItemStack stored = workstation.eject();
+            if (!stored.isEmpty()) Block.popResource(level, pos, stored);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+    @Override public boolean hasAnalogOutputSignal(BlockState state) { return true; }
+    @Override public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        if (!(level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation)) return 0;
+        return workstation.getTempad().isEmpty() ? 0 : 15;
+    }
     @Override public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof WorkstationBlockEntity workstation)) return InteractionResult.PASS;
         if (level.isClientSide) return InteractionResult.SUCCESS;
