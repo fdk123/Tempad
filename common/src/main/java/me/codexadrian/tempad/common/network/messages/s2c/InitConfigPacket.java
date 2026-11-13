@@ -26,7 +26,8 @@ public record InitConfigPacket(
     int metronomeCapacity,
     int metronomeGenerationInterval,
     int metronomeGenerationAmount,
-    int metronomeDistributionRange
+    int metronomeDistributionRange,
+    boolean metronomeRedstonePause
 ) implements Packet<InitConfigPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "sync_config");
@@ -63,6 +64,7 @@ public record InitConfigPacket(
             buffer.writeInt(message.metronomeGenerationInterval);
             buffer.writeInt(message.metronomeGenerationAmount);
             buffer.writeInt(message.metronomeDistributionRange);
+            buffer.writeBoolean(message.metronomeRedstonePause);
         }
 
         @Override
@@ -85,7 +87,8 @@ public record InitConfigPacket(
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
-                buffer.readInt()
+                buffer.readInt(),
+                buffer.readBoolean()
             );
         }
 
@@ -110,6 +113,7 @@ public record InitConfigPacket(
                 ConfigCache.metronomeGenerationInterval = message.metronomeGenerationInterval;
                 ConfigCache.metronomeGenerationAmount = message.metronomeGenerationAmount;
                 ConfigCache.metronomeDistributionRange = message.metronomeDistributionRange;
+                ConfigCache.metronomeRedstonePause = message.metronomeRedstonePause;
             };
         }
     }

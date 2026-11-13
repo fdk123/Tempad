@@ -28,6 +28,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, MetronomeBlockEntity entity) {
         if (level.isClientSide) return;
+        if (ConfigCache.metronomeRedstonePause && level.hasNeighborSignal(pos)) return;
         if (++entity.ticks < ConfigCache.metronomeGenerationInterval) return;
         entity.ticks = 0;
         entity.chronons = Math.min(entity.getCapacity(), entity.chronons + ConfigCache.metronomeGenerationAmount);

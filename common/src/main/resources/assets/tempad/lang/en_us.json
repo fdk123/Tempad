@@ -89,4 +89,5 @@
   ,"config.tempad.metronome_generation_interval": "Metronome generation interval"
   ,"config.tempad.metronome_generation_amount": "Metronome generation amount"
   ,"config.tempad.metronome_distribution_range": "Metronome distribution range"
+  ,"config.tempad.metronome_redstone_pause": "Pause Metronome on redstone signal"
 }

@@ -80,7 +80,8 @@ public class ForgeTempad {
                 TempadConfig.metronomeCapacity,
                 TempadConfig.metronomeGenerationInterval,
                 TempadConfig.metronomeGenerationAmount,
-                TempadConfig.metronomeDistributionRange), event.getEntity());
+                TempadConfig.metronomeDistributionRange,
+                TempadConfig.metronomeRedstonePause), event.getEntity());
         });
     }
 

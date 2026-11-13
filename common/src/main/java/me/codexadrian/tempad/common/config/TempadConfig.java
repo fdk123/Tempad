@@ -122,6 +122,10 @@ public final class TempadConfig {
     @IntRange(min = 1, max = 64)
     public static int metronomeDistributionRange = 8;
 
+    @ConfigEntry(id = "metronomeRedstonePause", type = EntryType.BOOLEAN, translation = "config.tempad.metronome_redstone_pause")
+    @Comment("Whether a redstone signal pauses Metronome generation.")
+    public static boolean metronomeRedstonePause = true;
+
     @ConfigEntry(id = "timedoorFuelType", type = EntryType.STRING, translation = "config.tempad.timedoor_fuel_type")
     @Comment("The type of fuel that the timedoor will consume.")
     public static String tempadFuelType = "tempad:timer";
