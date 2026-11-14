@@ -25,14 +25,14 @@ public final class PlayerLocationAccessImpl {
         return false;
     }
 
-    public static boolean sameFtbTeam(ServerPlayer owner, UUID accessor) {
+    public static boolean sameFtbTeam(UUID owner, UUID accessor) {
         if (!ModList.get().isLoaded("ftbteams")) return false;
         try {
             Class<?> apiClass = Class.forName("dev.ftb.mods.ftbteams.FTBTeamsAPIImpl");
             Object api = apiClass.getField("INSTANCE").get(null);
             Object manager = apiClass.getMethod("getManager").invoke(api);
             return Boolean.TRUE.equals(manager.getClass().getMethod("arePlayersInSameTeam", UUID.class, UUID.class)
-                .invoke(manager, owner.getUUID(), accessor));
+                .invoke(manager, owner, accessor));
         } catch (ReflectiveOperationException | RuntimeException missingApi) {
             return false;
         }

@@ -3,6 +3,7 @@ package me.codexadrian.tempad.client.gui;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.c2s.UpdateMarkerPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenMarkerScreenPacket;
+import me.codexadrian.tempad.common.utils.PlatformUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -20,6 +21,7 @@ public final class MarkerEditScreen extends Screen {
     private EditBox offset;
     private EditBox angle;
     private boolean publicAccess;
+    private String accessMode;
     private boolean locked;
     private Button accessButton;
     private Button lockButton;
@@ -27,7 +29,8 @@ public final class MarkerEditScreen extends Screen {
     public MarkerEditScreen(OpenMarkerScreenPacket marker) {
         super(Component.translatable(marker.chronomark() ? "block.tempad.chronomark" : "block.tempad.timedoor_marker"));
         this.marker = marker;
-        this.publicAccess = marker.publicAccess();
+        this.accessMode = marker.accessMode();
+        this.publicAccess = marker.chronomark() ? "public".equals(accessMode) : marker.publicAccess();
         this.locked = marker.locked();
     }
 
@@ -37,7 +40,17 @@ public final class MarkerEditScreen extends Screen {
         name = field(x + 110, y + 28, 130, marker.name(), 48);
         color = field(x + 110, y + 53, 130, String.format("#%06X", marker.color() & 0xFFFFFF), 7);
         accessButton = addRenderableWidget(Button.builder(accessLabel(), button -> {
-            publicAccess = !publicAccess;
+            if (marker.chronomark()) {
+                accessMode = switch (accessMode) {
+                    case "private" -> "public";
+                    case "public" -> PlatformUtils.isModLoaded("ftbteams") ? "ftbteams" : "private";
+                    default -> "private";
+                };
+                publicAccess = "public".equals(accessMode);
+            } else {
+                publicAccess = !publicAccess;
+                accessMode = publicAccess ? "public" : "private";
+            }
             accessButton.setMessage(accessLabel());
         }).bounds(x + 110, y + 78, 130, 20).build());
         lockButton = addRenderableWidget(Button.builder(lockLabel(), button -> {
@@ -60,7 +73,7 @@ public final class MarkerEditScreen extends Screen {
         return addRenderableWidget(box);
     }
 
-    private Component accessLabel() { return Component.translatable(publicAccess ? "screen.tempad.marker.public" : "screen.tempad.marker.private"); }
+    private Component accessLabel() { return Component.translatable("screen.tempad.marker." + (marker.chronomark() ? accessMode : publicAccess ? "public" : "private")); }
     private Component lockLabel() { return Component.translatable(locked ? "screen.tempad.marker.locked" : "screen.tempad.marker.unlocked"); }
 
     private void save() {
@@ -72,7 +85,7 @@ public final class MarkerEditScreen extends Screen {
             try { yOffset = Float.parseFloat(offset.getValue()); } catch (NumberFormatException ignored) {}
             try { yaw = Integer.parseInt(angle.getValue()); } catch (NumberFormatException ignored) {}
         }
-        NetworkHandler.CHANNEL.sendToServer(new UpdateMarkerPacket(marker.pos(), name.getValue(), rgb, publicAccess, locked, yOffset, yaw));
+        NetworkHandler.CHANNEL.sendToServer(new UpdateMarkerPacket(marker.pos(), name.getValue(), rgb, publicAccess, accessMode, locked, yOffset, yaw));
         onClose();
     }
 

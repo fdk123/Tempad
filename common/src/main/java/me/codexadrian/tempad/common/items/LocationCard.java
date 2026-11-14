@@ -78,6 +78,10 @@ public class LocationCard extends Item {
                 return InteractionResultHolder.fail(player.getItemInHand(usedHand));
             }
             if (location != null) {
+                if (player.getItemInHand(usedHand).hasTag() && player.getItemInHand(usedHand).getTag().hasUUID("MarkerId")) {
+                    player.displayClientMessage(Component.translatable("item.tempad.location_card.marker_live"), true);
+                    return InteractionResultHolder.success(player.getItemInHand(usedHand));
+                }
                 TempadLocationHandler.addLocation(level, player.getUUID(), location);
                 player.getItemInHand(usedHand).shrink(1);
                 player.displayClientMessage(Component.translatable("item.tempad.location_card.added_location", Component.literal(location.getName()).withStyle(ChatFormatting.GOLD)), true);

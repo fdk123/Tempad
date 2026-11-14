@@ -16,17 +16,29 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Cross-dimensional, persisted index of both 3.0 marker types. */
 public final class MarkerIndex extends SavedData {
     private final Map<UUID, Entry> markers = new HashMap<>();
+    private final Set<UUID> knownMarkerIds = new HashSet<>();
 
     public record Entry(UUID id, ResourceKey<Level> dimension, BlockPos blockPos, UUID owner,
                         String name, int color, boolean publicAccess, boolean locked,
-                        boolean chronomark, Direction facing, boolean ceiling, float yOffset, int angle) {
-        public boolean visibleTo(UUID player) { return publicAccess || owner.equals(player); }
+                        boolean chronomark, Direction facing, boolean ceiling, float yOffset, int angle,
+                        String accessMode) {
+        public boolean visibleTo(Level level, UUID player) {
+            if (owner.equals(player)) return true;
+            if (!chronomark) return publicAccess;
+            return switch (accessMode) {
+                case "public" -> true;
+                case "ftbteams" -> PlayerLocationAccess.sameFtbTeam(owner, player);
+                default -> false;
+            };
+        }
 
         public LocationData location() {
             Vec3 arrival;
@@ -58,6 +70,7 @@ public final class MarkerIndex extends SavedData {
             tag.putBoolean("Ceiling", ceiling);
             tag.putFloat("YOffset", yOffset);
             tag.putInt("Angle", angle);
+            tag.putString("AccessMode", accessMode);
             return tag;
         }
 
@@ -70,8 +83,14 @@ public final class MarkerIndex extends SavedData {
                     BlockPos.of(tag.getLong("Pos")), tag.getUUID("Owner"), tag.getString("Name"),
                     tag.getInt("Color"), tag.getBoolean("Public"), tag.getBoolean("Locked"),
                     tag.getBoolean("Chronomark"), Direction.from2DDataValue(tag.getInt("Facing")),
-                    tag.getBoolean("Ceiling"), tag.getFloat("YOffset"), tag.getInt("Angle"));
+                    tag.getBoolean("Ceiling"), tag.getFloat("YOffset"), tag.getInt("Angle"),
+                    savedAccessMode(tag));
             } catch (RuntimeException malformed) { return null; }
+        }
+
+        private static String savedAccessMode(CompoundTag tag) {
+            String mode = tag.contains("AccessMode") ? tag.getString("AccessMode") : tag.getBoolean("Public") ? "public" : "private";
+            return "public".equals(mode) || "ftbteams".equals(mode) ? mode : "private";
         }
     }
 
@@ -81,7 +100,14 @@ public final class MarkerIndex extends SavedData {
         MarkerIndex index = new MarkerIndex();
         for (Tag entry : tag.getList("Markers", Tag.TAG_COMPOUND)) {
             Entry marker = Entry.load((CompoundTag) entry);
-            if (marker != null) index.markers.put(marker.id(), marker);
+            if (marker != null) {
+                index.markers.put(marker.id(), marker);
+                index.knownMarkerIds.add(marker.id());
+            }
+        }
+        for (String id : tag.getCompound("KnownMarkerIds").getAllKeys()) {
+            try { index.knownMarkerIds.add(UUID.fromString(id)); }
+            catch (IllegalArgumentException malformed) { /* Ignore invalid saved identifiers. */ }
         }
         return index;
     }
@@ -90,6 +116,9 @@ public final class MarkerIndex extends SavedData {
         ListTag entries = new ListTag();
         markers.values().forEach(marker -> entries.add(marker.save()));
         tag.put("Markers", entries);
+        CompoundTag known = new CompoundTag();
+        knownMarkerIds.forEach(id -> known.putBoolean(id.toString(), true));
+        tag.put("KnownMarkerIds", known);
         return tag;
     }
 
@@ -102,15 +131,21 @@ public final class MarkerIndex extends SavedData {
         MarkerIndex index = get(level);
         Map<UUID, LocationData> visible = new HashMap<>();
         if (index != null) index.markers.forEach((id, marker) -> {
-            if (marker.visibleTo(player)) visible.put(id, marker.location());
+            if (marker.visibleTo(level, player)) visible.put(id, marker.location());
         });
         return visible;
+    }
+
+    /** Includes removed markers so legacy imported card snapshots cannot bypass a revoked link. */
+    public static boolean isKnownMarker(Level level, UUID id) {
+        MarkerIndex index = get(level);
+        return index != null && index.knownMarkerIds.contains(id);
     }
 
     @Nullable public static LocationData resolve(Level level, UUID player, UUID id) {
         MarkerIndex index = get(level);
         Entry entry = index == null ? null : index.markers.get(id);
-        return entry != null && entry.visibleTo(player) ? entry.location() : null;
+        return entry != null && entry.visibleTo(level, player) ? entry.location() : null;
     }
 
     public static void publish(TimedoorMarkerBlockEntity marker) {
@@ -124,6 +159,7 @@ public final class MarkerIndex extends SavedData {
             marker.setMarkerId(id);
         }
         index.markers.put(id, marker.snapshot());
+        index.knownMarkerIds.add(id);
         index.setDirty();
     }
 
@@ -133,6 +169,7 @@ public final class MarkerIndex extends SavedData {
         Entry current = index.markers.get(id);
         if (current != null && current.dimension().equals(level.dimension()) && current.blockPos().equals(pos)) {
             index.markers.remove(id);
+            index.knownMarkerIds.add(id);
             index.setDirty();
         }
     }

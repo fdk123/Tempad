@@ -90,8 +90,15 @@ Use a Location Card on a marker to bind it to the marker ID. Cards exported
 from the Tempad retain the link, and Projectors carrying those cards resolve
 the current marker position every time they open a portal. Removing the marker
 invalidates its link. The marker settings screen and network handler validate
-distance and edit access on the server. Owner-only and public access are
-available. The block and item models use vanilla textures and new geometry.
+distance and edit access on the server. The regular marker has owner-only and
+public access; Chronomark also supports the owner's FTB Team when FTB Teams is
+installed. Existing public/private settings migrate to the new access mode.
+An open Timedoor follows its marker and closes if access is revoked or the
+marker is removed. Linked cards are not imported as fixed coordinates into
+the Tempad: accessible markers already appear through the marker provider.
+The index remembers removed marker IDs to suppress stale snapshots imported
+by earlier builds when the marker ID is known to the index. The block and item
+models use vanilla textures and new geometry.
 
 ### Time Twister and travel history (Forge 1.20.1)
 

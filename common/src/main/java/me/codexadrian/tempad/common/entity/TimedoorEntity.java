@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.MarkerIndex;
 import me.codexadrian.tempad.common.data.PlayerLocationHandler;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
@@ -45,6 +46,7 @@ public class TimedoorEntity extends Entity {
     private LocationData locationData = null;
     private UUID owner = null;
     private UUID targetPlayer = null;
+    private UUID targetMarker = null;
     private UUID linkedPortalId = null;
     private TimedoorEntity linkedPortalEntity = null;
     private int lifetimeTicks = TempadConfig.timedoorWait;
@@ -68,6 +70,7 @@ public class TimedoorEntity extends Entity {
         lifetimeTicks = compoundTag.contains("lifetime_ticks") ? Math.max(1, compoundTag.getInt("lifetime_ticks")) : TempadConfig.timedoorWait;
         if (compoundTag.hasUUID("owner")) this.setOwner(compoundTag.getUUID("owner"));
         if (compoundTag.hasUUID("target_player")) this.setTargetPlayer(compoundTag.getUUID("target_player"));
+        if (compoundTag.hasUUID("target_marker")) this.setTargetMarker(compoundTag.getUUID("target_marker"));
         this.setColor(compoundTag.getInt("outline_color"));
         this.setFloorMode(compoundTag.getBoolean("floor_mode"));
         if (compoundTag.contains("linked_portal")) {
@@ -84,6 +87,7 @@ public class TimedoorEntity extends Entity {
         compoundTag.putInt("lifetime_ticks", lifetimeTicks);
         if (owner != null) compoundTag.putUUID("owner", getOwner());
         if (targetPlayer != null) compoundTag.putUUID("target_player", targetPlayer);
+        if (targetMarker != null) compoundTag.putUUID("target_marker", targetMarker);
         compoundTag.putInt("outline_color", getColor());
         compoundTag.putBoolean("floor_mode", isFloorMode());
         if (getLinkedPortalId() != null) {
@@ -99,7 +103,7 @@ public class TimedoorEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide() && targetPlayer != null && !refreshPlayerTarget()) {
+        if (!level().isClientSide() && (targetPlayer != null || targetMarker != null) && !refreshDynamicTarget()) {
             if (tickCount > getClosingTime() + ANIMATION_LENGTH) discard();
             return;
         }
@@ -173,11 +177,13 @@ public class TimedoorEntity extends Entity {
     }
 
     public void setTargetPlayer(@Nullable UUID player) { targetPlayer = player; }
+    public void setTargetMarker(@Nullable UUID marker) { targetMarker = marker; }
 
-    private boolean refreshPlayerTarget() {
+    private boolean refreshDynamicTarget() {
         if (!(level() instanceof ServerLevel serverLevel) || owner == null) return closeUnreachableTarget();
         var accessor = serverLevel.getServer().getPlayerList().getPlayer(owner);
-        LocationData live = PlayerLocationHandler.live(serverLevel, owner, targetPlayer);
+        LocationData live = targetPlayer != null ? PlayerLocationHandler.live(serverLevel, owner, targetPlayer)
+            : MarkerIndex.resolve(serverLevel, owner, targetMarker);
         if (accessor == null || live == null || !TeleportUtils.mayTeleport(live.getLevelKey(), accessor))
             return closeUnreachableTarget();
         setLocation(live);

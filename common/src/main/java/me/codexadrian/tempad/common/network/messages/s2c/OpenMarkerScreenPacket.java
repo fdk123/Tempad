@@ -10,7 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public record OpenMarkerScreenPacket(BlockPos pos, boolean chronomark, String name, int color,
-                                     boolean publicAccess, boolean locked, float yOffset, int angle) implements Packet<OpenMarkerScreenPacket> {
+                                     boolean publicAccess, String accessMode, boolean locked, float yOffset, int angle) implements Packet<OpenMarkerScreenPacket> {
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "open_marker");
     public static final PacketHandler<OpenMarkerScreenPacket> HANDLER = new Handler();
     @Override public ResourceLocation getID() { return ID; }
@@ -23,6 +23,7 @@ public record OpenMarkerScreenPacket(BlockPos pos, boolean chronomark, String na
             buffer.writeUtf(message.name, 64);
             buffer.writeInt(message.color);
             buffer.writeBoolean(message.publicAccess);
+            buffer.writeUtf(message.accessMode, 24);
             buffer.writeBoolean(message.locked);
             buffer.writeFloat(message.yOffset);
             buffer.writeInt(message.angle);
@@ -30,7 +31,7 @@ public record OpenMarkerScreenPacket(BlockPos pos, boolean chronomark, String na
 
         @Override public OpenMarkerScreenPacket decode(FriendlyByteBuf buffer) {
             return new OpenMarkerScreenPacket(buffer.readBlockPos(), buffer.readBoolean(), buffer.readUtf(64),
-                buffer.readInt(), buffer.readBoolean(), buffer.readBoolean(), buffer.readFloat(), buffer.readInt());
+                buffer.readInt(), buffer.readBoolean(), buffer.readUtf(24), buffer.readBoolean(), buffer.readFloat(), buffer.readInt());
         }
 
         @Override public PacketContext handle(OpenMarkerScreenPacket message) { return (player, level) -> ClientUtils.openMarkerScreen(message); }

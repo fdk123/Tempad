@@ -59,6 +59,7 @@ public class TempadLocationHandler extends SaveHandler {
     public static Map<UUID, LocationData> getLocations(Level level, UUID player) {
         TempadLocationHandler handler = read(level);
         Map<UUID, LocationData> orDefault = new HashMap<>(handler.locations.getOrDefault(player, Collections.emptyMap()));
+        orDefault.keySet().removeIf(id -> MarkerIndex.isKnownMarker(level, id));
         LocationsApi.gatherLocations(level, player, orDefault);
         return orDefault;
     }

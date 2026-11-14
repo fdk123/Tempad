@@ -17,7 +17,7 @@ public final class PlayerLocationAccess {
         if (!(stack.getItem() instanceof ScreeningDeviceItem)) return false;
         return switch (ScreeningDeviceItem.mode(stack)) {
             case ScreeningDeviceItem.PUBLIC -> true;
-            case ScreeningDeviceItem.FTB_TEAMS -> sameFtbTeam(owner, accessor);
+            case ScreeningDeviceItem.FTB_TEAMS -> sameFtbTeam(owner.getUUID(), accessor);
             default -> false;
         };
     }
@@ -34,7 +34,7 @@ public final class PlayerLocationAccess {
         throw new AssertionError("Platform implementation missing");
     }
 
-    @ExpectPlatform public static boolean sameFtbTeam(ServerPlayer owner, UUID accessor) {
+    @ExpectPlatform public static boolean sameFtbTeam(UUID owner, UUID accessor) {
         throw new AssertionError("Platform implementation missing");
     }
 }
