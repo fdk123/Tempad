@@ -33,7 +33,7 @@ public final class TimeTwisterItem extends Item implements ChrononContainerItem 
                 return InteractionResultHolder.fail(stack);
             }
             NetworkHandler.CHANNEL.sendToPlayer(new OpenTimeTwisterPacket(
-                TravelHistoryData.get(serverPlayer).relevant(player.getUUID()), false, ChrononStorage.get(stack), cost), player);
+                TravelHistoryData.get(serverPlayer).relevant(player.getUUID()), false, ChrononStorage.get(stack), cost, null), player);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }

@@ -112,6 +112,19 @@ then the Twister reserve. An installed Twister adds a Timeline button to the
 Tempad screen. The timeline uses a compact text interface in this backport;
 the 3.0 radial artwork is not included.
 
+### Tempad settings and quick actions (Forge 1.20.1)
+
+Each Tempad now keeps its own start app, quick action and location ordering in
+item NBT. The settings screen offers Locations, the installed Time Twister's
+Timeline, or the installed Knowledge Repository as the start app. The existing
+quick action key can open the favorite Timedoor or be disabled. Locations can be
+sorted by name, dimension or type. Unavailable apps fall back to Locations, and
+the server restricts received settings to known values. Each settings packet
+identifies the exact Tempad that opened the screen, so carrying more than one
+does not edit or drain the wrong device. The 3.0 app and macro
+registries are represented by these currently available Forge 1.20.1 actions;
+future apps can extend the setting list as they are ported.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |

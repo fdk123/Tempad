@@ -11,10 +11,22 @@ import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public record OpenFavoritedLocationPacket(int color) implements Packet<OpenFavoritedLocationPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "shortcut_favorited");
+
+    public static void openFavorite(Player player, Level level, int color) {
+        if (TempadLocationHandler.getFavorite(level, player.getUUID()) == null) return;
+        ItemStack tempadStack = TeleportUtils.findTempad(player);
+        LocationData locationData = TempadLocationHandler.getLocation(level, player.getUUID(), TempadLocationHandler.getFavorite(level, player.getUUID()));
+        if (locationData != null && tempadStack.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(player, tempadStack) && TeleportUtils.mayTeleport(locationData.getLevelKey(), player)) {
+            if (!player.getAbilities().instabuild) tempadItem.getOption().onTimedoorOpen(player);
+            TempadItem.summonTimeDoor(locationData, player, color);
+        }
+    }
 
     @Override
     public ResourceLocation getID() {
@@ -40,14 +52,7 @@ public record OpenFavoritedLocationPacket(int color) implements Packet<OpenFavor
 
         @Override
         public PacketContext handle(OpenFavoritedLocationPacket message) {
-            return (player, level) -> {
-                ItemStack tempadStack = TeleportUtils.findTempad(player);
-                LocationData locationData = TempadLocationHandler.getLocation(level, player.getUUID(), TempadLocationHandler.getFavorite(level, player.getUUID()));
-                if (locationData != null && tempadStack.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(player, tempadStack) && TeleportUtils.mayTeleport(locationData.getLevelKey(), player)) {
-                    if (!player.getAbilities().instabuild) tempadItem.getOption().onTimedoorOpen(player);
-                    TempadItem.summonTimeDoor(locationData, player, message.color);
-                }
-            };
+            return (player, level) -> openFavorite(player, level, message.color);
         }
     }
 }

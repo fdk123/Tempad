@@ -3,6 +3,7 @@ package me.codexadrian.tempad.client.gui;
 import me.codexadrian.tempad.common.data.TravelHistoryData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.c2s.BacktrackPacket;
+import me.codexadrian.tempad.common.network.messages.c2s.RequestTempadMainPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -35,7 +36,7 @@ public final class TimeTwisterScreen extends Screen {
             Component marker = entry.marker() == null ? Component.empty() : Component.translatable("history.tempad." + entry.marker().getPath());
             Component label = Component.literal(DATE.format(Instant.ofEpochMilli(entry.time())) + "  ").append(marker);
             Button button = addRenderableWidget(Button.builder(label, ignored -> {
-                NetworkHandler.CHANNEL.sendToServer(new BacktrackPacket(entry.time(), data.embedded()));
+                NetworkHandler.CHANNEL.sendToServer(new BacktrackPacket(entry.time(), data.embedded(), data.deviceId()));
                 onClose();
             }).bounds(x, y + 39 + i * 21, 300, 20).build());
             button.active = enough;
@@ -45,6 +46,10 @@ public final class TimeTwisterScreen extends Screen {
         }
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), ignored -> onClose())
             .bounds(width / 2 - 40, y + 209, 80, 20).build());
+        if (data.embedded()) addRenderableWidget(Button.builder(Component.translatable("item.tempad.tempad"), ignored -> {
+            NetworkHandler.CHANNEL.sendToServer(new RequestTempadMainPacket(data.deviceId()));
+            onClose();
+        }).bounds(x, y + 209, 80, 20).build());
     }
 
     @Override public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {

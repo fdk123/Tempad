@@ -67,4 +67,17 @@
   "guide.tempad.page.2.body": "Заряжайте Tempad от батареи или метронома. Метроном также заряжает соседнюю рабочую станцию того же владельца. Сигнал редстоуна открывает портал станции к избранной точке.",
   "guide.tempad.page.3.title": "Улучшения",
   "guide.tempad.page.3.body": "Поместите Tempad в рабочую станцию и примените к ней предмет улучшения. Дождитесь завершения загрузки, прежде чем забрать устройство. Установленные улучшения сохраняются на Tempad."
+  ,"screen.tempad.settings.title": "Настройки Темпада"
+  ,"screen.tempad.settings.app": "Стартовое приложение: %s"
+  ,"screen.tempad.settings.app.locations": "Точки"
+  ,"screen.tempad.settings.app.timeline": "История"
+  ,"screen.tempad.settings.app.guide": "Справочник"
+  ,"screen.tempad.settings.macro": "Быстрое действие: %s"
+  ,"screen.tempad.settings.macro.favorite": "Дверь к избранной точке"
+  ,"screen.tempad.settings.macro.none": "Отключено"
+  ,"screen.tempad.settings.order": "Сортировка точек: %s"
+  ,"screen.tempad.settings.order.alphabetical": "По алфавиту"
+  ,"screen.tempad.settings.order.dimension": "По измерению"
+  ,"screen.tempad.settings.order.type": "По типу"
+  ,"key.tempad.favorite": "Быстрое действие Темпада"
 }

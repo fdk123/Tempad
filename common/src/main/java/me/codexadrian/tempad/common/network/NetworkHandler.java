@@ -25,6 +25,9 @@ public class NetworkHandler {
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, UpdateMarkerPacket.ID, UpdateMarkerPacket.HANDLER, UpdateMarkerPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, RequestTimeTwisterPacket.ID, RequestTimeTwisterPacket.HANDLER, RequestTimeTwisterPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, BacktrackPacket.ID, BacktrackPacket.HANDLER, BacktrackPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, SaveTempadSettingsPacket.ID, SaveTempadSettingsPacket.HANDLER, SaveTempadSettingsPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, UseTempadMacroPacket.ID, UseTempadMacroPacket.HANDLER, UseTempadMacroPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, RequestTempadMainPacket.ID, RequestTempadMainPacket.HANDLER, RequestTempadMainPacket.class);
 
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, InitConfigPacket.ID, InitConfigPacket.HANDLER, InitConfigPacket.class);
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenTempadScreenPacket.ID, OpenTempadScreenPacket.HANDLER, OpenTempadScreenPacket.class);

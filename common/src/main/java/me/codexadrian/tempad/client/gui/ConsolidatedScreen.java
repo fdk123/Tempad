@@ -11,6 +11,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.ConfigCache;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
+import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.items.TempadItem;
 import me.codexadrian.tempad.common.network.messages.c2s.*;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,13 +57,29 @@ public class ConsolidatedScreen extends Screen {
     private Button deleteButton;
     private Button teleportButton;
 
-    public ConsolidatedScreen(List<LocationData> locations, UUID favorite, boolean canSaveLocations, boolean hasKnowledgeRepository, boolean hasTimeTwister) {
+    private final String defaultApp;
+    private final String defaultMacro;
+    private final String locationOrder;
+    private final UUID deviceId;
+
+    public ConsolidatedScreen(OpenTempadScreenPacket packet) {
         super(Component.nullToEmpty(""));
-        this.locations = locations;
-        this.favorite = favorite;
-        this.canSaveLocations = canSaveLocations;
-        this.hasKnowledgeRepository = hasKnowledgeRepository;
-        this.hasTimeTwister = hasTimeTwister;
+        this.locations = new ArrayList<>(packet.locationData());
+        this.favorite = packet.favorite();
+        this.canSaveLocations = packet.canSaveLocations();
+        this.hasKnowledgeRepository = packet.hasKnowledgeRepository();
+        this.hasTimeTwister = packet.hasTimeTwister();
+        this.defaultApp = packet.defaultApp();
+        this.defaultMacro = packet.defaultMacro();
+        this.locationOrder = packet.locationOrder();
+        this.deviceId = packet.deviceId();
+        Comparator<LocationData> names = Comparator.comparing(LocationData::getName, String.CASE_INSENSITIVE_ORDER);
+        Comparator<LocationData> ordering = switch (locationOrder) {
+            case "dimension" -> Comparator.comparing((LocationData location) -> location.getLevelKey() == null ? "" : location.getLevelKey().location().toString()).thenComparing(names);
+            case "type" -> Comparator.comparing(LocationData::isDeletable).reversed().thenComparing(names);
+            default -> names;
+        };
+        this.locations.sort(ordering);
     }
 
     @Override
@@ -155,9 +173,11 @@ public class ConsolidatedScreen extends Screen {
         if (canSaveLocations) addRenderableWidget(new TempadButton(cornerX + 208, cornerY + 14, 12, 12, Component.translatable("gui." + Tempad.MODID + ".add_location"), (button) -> openNewLocationModal(), 5)).setTooltip(Tooltip.create(Component.translatable("gui." + Tempad.MODID + ".add_location")));
         if (hasKnowledgeRepository) addRenderableWidget(Button.builder(Component.literal("?"), button -> minecraft.setScreen(new KnowledgeRepositoryScreen(this))).bounds(cornerX + 111, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("app.tempad.knowledge_repository"))).build());
         if (hasTimeTwister) addRenderableWidget(Button.builder(Component.literal("T"), button -> {
-            NetworkHandler.CHANNEL.sendToServer(new RequestTimeTwisterPacket());
+            NetworkHandler.CHANNEL.sendToServer(new RequestTimeTwisterPacket(deviceId));
             minecraft.setScreen(null);
         }).bounds(cornerX + 91, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("screen.tempad.time_twister.title"))).build());
+        addRenderableWidget(Button.builder(Component.literal("S"), button -> minecraft.setScreen(new TempadSettingsScreen(this, deviceId, defaultApp, defaultMacro, locationOrder, hasTimeTwister, hasKnowledgeRepository)))
+            .bounds(cornerX + 71, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("screen.tempad.settings.title"))).build());
     }
 
     private void favoriteAction() {

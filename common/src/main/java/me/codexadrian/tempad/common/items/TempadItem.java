@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -74,9 +75,8 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand interactionHand) {
         ItemStack stack = player.getItemInHand(interactionHand);
         if (!player.isShiftKeyDown()) {
-            if (!level.isClientSide) {
-                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()), TempadUpgrades.canSaveLocations(player), TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack));
-                NetworkHandler.CHANNEL.sendToPlayer(packet, player);
+            if (player instanceof ServerPlayer serverPlayer) {
+                TempadSettings.openDefault(serverPlayer, stack);
                 return InteractionResultHolder.success(stack);
             } else {
                 return InteractionResultHolder.pass(stack);

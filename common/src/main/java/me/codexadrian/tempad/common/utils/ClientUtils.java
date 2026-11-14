@@ -4,18 +4,21 @@ import me.codexadrian.tempad.client.config.TempadClientConfig;
 import me.codexadrian.tempad.client.gui.ConsolidatedScreen;
 import me.codexadrian.tempad.client.gui.MarkerEditScreen;
 import me.codexadrian.tempad.client.gui.TimeTwisterScreen;
+import me.codexadrian.tempad.client.gui.KnowledgeRepositoryScreen;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenMarkerScreenPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenFavoritedLocationPacket;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenTempadByShortcutPacket;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenWalletByShortcutPacket;
+import me.codexadrian.tempad.common.network.messages.c2s.UseTempadMacroPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import net.minecraft.client.Minecraft;
 
 public class ClientUtils {
     public static void openScreen(OpenTempadScreenPacket packet) {
-        Minecraft.getInstance().setScreen(new ConsolidatedScreen(packet.locationData(), packet.favorite(), packet.canSaveLocations(), packet.hasKnowledgeRepository(), packet.hasTimeTwister()));
+        ConsolidatedScreen screen = new ConsolidatedScreen(packet);
+        Minecraft.getInstance().setScreen(packet.startGuide() ? new KnowledgeRepositoryScreen(screen) : screen);
     }
 
     public static void openMarkerScreen(OpenMarkerScreenPacket packet) {
@@ -46,6 +49,10 @@ public class ClientUtils {
     public static void openFavorited() {
         OpenFavoritedLocationPacket packet = new OpenFavoritedLocationPacket(TempadClientConfig.color);
         NetworkHandler.CHANNEL.sendToServer(packet);
+    }
+
+    public static void useTempadMacro() {
+        NetworkHandler.CHANNEL.sendToServer(new UseTempadMacroPacket(TempadClientConfig.color));
     }
 
     public static void openWallet() {

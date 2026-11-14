@@ -93,7 +93,7 @@ public class ForgeTempadClient {
                 ClientUtils.openTempadbyShortcut();
             }
             while (FAVORITED_KEYBIND.consumeClick()) {
-                ClientUtils.openFavorited();
+                ClientUtils.useTempadMacro();
             }
             while (WALLET_KEYBIND.consumeClick()) {
                 ClientUtils.openWallet();

@@ -3,21 +3,12 @@ package me.codexadrian.tempad.common.network.messages.c2s;
 import com.teamresourceful.resourcefullib.common.networking.base.Packet;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketContext;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
-import com.teamresourceful.resourcefullib.common.utils.CommonUtils;
 import me.codexadrian.tempad.common.Tempad;
-import me.codexadrian.tempad.common.data.LocationData;
-import me.codexadrian.tempad.common.data.TempadLocationHandler;
-import me.codexadrian.tempad.common.network.NetworkHandler;
-import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
-import me.codexadrian.tempad.common.items.TempadUpgrades;
-import me.codexadrian.tempad.common.items.TimeTwisterData;
-import net.minecraft.core.BlockPos;
+import me.codexadrian.tempad.common.items.TempadSettings;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 public record OpenTempadByShortcutPacket() implements Packet<OpenTempadByShortcutPacket> {
     public static Handler HANDLER = new Handler();
@@ -47,10 +38,9 @@ public record OpenTempadByShortcutPacket() implements Packet<OpenTempadByShortcu
         @Override
         public PacketContext handle(OpenTempadByShortcutPacket message) {
             return (player, level) -> {
-                if (!TeleportUtils.hasTempad(player)) return;
+                if (!(player instanceof ServerPlayer serverPlayer) || !TeleportUtils.hasTempad(player)) return;
                 var stack = TeleportUtils.findTempad(player);
-                OpenTempadScreenPacket packet = new OpenTempadScreenPacket(new ArrayList<>(TempadLocationHandler.getLocations(level, player.getUUID()).values()), TempadLocationHandler.getFavorite(level, player.getUUID()), TempadUpgrades.canSaveLocations(player), TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack));
-                NetworkHandler.CHANNEL.sendToPlayer(packet, player);
+                TempadSettings.openDefault(serverPlayer, stack);
             };
         }
     }

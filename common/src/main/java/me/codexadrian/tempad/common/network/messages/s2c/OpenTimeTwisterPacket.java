@@ -13,8 +13,9 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public record OpenTimeTwisterPacket(List<TravelHistoryData.Entry> history, boolean embedded, int charge, int cost) implements Packet<OpenTimeTwisterPacket> {
+public record OpenTimeTwisterPacket(List<TravelHistoryData.Entry> history, boolean embedded, int charge, int cost, UUID deviceId) implements Packet<OpenTimeTwisterPacket> {
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "open_time_twister");
     public static final PacketHandler<OpenTimeTwisterPacket> HANDLER = new Handler();
     @Override public ResourceLocation getID() { return ID; }
@@ -33,13 +34,14 @@ public record OpenTimeTwisterPacket(List<TravelHistoryData.Entry> history, boole
             buffer.writeBoolean(message.embedded);
             buffer.writeVarInt(message.charge);
             buffer.writeVarInt(message.cost);
+            buffer.writeOptional(Optional.ofNullable(message.deviceId), FriendlyByteBuf::writeUUID);
         }
 
         @Override public OpenTimeTwisterPacket decode(FriendlyByteBuf buffer) {
             List<TravelHistoryData.Entry> history = buffer.readList(buf -> new TravelHistoryData.Entry(
                 buf.readLong(), buf.readOptional(FriendlyByteBuf::readResourceLocation).orElse(null),
                 buf.readResourceKey(Registries.DIMENSION), new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble())));
-            return new OpenTimeTwisterPacket(history, buffer.readBoolean(), buffer.readVarInt(), buffer.readVarInt());
+            return new OpenTimeTwisterPacket(history, buffer.readBoolean(), buffer.readVarInt(), buffer.readVarInt(), buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null));
         }
 
         @Override public PacketContext handle(OpenTimeTwisterPacket message) { return (player, level) -> ClientUtils.openTimeTwisterScreen(message); }

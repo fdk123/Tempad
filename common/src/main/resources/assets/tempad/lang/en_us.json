@@ -160,7 +160,7 @@
   "item.tempad.location_card.set_location": "Set location: %s",
 
   "category.tempad.keybinds": "Tempad",
-  "key.tempad.favorite": "Open favorited location",
+  "key.tempad.favorite": "Use Tempad quick action",
   "key.tempad.shortcut": "Open Tempad screen"
   ,"key.tempad.wallet": "Open Card Wallet",
   "config.tempad.chronometer_generation_interval": "Chronometer generation interval",
@@ -175,4 +175,16 @@
   ,"config.tempad.metronome_transfer_rate": "Metronome transfer rate"
   ,"config.tempad.metronome_redstone_pause": "Pause Metronome on redstone signal"
   ,"config.tempad.workstation_portal_sustain_cost": "Workstation chronons per second"
+  ,"screen.tempad.settings.title": "Tempad Settings"
+  ,"screen.tempad.settings.app": "Start app: %s"
+  ,"screen.tempad.settings.app.locations": "Locations"
+  ,"screen.tempad.settings.app.timeline": "Timeline"
+  ,"screen.tempad.settings.app.guide": "Knowledge Repository"
+  ,"screen.tempad.settings.macro": "Quick action: %s"
+  ,"screen.tempad.settings.macro.favorite": "Open favorite Timedoor"
+  ,"screen.tempad.settings.macro.none": "Disabled"
+  ,"screen.tempad.settings.order": "Sort locations: %s"
+  ,"screen.tempad.settings.order.alphabetical": "Alphabetical"
+  ,"screen.tempad.settings.order.dimension": "Dimension"
+  ,"screen.tempad.settings.order.type": "Type"
 }
