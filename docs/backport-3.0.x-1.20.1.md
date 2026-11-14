@@ -4,7 +4,7 @@ This branch starts from upstream `1.20.1` (`fd59f8a`) and tracks the 3.0.x
 rewrite from upstream `1.21.x` (`e3816ad`). The local fork is prepared with:
 
 - `upstream`: `https://github.com/terrarium-earth/Tempad.git`
-- `origin`: `https://github.com/fdk123/Tempad.git` (to be created/published)
+- `origin`: `https://github.com/fdk123/Tempad.git`
 - branch: `backport/3.0.x-1.20.1`
 
 ## Scope
@@ -53,9 +53,8 @@ text and vanilla Minecraft textures; the 1.21 guide artwork is not included.
 
 The Knowledge Repository crafting recipe uses a Chronometer in place of the
 1.21 Knowledge Projector, which has not been ported. The Player Teleport
-Upgrade is installed through a new 1.20.1 workstation recipe. Upstream 1.21
-registers the item and location provider but does not provide a survival
-crafting or installation recipe, so this is an explicit modpack adaptation.
+Upgrade uses the upstream survival crafting pattern and workstation download
+recipe, adapted to the 1.20.1 recipe format.
 
 ### Timedoor Projector block (Forge 1.20.1)
 
