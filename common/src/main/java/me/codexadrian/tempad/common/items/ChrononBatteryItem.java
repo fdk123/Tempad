@@ -1,6 +1,8 @@
 package me.codexadrian.tempad.common.items;
 
 import me.codexadrian.tempad.common.Tempad;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -14,18 +16,37 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.IntSupplier;
 
 public class ChrononBatteryItem extends Item implements ChrononContainerItem {
-    private final int capacity;
+    private final IntSupplier capacity;
+    private final IntSupplier displayCapacity;
 
     public ChrononBatteryItem(Properties properties, int capacity) {
+        this(properties, () -> capacity, () -> capacity);
+    }
+
+    public ChrononBatteryItem(Properties properties, IntSupplier capacity, IntSupplier displayCapacity) {
         super(properties.stacksTo(1));
         this.capacity = capacity;
+        this.displayCapacity = displayCapacity;
     }
 
     @Override
     public int getChrononCapacity(ItemStack stack) {
-        return capacity;
+        return Math.max(1, capacity.getAsInt());
+    }
+
+    @Override
+    public void inventoryTick(ItemStack source, Level level, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(source, level, entity, slot, selected);
+        if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % 10 != 0 || getChronons(source) <= 0) return;
+        for (ItemStack target : CarriedStacks.of(player)) {
+            if (target == source || target.is(Tempad.CHRONON_BATTERIES)
+                || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST)
+                || !(target.getItem() instanceof ChrononContainerItem container)) continue;
+            if (ChrononStorage.transfer(source, target, container, getChronons(source)) > 0) break;
+        }
     }
 
     @Override
@@ -36,8 +57,7 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
         int available = getChronons(source);
         if (available <= 0) return InteractionResultHolder.fail(source);
 
-        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
-            ItemStack target = player.getInventory().getItem(slot);
+        for (ItemStack target : CarriedStacks.of(player)) {
             if (target == source || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
             int moved = ChrononStorage.transfer(source, target, container, available);
             if (moved <= 0) continue;
@@ -62,6 +82,6 @@ public class ChrononBatteryItem extends Item implements ChrononContainerItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
-        tooltip.add(Component.translatable("item.tempad.chronons", getChronons(stack), capacity));
+        tooltip.add(Component.translatable("item.tempad.chronons", getChronons(stack), Math.max(1, displayCapacity.getAsInt())));
     }
 }

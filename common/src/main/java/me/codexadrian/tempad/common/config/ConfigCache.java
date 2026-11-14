@@ -20,6 +20,9 @@ public class ConfigCache {
     public static int advancedTempadfuelConsumptionValue = TempadConfig.advancedTempadfuelConsumptionValue;
     public static int advancedTempadfuelCapacityValue = TempadConfig.advancedTempadfuelCapacityValue;
     public static int chronometerGenerationInterval = TempadConfig.chronometerGenerationInterval;
+    public static int chronometerCapacity = TempadConfig.chronometerCapacity;
+    public static int chrononBatteryCapacity = TempadConfig.chrononBatteryCapacity;
+    public static int chrononCellCapacity = TempadConfig.chrononCellCapacity;
     public static int chronometerGenerationAmount = TempadConfig.chronometerGenerationAmount;
     public static int chrononGeneratorCapacity = TempadConfig.chrononGeneratorCapacity;
     public static int chrononGeneratorGenerationInterval = TempadConfig.chrononGeneratorGenerationInterval;

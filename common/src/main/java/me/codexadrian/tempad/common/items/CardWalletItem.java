@@ -2,6 +2,7 @@ package me.codexadrian.tempad.common.items;
 
 import me.codexadrian.tempad.common.utils.WalletOpener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -48,7 +49,15 @@ public class CardWalletItem extends Item {
         super.appendHoverText(stack, level, tooltip, flag);
         int stored = 0;
         WalletContainer contents = new WalletContainer(stack);
-        for (int slot = 0; slot < contents.getContainerSize(); slot++) if (!contents.getItem(slot).isEmpty()) stored++;
+        for (int slot = 0; slot < contents.getContainerSize(); slot++) {
+            ItemStack card = contents.getItem(slot);
+            if (card.isEmpty()) continue;
+            stored++;
+            var destination = LocationCard.getLocation(card);
+            if (destination != null) tooltip.add(Component.translatable("item.tempad.card_wallet.entry", slot + 1,
+                Component.literal(destination.getName()).withStyle(ChatFormatting.AQUA), card.getCount()).withStyle(ChatFormatting.GRAY));
+        }
         tooltip.add(Component.translatable("item.tempad.card_wallet.count", stored, 18));
+        if (stored == 0) tooltip.add(Component.translatable("item.tempad.card_wallet.empty").withStyle(ChatFormatting.DARK_GRAY));
     }
 }

@@ -4,6 +4,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.block.MetronomeBlockEntity;
 import me.codexadrian.tempad.common.block.TimedoorProjectorBlockEntity;
 import me.codexadrian.tempad.common.block.WorkstationBlockEntity;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -28,8 +29,7 @@ public final class CreativeChronometerItem extends Item implements ChrononContai
     @Override public void inventoryTick(ItemStack source, Level level, Entity entity, int slot, boolean selected) {
         super.inventoryTick(source, level, entity, slot, selected);
         if (level.isClientSide || !(entity instanceof Player player) || player.tickCount % 10 != 0) return;
-        for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
-            ItemStack target = player.getInventory().getItem(index);
+        for (ItemStack target : CarriedStacks.of(player)) {
             if (target == source || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST)
                     || !(target.getItem() instanceof ChrononContainerItem container)) continue;
             container.insertChronons(target, Integer.MAX_VALUE);

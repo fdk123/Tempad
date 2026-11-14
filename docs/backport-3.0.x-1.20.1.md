@@ -125,6 +125,29 @@ a wallet, normal use retains the older card-import behavior. Sneak-use imports
 an unlinked card even when a wallet is present. Using one card from a stack to
 record a location or bind a marker only changes that card.
 
+The Forge wallet menu uses the vanilla two-row chest screen with server-side
+rules that prevent moving any wallet while the menu is open. It closes if the
+opened wallet is no longer carried, and clearing its contents keeps all
+eighteen slots usable. Its tooltip lists each stored destination and stack
+count. Wallet destinations and the wallet shortcut also find a wallet worn in
+a Curios belt or charm slot; Curios remains optional.
+
+### Portable chronon distribution and Curios (Forge 1.20.1)
+
+Chronon Batteries and Cells now offer their charge to carried devices every
+ten ticks, without feeding another battery or generator. Chronometers and
+Chronon Generators distribute stored charge and generate at their configured
+server rate; a second carried generator stops generation, matching the 3.0
+clash rule. The Creative Chronometer and nearby Metronomes also charge devices
+in Curios slots. Batteries, Cells, generators, Chronometers and wallets can be
+equipped in their 3.0 Curios slot categories. The optional Curios access code
+is isolated so the Forge build works without that mod installed.
+The default capacities now match 3.0: Battery 4000, Cell 2000, Chronometer
+4000 and Chronon Generator 2000 chronons. Chronometers generate every 18 ticks
+and generators every 24 ticks by default. Capacities are configurable and read
+when the item is used; stored charge in older items is not rewritten when a
+capacity is lowered.
+
 ### Timedoor Projector block (Forge 1.20.1)
 
 The 3.0 Timedoor Projector is now available as both an item and a placeable

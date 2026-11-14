@@ -1,4 +1,9 @@
 {
+  "config.tempad.chronometer_capacity": "Chronometer capacity",
+  "config.tempad.chronon_battery_capacity": "Chronon Battery capacity",
+  "config.tempad.chronon_cell_capacity": "Chronon Cell capacity",
+  "item.tempad.card_wallet.entry": "%s. %s ×%s",
+  "item.tempad.card_wallet.empty": "No destinations stored",
   "config.tempad.allow_intradimensional_travel": "Allow travel within a dimension",
   "item.tempad.time_twister": "Time Twister",
   "item.tempad.time_twister.no_chronons": "Not enough chronons to backtrack",

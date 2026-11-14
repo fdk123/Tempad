@@ -1,4 +1,9 @@
 {
+  "config.tempad.chronometer_capacity": "Ёмкость хронометра",
+  "config.tempad.chronon_battery_capacity": "Ёмкость хрононовой батареи",
+  "config.tempad.chronon_cell_capacity": "Ёмкость хрононовой ячейки",
+  "item.tempad.card_wallet.entry": "%s. %s ×%s",
+  "item.tempad.card_wallet.empty": "Нет сохранённых точек",
   "config.tempad.allow_intradimensional_travel": "Разрешить перемещение внутри измерения",
   "item.tempad.time_twister": "Искривитель времени",
   "item.tempad.time_twister.no_chronons": "Недостаточно хрононов для возврата",

@@ -76,7 +76,9 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> PLAYER_TELEPORT_UPGRADE = ITEMS.register("player_teleport_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> LOCATION_BROADCASTER = ITEMS.register("location_broadcaster", () -> new LocationBroadcasterItem(new Item.Properties()));
     public static final RegistryEntry<Item> SCREENING_DEVICE = ITEMS.register("screening_device", () -> new ScreeningDeviceItem(new Item.Properties()));
-    public static final RegistryEntry<Item> CHRONON_BATTERY = ITEMS.register("chronon_battery", () -> new ChrononBatteryItem(new Item.Properties(), 1000));
+    public static final RegistryEntry<Item> CHRONON_BATTERY = ITEMS.register("chronon_battery", () -> new ChrononBatteryItem(new Item.Properties(),
+        () -> me.codexadrian.tempad.common.config.TempadConfig.chrononBatteryCapacity,
+        () -> me.codexadrian.tempad.common.config.ConfigCache.chrononBatteryCapacity));
     public static final RegistryEntry<Item> CHRONON_CELL = ITEMS.register("chronon_cell", () -> new ChrononCellItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONON_GENERATOR = ITEMS.register("chronon_generator", () -> new ChrononGeneratorItem(new Item.Properties()));

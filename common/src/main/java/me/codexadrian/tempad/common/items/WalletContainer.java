@@ -8,6 +8,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
 
 /** NBT-backed two-row container used by the 3.0.x card wallet. */
 public final class WalletContainer implements Container {
@@ -105,12 +106,13 @@ public final class WalletContainer implements Container {
 
     @Override
     public boolean stillValid(Player player) {
-        return !wallet.isEmpty();
+        if (player.level().isClientSide()) return true;
+        return CarriedStacks.contains(player, wallet);
     }
 
     @Override
     public void clearContent() {
-        items.clear();
+        for (int slot = 0; slot < items.size(); slot++) items.set(slot, ItemStack.EMPTY);
         setChanged();
     }
 

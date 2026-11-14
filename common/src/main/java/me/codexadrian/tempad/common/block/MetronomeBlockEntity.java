@@ -5,6 +5,7 @@ import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.MetronomeNetworkData;
 import me.codexadrian.tempad.common.items.ChrononContainerItem;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -102,8 +103,7 @@ public final class MetronomeBlockEntity extends BlockEntity {
         boolean changed = false;
         for (Player player : level.getEntitiesOfClass(Player.class, new AABB(worldPosition).inflate(TempadConfig.metronomeDistributionRange))) {
             if (!owner.equals(player.getUUID())) continue;
-            for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
-                ItemStack stack = player.getInventory().getItem(slot);
+            for (ItemStack stack : CarriedStacks.of(player)) {
                 if (stack.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(stack.getItem() instanceof ChrononContainerItem container)) continue;
                 int moved = container.insertChronons(stack, network.stored(owner));
                 if (moved > 0) { network.extract(owner, moved); changed = true; }

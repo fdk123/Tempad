@@ -3,6 +3,7 @@ package me.codexadrian.tempad.common.data;
 import me.codexadrian.tempad.common.items.CardWalletItem;
 import me.codexadrian.tempad.common.items.LocationCard;
 import me.codexadrian.tempad.common.items.WalletContainer;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -56,8 +57,7 @@ public final class WalletLocationHandler {
     }
 
     private static ItemStack firstWallet(ServerPlayer player) {
-        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
-            ItemStack stack = player.getInventory().getItem(slot);
+        for (ItemStack stack : CarriedStacks.of(player)) {
             if (stack.getItem() instanceof CardWalletItem && !new WalletContainer(stack).isEmpty()) return stack;
         }
         return ItemStack.EMPTY;

@@ -7,6 +7,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.items.CardWalletItem;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.utils.WalletOpener;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -38,8 +39,7 @@ public record OpenWalletByShortcutPacket() implements Packet<OpenWalletByShortcu
         @Override
         public PacketContext handle(OpenWalletByShortcutPacket message) {
             return (player, level) -> {
-                for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
-                    ItemStack stack = player.getInventory().getItem(slot);
+                for (ItemStack stack : CarriedStacks.of(player)) {
                     if (stack.getItem() instanceof CardWalletItem) {
                         WalletOpener.open(player, stack);
                         return;

@@ -20,6 +20,9 @@ public record InitConfigPacket(
     int advancedTempadfuelConsumptionValue,
     int advancedTempadfuelCapacityValue,
     int chronometerGenerationInterval,
+    int chronometerCapacity,
+    int chrononBatteryCapacity,
+    int chrononCellCapacity,
     int chronometerGenerationAmount,
     int chrononGeneratorCapacity,
     int chrononGeneratorGenerationInterval,
@@ -64,6 +67,9 @@ public record InitConfigPacket(
             buffer.writeInt(message.advancedTempadfuelConsumptionValue);
             buffer.writeInt(message.advancedTempadfuelCapacityValue);
             buffer.writeInt(message.chronometerGenerationInterval);
+            buffer.writeInt(message.chronometerCapacity);
+            buffer.writeInt(message.chrononBatteryCapacity);
+            buffer.writeInt(message.chrononCellCapacity);
             buffer.writeInt(message.chronometerGenerationAmount);
             buffer.writeInt(message.chrononGeneratorCapacity);
             buffer.writeInt(message.chrononGeneratorGenerationInterval);
@@ -103,6 +109,9 @@ public record InitConfigPacket(
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
+                buffer.readInt(),
+                buffer.readInt(),
+                buffer.readInt(),
                 buffer.readBoolean(),
                 buffer.readInt(),
                 buffer.readInt(),
@@ -127,6 +136,9 @@ public record InitConfigPacket(
                 ConfigCache.advancedTempadfuelConsumptionValue = message.advancedTempadfuelConsumptionValue;
                 ConfigCache.advancedTempadfuelCapacityValue = message.advancedTempadfuelCapacityValue;
                 ConfigCache.chronometerGenerationInterval = message.chronometerGenerationInterval;
+                ConfigCache.chronometerCapacity = message.chronometerCapacity;
+                ConfigCache.chrononBatteryCapacity = message.chrononBatteryCapacity;
+                ConfigCache.chrononCellCapacity = message.chrononCellCapacity;
                 ConfigCache.chronometerGenerationAmount = message.chronometerGenerationAmount;
                 ConfigCache.chrononGeneratorCapacity = message.chrononGeneratorCapacity;
                 ConfigCache.chrononGeneratorGenerationInterval = message.chrononGeneratorGenerationInterval;

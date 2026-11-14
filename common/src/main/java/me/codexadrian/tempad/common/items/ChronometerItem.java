@@ -7,24 +7,27 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.ConfigCache;
+import me.codexadrian.tempad.common.config.TempadConfig;
+import me.codexadrian.tempad.common.utils.CarriedStacks;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.IntSupplier;
 
 public class ChronometerItem extends ChrononBatteryItem {
     public ChronometerItem(Properties properties) {
-        this(properties, 1000);
+        this(properties, () -> TempadConfig.chronometerCapacity, () -> ConfigCache.chronometerCapacity);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
-        tooltip.add(Component.translatable("item.tempad.generator_rate", getGenerationAmount(), getGenerationInterval()));
+        tooltip.add(Component.translatable("item.tempad.generator_rate", displayGenerationAmount(), displayGenerationInterval()));
     }
 
-    protected ChronometerItem(Properties properties, int capacity) {
-        super(properties, capacity);
+    protected ChronometerItem(Properties properties, IntSupplier capacity, IntSupplier displayCapacity) {
+        super(properties, capacity, displayCapacity);
     }
 
     @Override
@@ -34,28 +37,27 @@ public class ChronometerItem extends ChrononBatteryItem {
         insertChronons(stack, getGenerationAmount());
         if (getChronons(stack) <= 0) return;
 
-        for (int index = 0; index < player.getInventory().getContainerSize(); index++) {
-            ItemStack target = player.getInventory().getItem(index);
+        for (ItemStack target : CarriedStacks.of(player)) {
             if (target == stack || target.is(Tempad.CHRONON_AUTO_CHARGE_BLACKLIST) || !(target.getItem() instanceof ChrononContainerItem container)) continue;
             int available = getChronons(stack);
-            ChrononStorage.transfer(stack, target, container, available);
-            if (getChronons(stack) == 0) break;
+            if (ChrononStorage.transfer(stack, target, container, available) > 0) break;
         }
     }
 
     protected int getGenerationInterval() {
-        return ConfigCache.chronometerGenerationInterval;
+        return Math.max(1, TempadConfig.chronometerGenerationInterval);
     }
 
     protected int getGenerationAmount() {
-        return ConfigCache.chronometerGenerationAmount;
+        return Math.max(0, TempadConfig.chronometerGenerationAmount);
     }
 
+    protected int displayGenerationInterval() { return ConfigCache.chronometerGenerationInterval; }
+    protected int displayGenerationAmount() { return ConfigCache.chronometerGenerationAmount; }
+
     private boolean isClashing(Player player, ItemStack source) {
-        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
-            ItemStack candidate = player.getInventory().getItem(slot);
+        for (ItemStack candidate : CarriedStacks.of(player)) {
             if (candidate.is(Tempad.CHRONON_GENERATORS) && candidate != source) return true;
-            if (candidate == source) return false;
         }
         return false;
     }

@@ -38,6 +38,7 @@ public class Tempad {
     public static final TagKey<Item> TEMPAD_FUEL_TAG = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "tempad_fuel"));
     public static final TagKey<Item> CHRONON_AUTO_CHARGE_BLACKLIST = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "auto_charge_blacklist"));
     public static final TagKey<Item> CHRONON_GENERATORS = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "chronon_generators"));
+    public static final TagKey<Item> CHRONON_BATTERIES = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "batteries"));
     public static final TagKey<Fluid> TEMPAD_LIQUID_FUEL_TAG = TagKey.create(Registries.FLUID, new ResourceLocation(MODID, "tempad_liquid_fuel"));
     public static final TagKey<Level> TEMPAD_DIMENSION_BLACKLIST = TagKey.create(Registries.DIMENSION, new ResourceLocation(MODID, "tempad_dimension_blacklist"));
     public static final TagKey<DimensionType> ENTERING_NOT_SUPPORTED = TagKey.create(Registries.DIMENSION_TYPE, new ResourceLocation(MODID, "entering_not_supported"));
