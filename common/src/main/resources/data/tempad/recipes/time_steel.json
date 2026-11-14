@@ -1,19 +1,26 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "s": {
+      "item": "minecraft:netherite_scrap"
+    }
+  },
   "pattern": [
     "si",
     "is"
   ],
-  "key": {
-    "s": {
-      "item": "minecraft:netherite_scrap"
-    },
-    "i": {
-      "item": "minecraft:iron_ingot"
-    }
-  },
   "result": {
-    "item": "tempad:time_steel",
-    "count": 2
-  }
+    "count": 2,
+    "item": "tempad:time_steel"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ]
 }

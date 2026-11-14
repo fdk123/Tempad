@@ -1,1 +1,30 @@
-{"type":"minecraft:crafting_shaped","pattern":[" G ","ECR"," I "],"key":{"G":{"item":"minecraft:glass"},"E":{"item":"minecraft:emerald"},"C":{"item":"minecraft:compass"},"R":{"item":"minecraft:redstone"},"I":{"item":"minecraft:iron_ingot"}},"result":{"item":"tempad:location_broadcaster"}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:compass"
+    },
+    "e": {
+      "tag": "forge:gems/emerald"
+    },
+    "g": {
+      "tag": "forge:glass/colorless"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "pattern": [
+    " g ",
+    "eDr",
+    " i "
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:location_broadcaster"
+  }
+}

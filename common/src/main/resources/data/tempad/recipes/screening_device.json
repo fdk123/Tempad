@@ -1,1 +1,30 @@
-{"type":"minecraft:crafting_shaped","pattern":[" G ","ECR"," T "],"key":{"G":{"item":"minecraft:tinted_glass"},"E":{"item":"minecraft:emerald"},"C":{"item":"minecraft:compass"},"R":{"item":"minecraft:redstone"},"T":{"item":"tempad:time_steel"}},"result":{"item":"tempad:screening_device"}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:compass"
+    },
+    "G": {
+      "tag": "forge:glass/tinted"
+    },
+    "T": {
+      "item": "tempad:time_steel"
+    },
+    "e": {
+      "tag": "forge:gems/emerald"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "pattern": [
+    " G ",
+    "eDr",
+    " T "
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:screening_device"
+  }
+}

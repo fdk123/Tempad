@@ -1,26 +1,33 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "RTB",
-    "###"
-  ],
+  "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:quartz_block"
+    "B": {
+      "item": "tempad:chronon_battery"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "G": {
+      "tag": "forge:glass/tinted"
+    },
+    "Q": {
+      "tag": "forge:gems/quartz"
     },
     "R": {
       "item": "minecraft:redstone_lamp"
     },
     "T": {
-      "item": "minecraft:tinted_glass"
-    },
-    "B": {
-      "item": "minecraft:beacon"
+      "item": "tempad:time_steel"
     }
   },
+  "pattern": [
+    "GGG",
+    "QER",
+    "TBT"
+  ],
   "result": {
-    "item": "tempad:tempad",
-    "count": 1
+    "count": 1,
+    "item": "tempad:tempad"
   }
 }

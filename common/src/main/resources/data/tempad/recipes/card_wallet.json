@@ -1,23 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "c c",
-    "lpl",
-    "ccc"
-  ],
+  "category": "misc",
   "key": {
     "c": {
-      "item": "minecraft:copper_ingot"
+      "tag": "forge:ingots/copper"
     },
     "l": {
-      "item": "minecraft:leather"
+      "tag": "forge:leather"
     },
     "p": {
       "item": "tempad:location_card"
     }
   },
+  "pattern": [
+    "c c",
+    "lpl",
+    "ccc"
+  ],
   "result": {
-    "item": "tempad:card_wallet",
-    "count": 1
+    "count": 1,
+    "item": "tempad:card_wallet"
   }
 }

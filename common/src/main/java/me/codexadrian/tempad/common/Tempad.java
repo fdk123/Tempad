@@ -10,6 +10,7 @@ import me.codexadrian.tempad.common.registry.TempadRegistry;
 import me.codexadrian.tempad.api.locations.LocationsApi;
 import me.codexadrian.tempad.common.data.MarkerIndex;
 import me.codexadrian.tempad.common.data.PlayerLocationHandler;
+import me.codexadrian.tempad.common.data.WalletLocationHandler;
 import me.codexadrian.tempad.common.utils.PlatformUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -61,6 +62,7 @@ public class Tempad {
         TempadRegistry.RECIPE_TYPES.init();
         LocationsApi.registerLocationGetter("tempad:markers", MarkerIndex::visibleLocations);
         LocationsApi.registerLocationGetter("tempad:players", PlayerLocationHandler::visibleLocations);
+        LocationsApi.registerLocationGetter("tempad:wallet", WalletLocationHandler::visibleLocations);
         NetworkHandler.register();
 
         if (PlatformUtils.isModLoaded("botarium")) {

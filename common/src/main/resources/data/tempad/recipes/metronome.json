@@ -1,23 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ThT",
-    "TBT",
-    "TBT"
-  ],
+  "category": "misc",
   "key": {
+    "B": {
+      "item": "tempad:chronon_battery"
+    },
     "T": {
       "item": "tempad:time_steel"
     },
     "h": {
       "item": "minecraft:ender_chest"
-    },
-    "B": {
-      "item": "tempad:chronon_battery"
     }
   },
+  "pattern": [
+    "ThT",
+    "TBT",
+    "TBT"
+  ],
   "result": {
-    "item": "tempad:metronome",
-    "count": 1
+    "count": 1,
+    "item": "tempad:metronome"
   }
 }

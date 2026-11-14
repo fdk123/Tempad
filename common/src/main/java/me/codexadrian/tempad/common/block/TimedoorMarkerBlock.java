@@ -70,8 +70,15 @@ public final class TimedoorMarkerBlock extends BaseEntityBlock {
                 player.displayClientMessage(Component.translatable("item.tempad.location_card.marker_unavailable"), true);
                 return InteractionResult.FAIL;
             }
-            LocationCard.setLocation(held, linked, player.getDisplayName().getString());
-            held.getOrCreateTag().putUUID("MarkerId", marker.getMarkerId());
+            ItemStack bound = held;
+            if (held.getCount() > 1) {
+                bound = held.copy();
+                bound.setCount(1);
+                held.shrink(1);
+            }
+            LocationCard.setLocation(bound, linked, player.getDisplayName().getString());
+            bound.getOrCreateTag().putUUID("MarkerId", marker.getMarkerId());
+            if (bound != held) player.getInventory().placeItemBackInInventory(bound);
             player.displayClientMessage(Component.translatable("block.tempad.marker.card_bound"), true);
             return InteractionResult.CONSUME;
         }

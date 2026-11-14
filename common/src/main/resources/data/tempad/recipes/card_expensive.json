@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "tempad:time_steel"
+    },
+    {
+      "tag": "forge:dyes"
+    }
+  ],
+  "result": {
+    "count": 16,
+    "item": "tempad:location_card"
+  }
+}

@@ -64,7 +64,29 @@ public final class WalletContainer implements Container {
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        return stack.isEmpty() || (stack.getCount() == 1 && canStore(stack));
+        return stack.isEmpty() || canStore(stack);
+    }
+
+    /** Moves as many filled cards as possible into existing or empty slots. */
+    public int insert(ItemStack source) {
+        if (!canStore(source)) return 0;
+        int moved = 0;
+        for (int slot = 0; slot < items.size() && !source.isEmpty(); slot++) {
+            ItemStack existing = items.get(slot);
+            if (!existing.isEmpty() && !ItemStack.isSameItemSameTags(existing, source)) continue;
+            int room = source.getMaxStackSize() - existing.getCount();
+            if (room <= 0) continue;
+            int amount = Math.min(room, source.getCount());
+            if (existing.isEmpty()) {
+                ItemStack stored = source.copy();
+                stored.setCount(amount);
+                items.set(slot, stored);
+            } else existing.grow(amount);
+            source.shrink(amount);
+            moved += amount;
+        }
+        if (moved > 0) setChanged();
+        return moved;
     }
 
     @Override

@@ -1,25 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "QB",
-    "PC"
-  ],
-  "key": {
-    "Q": {
-      "item": "minecraft:quartz"
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/iron"
     },
-    "P": {
-      "item": "minecraft:paper"
-    },
-    "C": {
-      "item": "minecraft:compass"
-    },
-    "B": {
-      "item": "minecraft:black_dye"
+    {
+      "tag": "forge:dyes"
     }
-  },
+  ],
   "result": {
-    "item": "tempad:location_card",
-    "count": 1
+    "count": 4,
+    "item": "tempad:location_card"
   }
 }

@@ -1,1 +1,24 @@
-{"type":"minecraft:crafting_shaped","pattern":["KKK","EBE","KKK"],"key":{"K":{"item":"minecraft:dried_kelp"},"E":{"item":"minecraft:ender_pearl"},"B":{"item":"tempad:location_broadcaster"}},"result":{"item":"tempad:player_teleport_upgrade"}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "L": {
+      "item": "tempad:location_broadcaster"
+    },
+    "k": {
+      "item": "minecraft:dried_kelp"
+    }
+  },
+  "pattern": [
+    "kkk",
+    "ELE",
+    "kkk"
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:player_teleport_upgrade"
+  }
+}

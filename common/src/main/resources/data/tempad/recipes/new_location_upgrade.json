@@ -1,1 +1,24 @@
-{"type":"minecraft:crafting_shaped","pattern":["KKK","ENE","KKK"],"key":{"K":{"item":"minecraft:dried_kelp"},"E":{"item":"minecraft:ender_pearl"},"N":{"item":"minecraft:nether_star"}},"result":{"item":"tempad:new_location_upgrade"}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "*": {
+      "item": "minecraft:nether_star"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "k": {
+      "item": "minecraft:dried_kelp"
+    }
+  },
+  "pattern": [
+    "kkk",
+    "E*E",
+    "kkk"
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:new_location_upgrade"
+  }
+}

@@ -5,6 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -23,6 +26,21 @@ public class CardWalletItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide) WalletOpener.open(player, stack);
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+    }
+
+    @Override public boolean overrideStackedOnOther(ItemStack wallet, Slot slot, ClickAction action, Player player) {
+        if (action != ClickAction.SECONDARY || !slot.hasItem()) return false;
+        if (new WalletContainer(wallet).insert(slot.getItem()) == 0) return false;
+        if (slot.getItem().isEmpty()) slot.set(ItemStack.EMPTY);
+        else slot.setChanged();
+        return true;
+    }
+
+    @Override public boolean overrideOtherStackedOnMe(ItemStack wallet, ItemStack cards, Slot slot, ClickAction action, Player player, SlotAccess access) {
+        if (action != ClickAction.SECONDARY || new WalletContainer(wallet).insert(cards) == 0) return false;
+        access.set(cards);
+        slot.setChanged();
+        return true;
     }
 
     @Override

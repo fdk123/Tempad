@@ -1,1 +1,24 @@
-{"type":"minecraft:crafting_shaped","pattern":["G","B","C"],"key":{"G":{"item":"minecraft:glass"},"B":{"item":"minecraft:book"},"C":{"item":"minecraft:copper_ingot"}},"result":{"item":"tempad:knowledge_projector"}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "c": {
+      "tag": "forge:ingots/copper"
+    },
+    "g": {
+      "tag": "forge:glass/colorless"
+    },
+    "o": {
+      "item": "minecraft:book"
+    }
+  },
+  "pattern": [
+    "g",
+    "o",
+    "c"
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:knowledge_projector"
+  }
+}

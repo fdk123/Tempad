@@ -86,6 +86,31 @@ text are scrollable. All guide text is newly written for the working Forge
 model use vanilla Minecraft rendering and textures; the 1.21 artwork is not
 included.
 
+### Device recipes and Location Card wallet (Forge 1.20.1)
+
+The survival recipes for the 3.0 device set now use the 3.0 patterns and
+ingredient families. Common `c:` ingredients map to the corresponding Forge
+1.20.1 tags, including glass, ingots, gems and dyes. Location Cards have the
+3.0 cheap and expensive dye recipes, yielding four or sixteen cards. Cards
+stack to sixteen. The existing `tempad:location_card` recipe ID now represents
+the cheap recipe so old recipe-book references remain valid. Crafting a card,
+Timedoor Marker or Chronomark by itself clears its stored data. Existing items
+and their NBT remain readable.
+
+Time Steel has the upstream Create-dependent split: a shaped recipe and a
+superheated Create mixing recipe when Create is loaded, or a shapeless recipe
+otherwise. Forge conditions replace the 1.21 NeoForge conditions.
+
+Using a filled card puts it in a carried wallet when space is available.
+Secondary inventory clicks also insert filled cards into the wallet. A wallet
+has eighteen slots, each of which may hold a stack of cards. The first
+nonempty carried wallet exposes its destinations in the Tempad. These
+destinations cannot be deleted or exported from the Tempad; their Timedoors
+recheck the card while open and close if the card or wallet disappears. Without
+a wallet, normal use retains the older card-import behavior. Sneak-use imports
+an unlinked card even when a wallet is present. Using one card from a stack to
+record a location or bind a marker only changes that card.
+
 ### Timedoor Projector block (Forge 1.20.1)
 
 The 3.0 Timedoor Projector is now available as both an item and a placeable

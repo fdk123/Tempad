@@ -1,1 +1,27 @@
-{"type":"minecraft:crafting_shaped","pattern":["TTT","TBT","TCT"],"key":{"T":{"item":"tempad:time_steel"},"B":{"item":"minecraft:crafting_table"},"C":{"item":"tempad:chronon_battery"}},"result":{"item":"tempad:workstation","count":1}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "forge:glass/tinted"
+    },
+    "Q": {
+      "tag": "forge:gems/quartz"
+    },
+    "T": {
+      "item": "tempad:time_steel"
+    },
+    "c": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "pattern": [
+    "GG ",
+    "ccc",
+    "TQT"
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:workstation"
+  }
+}

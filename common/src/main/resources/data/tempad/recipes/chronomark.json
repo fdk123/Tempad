@@ -1,1 +1,30 @@
-{"type":"minecraft:crafting_shaped","pattern":["ITI","SES","IBI"],"key":{"I":{"item":"minecraft:iron_ingot"},"T":{"item":"minecraft:tinted_glass"},"S":{"item":"tempad:time_steel"},"E":{"item":"minecraft:ender_pearl"},"B":{"item":"minecraft:iron_block"}},"result":{"item":"tempad:chronomark"}}
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "G": {
+      "tag": "forge:glass/tinted"
+    },
+    "I": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "T": {
+      "item": "tempad:time_steel"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "iGi",
+    "TET",
+    "iIi"
+  ],
+  "result": {
+    "count": 1,
+    "item": "tempad:chronomark"
+  }
+}

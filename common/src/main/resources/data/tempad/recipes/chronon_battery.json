@@ -1,26 +1,27 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "forge:gems/amethyst"
+    },
+    "C": {
+      "item": "tempad:chronon_cell"
+    },
+    "T": {
+      "item": "tempad:time_steel"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    }
+  },
   "pattern": [
     "iTi",
     "CAC",
     "iTi"
   ],
-  "key": {
-    "i": {
-      "item": "minecraft:iron_ingot"
-    },
-    "T": {
-      "item": "tempad:time_steel"
-    },
-    "C": {
-      "item": "tempad:chronon_cell"
-    },
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    }
-  },
   "result": {
-    "item": "tempad:chronon_battery",
-    "count": 1
+    "count": 1,
+    "item": "tempad:chronon_battery"
   }
 }
