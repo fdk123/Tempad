@@ -278,4 +278,8 @@
   "config.jade.plugin_tempad.jade_projector": "Timedoor Projector status",
   "config.jade.plugin_tempad.jade_marker": "Marker status",
   "config.jade.plugin_tempad.jade_timedoor": "Timedoor status"
+  ,"advancements.tempad.time_twister.title": "Time moves differently here"
+  ,"advancements.tempad.time_twister.description": "Obtain a Time Twister"
+  ,"advancements.tempad.timedoor_projector.title": "Temporal Marvels"
+  ,"advancements.tempad.timedoor_projector.description": "Obtain a Timedoor Projector"
 }

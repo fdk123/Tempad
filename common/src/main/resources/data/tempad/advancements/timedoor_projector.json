@@ -1,0 +1,32 @@
+{
+  "parent": "tempad:tempad",
+  "display": {
+    "icon": {
+      "item": "tempad:timedoor_projector"
+    },
+    "title": {
+      "translate": "advancements.tempad.timedoor_projector.title"
+    },
+    "description": {
+      "translate": "advancements.tempad.timedoor_projector.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_timedoor_projector": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tempad:timedoor_projector"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

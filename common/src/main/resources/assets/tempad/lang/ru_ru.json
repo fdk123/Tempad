@@ -181,4 +181,8 @@
   "config.jade.plugin_tempad.jade_projector": "Состояние проектора",
   "config.jade.plugin_tempad.jade_marker": "Состояние метки",
   "config.jade.plugin_tempad.jade_timedoor": "Состояние временной двери"
+  ,"advancements.tempad.time_twister.title": "Здесь время течёт иначе"
+  ,"advancements.tempad.time_twister.description": "Получите Временной вихрь"
+  ,"advancements.tempad.timedoor_projector.title": "Чудеса времени"
+  ,"advancements.tempad.timedoor_projector.description": "Получите проектор временной двери"
 }

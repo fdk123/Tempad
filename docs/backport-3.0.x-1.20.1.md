@@ -298,6 +298,19 @@ player disconnects, the door closes. Moving targets update the destination
 and receiving portal. The upgrade item, crafting recipe, and installation recipe
 are ported. Optional Odyssey Allies access modes are not present in this Forge port.
 
+### Recipe discovery and device advancements (Forge 1.20.1)
+
+The 3.0 recipe unlock advancements now cover all crafting and upgrade recipes,
+including both conditional Time Steel crafting recipes, card variants, devices,
+and upgrade downloads. Create mixing remains a separate processing recipe.
+Forge 1.20.1 item predicates and mod conditions replace
+their NeoForge 1.21 forms. Recipe IDs that differ in this backport point to the
+actual 1.20.1 recipes: `card_cheap` to `location_card` and
+`time_steel_shaped` to `time_steel`. Upgrade download advancements also unlock
+when their upgrade item is obtained, so their recipe criterion is not circular.
+The Time Twister and Timedoor Projector join the existing Tempad device
+advancement tree, with English and Russian titles and descriptions.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |

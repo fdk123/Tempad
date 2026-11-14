@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "tempad:upgrades/knowledge_repository"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_upgrade_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tempad:knowledge_repository_upgrade"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_upgrade_item"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "tempad:upgrades/knowledge_repository"
+    ]
+  }
+}

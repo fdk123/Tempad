@@ -1,0 +1,32 @@
+{
+  "parent": "tempad:tempad",
+  "display": {
+    "icon": {
+      "item": "tempad:time_twister"
+    },
+    "title": {
+      "translate": "advancements.tempad.time_twister.title"
+    },
+    "description": {
+      "translate": "advancements.tempad.time_twister.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "has_time_twister": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tempad:time_twister"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
