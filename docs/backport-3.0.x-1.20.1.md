@@ -183,6 +183,33 @@ open long enough for the cooldown to expire and for a return trip. Passengers
 are dismounted and teleported individually, as in the existing 1.20.1 portal
 implementation.
 
+### Timedoor persistence, travel policy and Forge events (Forge 1.20.1)
+
+Timedoor entities are now saved with their age, closing tick, destination
+and linked portal ID. The previous entity registration disabled saving despite
+writing this data. New doors create their receiving end before the first
+traveler enters and wait for the 3.0 opening animation before teleporting.
+The default lifetime is 200 ticks, matching 3.0; existing world config files
+can retain their chosen lifetime. A missing linked end is given time to load
+before the door creates a replacement.
+
+Opening and forward crossing a door now respect the same server-side travel
+policy. Its receiving end still permits the return trip when dimension rules
+are asymmetric, as in 3.0.
+Dimension-type tags `tempad:entering_not_supported`,
+`tempad:leaving_not_supported` and
+`tempad:intradimensional_travel_not_supported` can be filled by datapacks;
+they are empty by default. `allowIntradimensionalTravel` is a separate config
+switch. The legacy dimension blacklist still applies. The entity-type tag
+`tempad:teleporting_not_supported` includes end crystals and optional boss
+tags, so packs can prohibit more entities without code changes.
+
+Forge addons can subscribe to `TimedoorEvent.Open`, `Enter`, `Exit` and `Close`
+on the game event bus. `OpenWithItem` and `OpenWithBlock` identify the source
+device. Canceling Open prevents the portal and its opening cost; canceling
+Enter leaves the traveler in place. The events use the 1.20.1 Forge API and
+are available through the Forge module.
+
 ### Time Twister and travel history (Forge 1.20.1)
 
 Travel history is recorded every 1200 ticks of player movement and at death,

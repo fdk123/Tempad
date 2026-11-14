@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,9 +20,25 @@ import java.util.function.Consumer;
 public class TeleportUtils {
 
     public static boolean mayTeleport(ResourceKey<Level> level, Player player) {
-        if (player.isCreative()) return true;
-        if (isDimensionBlacklisted(player.level(), level)) return false;
-        return level.equals(player.level().dimension()) || (player.level().isClientSide() ? ConfigCache.allowInterdimensionalTravel : TempadConfig.allowInterdimensionalTravel);
+        if (level == null) return false;
+        if (player.level().isClientSide()) {
+            if (isDimensionBlacklisted(player.level(), level)) return false;
+            return level.equals(player.level().dimension()) ? ConfigCache.allowIntradimensionalTravel : ConfigCache.allowInterdimensionalTravel;
+        }
+        return mayTravel(player.level(), level);
+    }
+
+    public static boolean mayTravel(Level sourceLevel, ResourceKey<Level> destination) {
+        if (destination == null || isDimensionBlacklisted(sourceLevel, destination)) return false;
+        if (!(sourceLevel instanceof ServerLevel serverLevel)) return false;
+        ServerLevel targetLevel = serverLevel.getServer().getLevel(destination);
+        if (targetLevel == null) return false;
+        if (sourceLevel.dimension().equals(destination))
+            return TempadConfig.allowIntradimensionalTravel
+                && !sourceLevel.dimensionTypeRegistration().is(Tempad.INTRADIMENSIONAL_TRAVEL_NOT_SUPPORTED);
+        return TempadConfig.allowInterdimensionalTravel
+            && !sourceLevel.dimensionTypeRegistration().is(Tempad.LEAVING_NOT_SUPPORTED)
+            && !targetLevel.dimensionTypeRegistration().is(Tempad.ENTERING_NOT_SUPPORTED);
     }
 
     public static boolean isDimensionBlacklisted(Level sourceLevel, ResourceKey<Level> level) {

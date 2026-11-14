@@ -87,5 +87,5 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> CARD_WALLET = ITEMS.register("card_wallet", () -> new CardWalletItem(new Item.Properties()));
 
     //the one entity in this mod
-    public static final RegistryEntry<EntityType<TimedoorEntity>> TIMEDOOR_ENTITY = ENTITIES.register("timedoor", () -> EntityType.Builder.of(TimedoorEntity::new, MobCategory.MISC).sized(0.4F, 2.3F).noSave().build("timedoor"));
+    public static final RegistryEntry<EntityType<TimedoorEntity>> TIMEDOOR_ENTITY = ENTITIES.register("timedoor", () -> EntityType.Builder.of(TimedoorEntity::new, MobCategory.MISC).sized(0.4F, 2.3F).build("timedoor"));
 }

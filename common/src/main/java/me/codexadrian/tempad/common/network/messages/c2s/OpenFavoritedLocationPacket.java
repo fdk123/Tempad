@@ -29,7 +29,7 @@ public record OpenFavoritedLocationPacket(int color) implements Packet<OpenFavor
                 && !TempadUpgrades.has(tempadStack, TempadUpgrades.PLAYER_TELEPORT)) return;
         LocationData locationData = TempadLocationHandler.getLocation(level, player.getUUID(), favorite);
         if (locationData != null && tempadStack.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(player, tempadStack) && TeleportUtils.mayTeleport(locationData.getLevelKey(), player)) {
-            if (TempadItem.summonTimeDoor(locationData, player, color) != null && !player.getAbilities().instabuild)
+            if (TempadItem.summonTimeDoor(locationData, player, color, tempadStack) != null && !player.getAbilities().instabuild)
                 tempadItem.getOption().onTimedoorOpen(player);
         }
     }

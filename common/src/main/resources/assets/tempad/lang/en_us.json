@@ -1,4 +1,5 @@
 {
+  "config.tempad.allow_intradimensional_travel": "Allow travel within a dimension",
   "item.tempad.time_twister": "Time Twister",
   "item.tempad.time_twister.no_chronons": "Not enough chronons to backtrack",
   "item.tempad.time_twister.cost": "Backtrack cost: %s chronons",

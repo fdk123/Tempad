@@ -1,4 +1,5 @@
 {
+  "config.tempad.allow_intradimensional_travel": "Разрешить перемещение внутри измерения",
   "item.tempad.time_twister": "Искривитель времени",
   "item.tempad.time_twister.no_chronons": "Недостаточно хрононов для возврата",
   "item.tempad.time_twister.cost": "Стоимость возврата: %s хрононов",

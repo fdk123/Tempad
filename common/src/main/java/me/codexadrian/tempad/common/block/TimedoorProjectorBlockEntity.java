@@ -75,7 +75,7 @@ public final class TimedoorProjectorBlockEntity extends BlockEntity {
         timedoorId = null;
         int cost = Math.max(0, TempadConfig.projectorDoorCost);
         if (chronons < cost) return;
-        TimedoorEntity opened = TempadItem.summonTimeDoor(destination, player, Tempad.ORANGE, worldPosition, getBlockState().getValue(TimedoorProjectorBlock.FACING), serverLevel);
+        TimedoorEntity opened = TempadItem.summonTimeDoor(destination, player, Tempad.ORANGE, worldPosition, getBlockState().getValue(TimedoorProjectorBlock.FACING), serverLevel, this);
         if (opened == null) return;
         opened.setLifetimeTicks(Math.max(1, TempadConfig.projectorDoorDuration));
         chronons -= cost;

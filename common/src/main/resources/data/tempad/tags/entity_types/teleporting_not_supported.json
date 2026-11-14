@@ -1,0 +1,8 @@
+{
+  "values": [
+    { "id": "#forge:bosses", "required": false },
+    { "id": "#c:bosses", "required": false },
+    { "id": "#c:teleporting_not_supported", "required": false },
+    "minecraft:end_crystal"
+  ]
+}

@@ -71,7 +71,7 @@ public final class TimedoorProjectorItem extends BlockItem implements ChrononCon
             player.displayClientMessage(Component.translatable("item.tempad.timedoor_projector.no_chronons"), true);
             return;
         }
-        TimedoorEntity door = TempadItem.summonTimeDoor(target, player, Tempad.ORANGE);
+        TimedoorEntity door = TempadItem.summonTimeDoor(target, player, Tempad.ORANGE, stack);
         if (door == null) return;
         door.setLifetimeTicks(Math.max(1, TempadConfig.projectorDoorDuration));
         if (!player.getAbilities().instabuild) ChrononStorage.extract(stack, cost);

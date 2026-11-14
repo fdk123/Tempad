@@ -53,7 +53,7 @@ public record SummonTimedoorPacket(UUID location, int color, UUID deviceId) impl
                 if (PlayerLocationHandler.isPlayerLocation(level, message.location)
                         && !TempadUpgrades.has(itemInHand, TempadUpgrades.PLAYER_TELEPORT)) return;
                 if (locationData != null && itemInHand.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(player, itemInHand) && TeleportUtils.mayTeleport(locationData.getLevelKey(), player)) {
-                    if (TempadItem.summonTimeDoor(locationData, player, message.color) != null && !player.getAbilities().instabuild)
+                    if (TempadItem.summonTimeDoor(locationData, player, message.color, itemInHand) != null && !player.getAbilities().instabuild)
                         tempadItem.getOption().onTimedoorOpen(player);
                 }
             };

@@ -8,6 +8,7 @@ public class ConfigCache {
     public static int timeTwisterBacktrackCost = TempadConfig.timeTwisterBacktrackCost;
     public static int maxHistorySize = TempadConfig.maxHistorySize;
     public static boolean allowInterdimensionalTravel = TempadConfig.allowInterdimensionalTravel;
+    public static boolean allowIntradimensionalTravel = TempadConfig.allowIntradimensionalTravel;
     public static boolean allowExporting = TempadConfig.allowExporting;
     public static boolean consumeCooldown = TempadConfig.consumeCooldown;
 

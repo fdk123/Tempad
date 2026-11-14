@@ -187,7 +187,7 @@ public final class WorkstationBlockEntity extends BlockEntity {
         if (!TeleportUtils.mayTeleport(location.getLevelKey(), player)) { workstation.setStatus("blocked"); return; }
         if (!tempad.getOption().canTimedoorOpen(player, workstation.tempad)) { workstation.setStatus("no_fuel"); return; }
         if (ChrononStorage.get(workstation.tempad) < Math.max(0, TempadConfig.workstationPortalSustainCost)) { workstation.setStatus("no_chronons"); return; }
-        TimedoorEntity opened = TempadItem.summonTimeDoor(location, player, 0, pos, state.getValue(WorkstationBlock.FACING), serverLevel, PortalSetupData.get(workstation.tempad));
+        TimedoorEntity opened = TempadItem.summonTimeDoor(location, player, 0, pos, state.getValue(WorkstationBlock.FACING), serverLevel, PortalSetupData.get(workstation.tempad), workstation);
         if (opened == null) { workstation.setStatus("blocked"); return; }
         if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player, workstation.tempad);
         workstation.timedoorId = opened.getUUID();

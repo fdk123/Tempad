@@ -77,6 +77,7 @@ public class ForgeTempad {
 
         MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> {
             NetworkHandler.CHANNEL.sendToPlayer(new InitConfigPacket(TempadConfig.allowInterdimensionalTravel,
+                TempadConfig.allowIntradimensionalTravel,
                 TempadConfig.allowExporting,
                 TempadConfig.consumeCooldown,
                 TempadConfig.tempadFuelType,

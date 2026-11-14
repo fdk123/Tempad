@@ -63,7 +63,7 @@ public final class TempadConfig {
 
     @ConfigEntry(id = "timedoorWaitTime", type = EntryType.INTEGER, translation = "config.tempad.timedoor_wait_time")
     @Comment("The amount of time in ticks that the timedoor will wait before closing itself after the owner walked through it.")
-    public static int timedoorWait = 60;
+    public static int timedoorWait = 200;
 
     @ConfigEntry(id = "timedoorAddWaitTime", type = EntryType.INTEGER, translation = "config.tempad.timedoor_add_wait_time")
     @Comment("The amount of time in ticks that the Tempad will add to the wait time when the player is in the Tempad.")
@@ -73,6 +73,10 @@ public final class TempadConfig {
     @ConfigEntry(id = "allowInterdimensionalTravel", type = EntryType.BOOLEAN, translation = "config.tempad.allow_interdimensional_travel")
     @Comment("Whether or not the Tempad should allow interdimensional travel.")
     public static boolean allowInterdimensionalTravel = true;
+
+    @ConfigEntry(id = "allowIntradimensionalTravel", type = EntryType.BOOLEAN, translation = "config.tempad.allow_intradimensional_travel")
+    @Comment("Whether Timedoors may connect two points within the same dimension.")
+    public static boolean allowIntradimensionalTravel = true;
 
     // allow exporting of locations
     @ConfigEntry(id = "allowExporting", type = EntryType.BOOLEAN, translation = "config.tempad.allow_exporting")

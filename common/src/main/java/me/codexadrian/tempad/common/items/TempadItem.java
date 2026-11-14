@@ -14,6 +14,7 @@ import me.codexadrian.tempad.common.data.MarkerIndex;
 import me.codexadrian.tempad.common.data.WalletLocationHandler;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
+import me.codexadrian.tempad.common.entity.TimedoorEvents;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.c2s.OpenFavoritedLocationPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
@@ -32,6 +33,7 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
@@ -96,7 +98,12 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
     }
 
     public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color) {
-        return summonTimeDoor(locationData, player, color, player.position(), player.getDirection(), player.level(), null, player.getXRot() > 45.0F);
+        return summonTimeDoor(locationData, player, color, (ItemStack) null);
+    }
+
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, @Nullable ItemStack sourceItem) {
+        return summonTimeDoor(locationData, player, color, player.position(), player.getDirection(), player.level(), null,
+            player.getXRot() > 45.0F, sourceItem, null);
     }
 
     public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin, Direction direction) {
@@ -108,12 +115,25 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
     }
 
     public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin, Direction direction, Level sourceLevel) {
-        return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction, sourceLevel);
+        return summonTimeDoor(locationData, player, color, origin, direction, sourceLevel, (BlockEntity) null);
+    }
+
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin,
+                                                 Direction direction, Level sourceLevel, @Nullable BlockEntity sourceBlock) {
+        return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction, sourceLevel, null,
+            false, null, sourceBlock);
     }
 
     public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin,
                                                 Direction direction, Level sourceLevel, PortalSetupData placement) {
-        return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction, sourceLevel, placement);
+        return summonTimeDoor(locationData, player, color, origin, direction, sourceLevel, placement, null);
+    }
+
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin,
+                                                Direction direction, Level sourceLevel, PortalSetupData placement,
+                                                @Nullable BlockEntity sourceBlock) {
+        return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction, sourceLevel, placement,
+            false, null, sourceBlock);
     }
 
     private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin, Direction direction, Level sourceLevel) {
@@ -122,12 +142,12 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
 
     private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin,
                                                  Direction direction, Level sourceLevel, @Nullable PortalSetupData placement) {
-        return summonTimeDoor(locationData, player, color, origin, direction, sourceLevel, placement, false);
+        return summonTimeDoor(locationData, player, color, origin, direction, sourceLevel, placement, false, null, null);
     }
 
     private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin,
                                                  Direction direction, Level sourceLevel, @Nullable PortalSetupData placement,
-                                                 boolean handheldFloor) {
+                                                 boolean handheldFloor, @Nullable ItemStack sourceItem, @Nullable BlockEntity sourceBlock) {
         TimedoorEntity timedoor = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), sourceLevel);
         timedoor.setColor(locationData.getPortalColor() >= 0 ? locationData.getPortalColor() : color);
         timedoor.setLocation(locationData);
@@ -145,6 +165,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         timedoor.setPos(doorPos.x, doorPos.y, doorPos.z);
         timedoor.setYRot(direction.getOpposite().toYRot() + (placement == null ? 0 : placement.angle()));
         timedoor.setFloorMode(placement == null ? handheldFloor : !placement.upright());
+        if (!TimedoorEvents.canOpen(timedoor, player, locationData, sourceItem, sourceBlock)) return null;
         if (!sourceLevel.addFreshEntity(timedoor)) return null;
         timedoor.playSound(Tempad.TIMEDOOR_SOUND.get());
         return timedoor;
