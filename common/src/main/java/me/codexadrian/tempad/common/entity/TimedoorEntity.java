@@ -51,6 +51,7 @@ public class TimedoorEntity extends Entity {
     private UUID targetWallet = null;
     private UUID linkedPortalId = null;
     private TimedoorEntity linkedPortalEntity = null;
+    private boolean receivingPortal = false;
     private int lifetimeTicks = TempadConfig.timedoorWait;
 
     public TimedoorEntity(EntityType<TimedoorEntity> entityType, Level level) {
@@ -79,6 +80,7 @@ public class TimedoorEntity extends Entity {
         if (compoundTag.contains("linked_portal")) {
             this.setLinkedPortalId(compoundTag.getUUID("linked_portal"));
         }
+        receivingPortal = compoundTag.getBoolean("receiving_portal");
     }
 
     @Override
@@ -97,6 +99,7 @@ public class TimedoorEntity extends Entity {
         if (getLinkedPortalId() != null) {
             compoundTag.putUUID("linked_portal", getLinkedPortalId());
         }
+        compoundTag.putBoolean("receiving_portal", receivingPortal);
     }
 
     @Override
@@ -107,7 +110,8 @@ public class TimedoorEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide() && (targetPlayer != null || targetMarker != null || targetWallet != null) && !refreshDynamicTarget()) {
+        if (level().isClientSide()) return;
+        if ((targetPlayer != null || targetMarker != null || targetWallet != null) && !refreshDynamicTarget()) {
             if (tickCount > getClosingTime() + ANIMATION_LENGTH) discard();
             return;
         }
@@ -120,46 +124,71 @@ public class TimedoorEntity extends Entity {
                 getX() + 1.1, getY() + 2.3, getZ() + 1.1);
         }
         if (getLocation() != null) {
+            TimedoorEntity existingExit = getLinkedPortalEntity();
+            if (!receivingPortal && existingExit != null && existingExit.getLocation() == null) {
+                existingExit.setLocation(returnLocation());
+                existingExit.receivingPortal = true;
+                existingExit.setYRot(getLocation().hasPreciseArrival() ? getLocation().getArrivalYaw() + 180.0F : getYRot());
+            }
             Predicate<Entity> b = (entity) -> (((entity instanceof LivingEntity || entity instanceof ItemEntity)
                 && !entity.getType().is(Tempad.TEMPAD_ENTITY_BLACKLIST)) || entity.getType().is(Tempad.TEMPAD_ENTITY_WHITELIST))
-                && isInsideDoor(entity);
+                && isInsideDoor(entity) && !isOnCooldown(entity);
             List<Entity> entities = this.level().getEntitiesOfClass(Entity.class, box, b);
             boolean destinationAllowed = !TeleportUtils.isDimensionBlacklisted(this.level(), getLocation().getLevelKey());
             if (destinationAllowed && !entities.isEmpty() && !level().isClientSide()) {
                 ServerLevel destinationLevel = Objects.requireNonNull(level().getServer()).getLevel(getLocation().getLevelKey());
                 if (destinationLevel != null) {
-                    entities.stream().flatMap(entity -> entity.getRootVehicle().getSelfAndPassengers()).distinct().forEach(entity -> {
+                    List<Entity> travelers = entities.stream().map(Entity::getRootVehicle).distinct()
+                        .flatMap(Entity::getSelfAndPassengers).distinct().toList();
+                    for (Entity entity : travelers) {
                         entity.ejectPassengers();
                         Vec3 deltaMovement = entity.getDeltaMovement();
                         var pos = getLocation().getBlockPos();
                         Vec3 arrival = getLocation().getArrivalPosition();
+                        float arrivalYaw = getLocation().hasPreciseArrival() ? getLocation().getArrivalYaw() : entity.getYRot();
+                        if (getLocation().hasPreciseArrival()) {
+                            deltaMovement = deltaMovement.yRot((float) Math.toRadians(getYRot() - arrivalYaw));
+                        }
+                        int cooldownTicks = level().dimension().equals(destinationLevel.dimension()) ? 30 : 60;
+                        setCooldown(entity, cooldownTicks);
+                        Entity teleported;
                         if (!getLocation().getLevelKey().location().equals(this.level().dimension().location())) {
-                            if (getLocation().hasPreciseArrival()) teleportEntityPrecise(destinationLevel, arrival, getLocation().getArrivalYaw(), deltaMovement, entity);
-                            else teleportEntity(destinationLevel, pos, deltaMovement, entity);
+                            if (getLocation().hasPreciseArrival()) teleported = teleportEntityPrecise(destinationLevel, arrival, arrivalYaw, deltaMovement, entity);
+                            else teleported = teleportEntity(destinationLevel, pos, deltaMovement, entity);
                         } else {
-                            if (getLocation().hasPreciseArrival()) entity.setYRot(getLocation().getArrivalYaw());
+                            if (getLocation().hasPreciseArrival()) entity.setYRot(arrivalYaw);
                             entity.teleportToWithTicket(arrival.x, arrival.y, arrival.z);
                             entity.setDeltaMovement(deltaMovement);
                             entity.hasImpulse = true;
+                            teleported = entity;
                         }
+                        if (teleported == null) continue;
+                        setCooldown(teleported, cooldownTicks);
                         TimedoorEntity linked = getLinkedPortalEntity();
-                        if (linked != null) linked.resetClosingTime();
-                        this.resetClosingTime();
-                        if (entity instanceof Player player && player.getUUID().equals(getOwner())) {
-                            this.setClosingTime(this.tickCount + TempadConfig.timedoorAddWaitTime);
-                            if (linked != null) linked.setClosingTime(linked.tickCount + TempadConfig.timedoorAddWaitTime);
+                        int minimumReturnTime = cooldownTicks + ANIMATION_LENGTH + 20;
+                        if (getClosingTime() != -1)
+                            setClosingTime(tickCount + Math.max(lifetimeTicks, minimumReturnTime));
+                        if (linked != null && linked.getClosingTime() != -1)
+                            linked.setClosingTime(linked.tickCount + Math.max(linked.lifetimeTicks, minimumReturnTime));
+                        if (teleported instanceof Player player && player.getUUID().equals(getOwner())) {
+                            if (getClosingTime() != -1)
+                                this.setClosingTime(this.tickCount + Math.max(TempadConfig.timedoorAddWaitTime, minimumReturnTime));
+                            if (linked != null && linked.getClosingTime() != -1)
+                                linked.setClosingTime(linked.tickCount + Math.max(TempadConfig.timedoorAddWaitTime, minimumReturnTime));
                         }
-                    });
-                    if (getLinkedPortalEntity() == null) {
+                    }
+                    if (!receivingPortal && getLinkedPortalEntity() == null) {
                         TimedoorEntity recipientPortal = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), destinationLevel);
                         recipientPortal.setOwner(this.getOwner());
-                        recipientPortal.setClosingTime(TempadConfig.timedoorAddWaitTime);
-                        recipientPortal.setLocation(null);
+                        recipientPortal.setLocation(returnLocation());
                         recipientPortal.setColor(this.getColor());
                         recipientPortal.setFloorMode(isFloorMode());
                         recipientPortal.setLifetimeTicks(lifetimeTicks);
+                        recipientPortal.setClosingTime(getClosingTime() == -1 ? -1
+                            : recipientPortal.tickCount + Math.max(1, getClosingTime() - tickCount));
                         placeRecipientPortal(recipientPortal, getLocation());
-                        recipientPortal.setYRot(this.getYRot());
+                        recipientPortal.setYRot(getLocation().hasPreciseArrival() ? getLocation().getArrivalYaw() + 180.0F : this.getYRot());
+                        recipientPortal.receivingPortal = true;
                         if (destinationLevel.addFreshEntity(recipientPortal)) {
                             this.setLinkedPortalId(recipientPortal.getUUID());
                             recipientPortal.setLinkedPortalId(this.getUUID());
@@ -169,7 +198,11 @@ public class TimedoorEntity extends Entity {
             }
         }
         if (this.tickCount > getClosingTime() + ANIMATION_LENGTH && getClosingTime() != -1) {
-            if (this.getLinkedPortalEntity() != null) this.getLinkedPortalEntity().setLinkedPortalId(null);
+            TimedoorEntity linked = this.getLinkedPortalEntity();
+            if (linked != null) {
+                linked.setLinkedPortalId(null);
+                if (!receivingPortal) linked.discard();
+            }
             this.setLinkedPortalId(null);
             this.discard();
         }
@@ -199,6 +232,7 @@ public class TimedoorEntity extends Entity {
             setLinkedPortalId(null);
         } else if (linked != null) {
             placeRecipientPortal(linked, live);
+            linked.setYRot(live.hasPreciseArrival() ? live.getArrivalYaw() + 180.0F : getYRot());
         }
         return true;
     }
@@ -221,6 +255,13 @@ public class TimedoorEntity extends Entity {
             BlockPos position = location.getBlockPos().relative(getDirection(), 1);
             recipient.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
         }
+    }
+
+    private LocationData returnLocation() {
+        double angle = Math.toRadians(getYRot() + 90.0F);
+        Vec3 arrival = position().add(Math.cos(angle), 0, Math.sin(angle));
+        return new LocationData(level().dimension().location().toString(), level().dimension(),
+            BlockPos.containing(arrival), UUID.randomUUID(), true, true, true, arrival, getYRot(), getColor());
     }
 
     @Nullable
@@ -249,12 +290,22 @@ public class TimedoorEntity extends Entity {
     }
 
     @ExpectPlatform
-    public static void teleportEntity(ServerLevel destinationLevel, BlockPos pos, Vec3 deltaMovement, Entity entity) {
+    public static Entity teleportEntity(ServerLevel destinationLevel, BlockPos pos, Vec3 deltaMovement, Entity entity) {
         throw new NotImplementedException();
     }
 
     @ExpectPlatform
-    public static void teleportEntityPrecise(ServerLevel destinationLevel, Vec3 pos, float yaw, Vec3 deltaMovement, Entity entity) {
+    public static Entity teleportEntityPrecise(ServerLevel destinationLevel, Vec3 pos, float yaw, Vec3 deltaMovement, Entity entity) {
+        throw new NotImplementedException();
+    }
+
+    @ExpectPlatform
+    public static boolean isOnCooldown(Entity entity) {
+        throw new NotImplementedException();
+    }
+
+    @ExpectPlatform
+    public static void setCooldown(Entity entity, int ticks) {
         throw new NotImplementedException();
     }
 

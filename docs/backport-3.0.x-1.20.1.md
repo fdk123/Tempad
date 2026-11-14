@@ -169,6 +169,20 @@ The index remembers removed marker IDs to suppress stale snapshots imported
 by earlier builds when the marker ID is known to the index. The block and item
 models use vanilla textures and new geometry.
 
+### Two-way Timedoor travel (Forge 1.20.1)
+
+The receiving Timedoor now links back to the original door and returns travelers
+to a precise point just beyond it. Both ends save their link and target, so
+return travel survives a world reload. Moving markers update the receiving
+door's position and angle. The original door removes its receiving end when it
+closes. Entities have a persistent 30-tick same-dimension or 60-tick
+cross-dimension cooldown, matching 3.0's loop protection. Precise destinations
+rotate travel momentum to the destination angle; cross-dimension travel also
+restores the resulting entity's velocity. After a crossing, the pair remains
+open long enough for the cooldown to expire and for a return trip. Passengers
+are dismounted and teleported individually, as in the existing 1.20.1 portal
+implementation.
+
 ### Time Twister and travel history (Forge 1.20.1)
 
 Travel history is recorded every 1200 ticks of player movement and at death,
