@@ -66,7 +66,7 @@
   "guide.tempad.page.2.title": "Хрононы",
   "guide.tempad.page.2.body": "Заряжайте Tempad от батареи или метронома. Метроном также заряжает соседнюю рабочую станцию того же владельца. Сигнал редстоуна открывает портал станции к избранной точке.",
   "guide.tempad.page.3.title": "Улучшения",
-  "guide.tempad.page.3.body": "Поместите Tempad в рабочую станцию и примените к ней предмет улучшения. Дождитесь завершения загрузки, прежде чем забрать устройство. Установленные улучшения сохраняются на Tempad."
+  "guide.tempad.page.3.body": "Поместите Tempad в рабочую станцию и примените к ней предмет улучшения. Дождитесь завершения загрузки, прежде чем забрать устройство. Установленные улучшения сохраняются на Tempad. Перед установкой настройте портал станции кнопкой P: точку назначения, смещения, угол и форму двери."
   ,"screen.tempad.settings.title": "Настройки Темпада"
   ,"screen.tempad.settings.app": "Стартовое приложение: %s"
   ,"screen.tempad.settings.app.locations": "Точки"
@@ -80,4 +80,16 @@
   ,"screen.tempad.settings.order.dimension": "По измерению"
   ,"screen.tempad.settings.order.type": "По типу"
   ,"key.tempad.favorite": "Быстрое действие Темпада"
+  ,"screen.tempad.portal_setup.title": "Настройка портала станции"
+  ,"screen.tempad.portal_setup.left_right": "Влево / вправо (-5...5)"
+  ,"screen.tempad.portal_setup.up_down": "Вверх / вниз (-5...5)"
+  ,"screen.tempad.portal_setup.forward_back": "Вперёд / назад (-5...5)"
+  ,"screen.tempad.portal_setup.angle": "Угол (градусы)"
+  ,"screen.tempad.portal_setup.orientation": "Форма двери: %s"
+  ,"screen.tempad.portal_setup.vertical": "Вертикальная"
+  ,"screen.tempad.portal_setup.floor": "Горизонтальная"
+  ,"screen.tempad.portal_setup.destination": "Точка назначения: %s"
+  ,"screen.tempad.portal_setup.favorite": "Избранная точка"
+  ,"screen.tempad.portal_setup.invalid": "Введите допустимые числа для смещений и угла"
+  ,"block.tempad.workstation.status.no_target": "выбранная точка недоступна"
 }

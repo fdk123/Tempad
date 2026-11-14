@@ -3,6 +3,7 @@ package me.codexadrian.tempad.common.block;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
 import me.codexadrian.tempad.common.items.TempadItem;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.config.TempadConfig;
@@ -171,12 +172,14 @@ public final class WorkstationBlockEntity extends BlockEntity {
         if (workstation.tempad.isEmpty()) { workstation.setStatus("no_tempad"); return; }
         if (!(serverLevel.getPlayerByUUID(workstation.owner) instanceof ServerPlayer player)) { workstation.setStatus("owner_offline"); return; }
         if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) { workstation.setStatus("invalid_tempad"); return; }
-        LocationData location = TempadLocationHandler.getLocation(serverLevel, player.getUUID(), TempadLocationHandler.getFavorite(serverLevel, player.getUUID()));
-        if (location == null) { workstation.setStatus("no_favorite"); return; }
+        UUID selected = PortalSetupData.selected(workstation.tempad);
+        if (selected == null) selected = TempadLocationHandler.getFavorite(serverLevel, player.getUUID());
+        LocationData location = selected == null ? null : TempadLocationHandler.getLocation(serverLevel, player.getUUID(), selected);
+        if (location == null) { workstation.setStatus(PortalSetupData.selected(workstation.tempad) == null ? "no_favorite" : "no_target"); return; }
         if (!TeleportUtils.mayTeleport(location.getLevelKey(), player)) { workstation.setStatus("blocked"); return; }
         if (!tempad.getOption().canTimedoorOpen(player, workstation.tempad)) { workstation.setStatus("no_fuel"); return; }
         if (ChrononStorage.get(workstation.tempad) < Math.max(0, TempadConfig.workstationPortalSustainCost)) { workstation.setStatus("no_chronons"); return; }
-        TimedoorEntity opened = TempadItem.summonTimeDoor(location, player, 0, pos, state.getValue(WorkstationBlock.FACING), serverLevel);
+        TimedoorEntity opened = TempadItem.summonTimeDoor(location, player, 0, pos, state.getValue(WorkstationBlock.FACING), serverLevel, PortalSetupData.get(workstation.tempad));
         if (opened == null) { workstation.setStatus("blocked"); return; }
         if (!player.getAbilities().instabuild) tempad.getOption().onTimedoorOpen(player, workstation.tempad);
         workstation.timedoorId = opened.getUUID();

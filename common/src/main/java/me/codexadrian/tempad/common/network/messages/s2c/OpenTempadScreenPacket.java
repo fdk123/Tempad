@@ -5,6 +5,7 @@ import com.teamresourceful.resourcefullib.common.networking.base.PacketContext;
 import com.teamresourceful.resourcefullib.common.networking.base.PacketHandler;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.utils.ClientUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -19,7 +20,8 @@ import java.util.UUID;
 
 public record OpenTempadScreenPacket(List<LocationData> locationData,
                                      UUID favorite, UUID deviceId, boolean canSaveLocations, boolean hasKnowledgeRepository, boolean hasTimeTwister,
-                                     String defaultApp, String defaultMacro, String locationOrder, boolean startGuide) implements Packet<OpenTempadScreenPacket> {
+                                     String defaultApp, String defaultMacro, String locationOrder, boolean startGuide,
+                                     PortalSetupData portalSetup, UUID selectedPortalLocation) implements Packet<OpenTempadScreenPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "open_screen");
 
@@ -64,6 +66,12 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
             buffer.writeUtf(message.defaultMacro, 32);
             buffer.writeUtf(message.locationOrder, 32);
             buffer.writeBoolean(message.startGuide);
+            buffer.writeFloat(message.portalSetup.leftRight());
+            buffer.writeFloat(message.portalSetup.upDown());
+            buffer.writeFloat(message.portalSetup.forwardBack());
+            buffer.writeVarInt(message.portalSetup.angle());
+            buffer.writeBoolean(message.portalSetup.upright());
+            buffer.writeOptional(Optional.ofNullable(message.selectedPortalLocation), FriendlyByteBuf::writeUUID);
         }
 
         @Override
@@ -81,7 +89,9 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
                 int color = buf.readInt();
                 return new LocationData(name, levelResourceKey, pos, id, teleportable, deletable, downloadable, arrival, yaw, color);
             }), buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null), buffer.readUUID(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(),
-                buffer.readUtf(32), buffer.readUtf(32), buffer.readUtf(32), buffer.readBoolean());
+                buffer.readUtf(32), buffer.readUtf(32), buffer.readUtf(32), buffer.readBoolean(),
+                new PortalSetupData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readVarInt(), buffer.readBoolean()),
+                buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null));
         }
 
         @Override

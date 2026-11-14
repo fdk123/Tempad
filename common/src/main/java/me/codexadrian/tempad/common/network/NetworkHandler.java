@@ -28,6 +28,7 @@ public class NetworkHandler {
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, SaveTempadSettingsPacket.ID, SaveTempadSettingsPacket.HANDLER, SaveTempadSettingsPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, UseTempadMacroPacket.ID, UseTempadMacroPacket.HANDLER, UseTempadMacroPacket.class);
         CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, RequestTempadMainPacket.ID, RequestTempadMainPacket.HANDLER, RequestTempadMainPacket.class);
+        CHANNEL.registerPacket(NetworkDirection.CLIENT_TO_SERVER, SavePortalSetupPacket.ID, SavePortalSetupPacket.HANDLER, SavePortalSetupPacket.class);
 
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, InitConfigPacket.ID, InitConfigPacket.HANDLER, InitConfigPacket.class);
         CHANNEL.registerPacket(NetworkDirection.SERVER_TO_CLIENT, OpenTempadScreenPacket.ID, OpenTempadScreenPacket.HANDLER, OpenTempadScreenPacket.class);

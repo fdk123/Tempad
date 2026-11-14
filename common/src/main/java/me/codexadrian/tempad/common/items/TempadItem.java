@@ -8,6 +8,7 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.ConfigCache;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.network.NetworkHandler;
@@ -92,7 +93,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
     }
 
     public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color) {
-        return summonTimeDoor(locationData, player, color, player.position(), player.getDirection(), player.level());
+        return summonTimeDoor(locationData, player, color, player.position(), player.getDirection(), player.level(), null, player.getXRot() > 45.0F);
     }
 
     public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin, Direction direction) {
@@ -107,13 +108,35 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction, sourceLevel);
     }
 
+    public static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, BlockPos origin,
+                                                Direction direction, Level sourceLevel, PortalSetupData placement) {
+        return summonTimeDoor(locationData, player, color, Vec3.atCenterOf(origin), direction, sourceLevel, placement);
+    }
+
     private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin, Direction direction, Level sourceLevel) {
+        return summonTimeDoor(locationData, player, color, origin, direction, sourceLevel, null);
+    }
+
+    private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin,
+                                                 Direction direction, Level sourceLevel, @Nullable PortalSetupData placement) {
+        return summonTimeDoor(locationData, player, color, origin, direction, sourceLevel, placement, false);
+    }
+
+    private static TimedoorEntity summonTimeDoor(LocationData locationData, Player player, int color, Vec3 origin,
+                                                 Direction direction, Level sourceLevel, @Nullable PortalSetupData placement,
+                                                 boolean handheldFloor) {
         TimedoorEntity timedoor = new TimedoorEntity(TempadRegistry.TIMEDOOR_ENTITY.get(), sourceLevel);
         timedoor.setColor(locationData.getPortalColor() >= 0 ? locationData.getPortalColor() : color);
         timedoor.setLocation(locationData);
         timedoor.setOwner(player.getUUID());
-        timedoor.setPos(origin.x() + direction.getStepX() * TempadConfig.distanceFromPlayer, origin.y(), origin.z() + direction.getStepZ() * TempadConfig.distanceFromPlayer);
-        timedoor.setYRot(direction.getOpposite().toYRot());
+        Vec3 offset = placement == null
+            ? new Vec3(direction.getStepX() * TempadConfig.distanceFromPlayer, 0, direction.getStepZ() * TempadConfig.distanceFromPlayer)
+            : placement.normalized().offset(direction);
+        Vec3 doorPos = origin.add(offset);
+        if (!sourceLevel.getWorldBorder().isWithinBounds(BlockPos.containing(doorPos))) return null;
+        timedoor.setPos(doorPos.x, doorPos.y, doorPos.z);
+        timedoor.setYRot(direction.getOpposite().toYRot() + (placement == null ? 0 : placement.angle()));
+        timedoor.setFloorMode(placement == null ? handheldFloor : !placement.upright());
         if (!sourceLevel.addFreshEntity(timedoor)) return null;
         timedoor.playSound(Tempad.TIMEDOOR_SOUND.get());
         return timedoor;

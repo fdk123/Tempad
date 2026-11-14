@@ -66,7 +66,7 @@
   "guide.tempad.page.2.title": "Chronons",
   "guide.tempad.page.2.body": "Charge a Tempad from a Chronon Battery or a Metronome. A Metronome also charges a nearby Workstation owned by the same player. Redstone activates the Workstation's portal to your favorite location.",
   "guide.tempad.page.3.title": "Upgrades",
-  "guide.tempad.page.3.body": "Insert a Tempad into a Workstation, then use an upgrade item on it. Wait for the download to finish before removing the device. Installed upgrades stay on the Tempad when you pick it up.",
+  "guide.tempad.page.3.body": "Insert a Tempad into a Workstation, then use an upgrade item on it. Wait for the download to finish before removing the device. Installed upgrades stay on the Tempad when you pick it up. Before installation, use the P button to configure the station portal's target, offsets, angle and shape.",
   "item.tempad.chronon_battery": "Chronon Battery",
   "item.tempad.chronon_cell": "Chronon Cell",
   "item.tempad.chronometer": "Chronometer",
@@ -187,4 +187,16 @@
   ,"screen.tempad.settings.order.alphabetical": "Alphabetical"
   ,"screen.tempad.settings.order.dimension": "Dimension"
   ,"screen.tempad.settings.order.type": "Type"
+  ,"screen.tempad.portal_setup.title": "Workstation Portal Setup"
+  ,"screen.tempad.portal_setup.left_right": "Left / right (-5 to 5)"
+  ,"screen.tempad.portal_setup.up_down": "Up / down (-5 to 5)"
+  ,"screen.tempad.portal_setup.forward_back": "Forward / back (-5 to 5)"
+  ,"screen.tempad.portal_setup.angle": "Angle (degrees)"
+  ,"screen.tempad.portal_setup.orientation": "Door shape: %s"
+  ,"screen.tempad.portal_setup.vertical": "Vertical"
+  ,"screen.tempad.portal_setup.floor": "Floor"
+  ,"screen.tempad.portal_setup.destination": "Destination: %s"
+  ,"screen.tempad.portal_setup.favorite": "Favorite location"
+  ,"screen.tempad.portal_setup.invalid": "Enter valid numeric portal offsets and angle"
+  ,"block.tempad.workstation.status.no_target": "selected destination unavailable"
 }

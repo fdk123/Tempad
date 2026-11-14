@@ -3,6 +3,7 @@ package me.codexadrian.tempad.common.items;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.data.TravelHistoryData;
+import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
@@ -85,6 +86,6 @@ public final class TempadSettings {
             new ArrayList<>(TempadLocationHandler.getLocations(player.level(), player.getUUID()).values()),
             TempadLocationHandler.getFavorite(player.level(), player.getUUID()), id(stack), TempadUpgrades.canSaveLocations(player),
             TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack),
-            app(stack), macro(stack), order(stack), startGuide), player);
+            app(stack), macro(stack), order(stack), startGuide, PortalSetupData.get(stack), PortalSetupData.selected(stack)), player);
     }
 }

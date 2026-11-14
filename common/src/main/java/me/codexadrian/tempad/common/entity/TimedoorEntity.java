@@ -40,6 +40,7 @@ public class TimedoorEntity extends Entity {
     public static final int ANIMATION_LENGTH = 8;
     private static final EntityDataAccessor<Integer> CLOSING_TIME = SynchedEntityData.defineId(TimedoorEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(TimedoorEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> FLOOR_MODE = SynchedEntityData.defineId(TimedoorEntity.class, EntityDataSerializers.BOOLEAN);
     private LocationData locationData = null;
     private UUID owner = null;
     private UUID linkedPortalId = null;
@@ -54,6 +55,7 @@ public class TimedoorEntity extends Entity {
     protected void defineSynchedData() {
         entityData.define(CLOSING_TIME, TempadConfig.timedoorWait);
         entityData.define(COLOR, Tempad.ORANGE);
+        entityData.define(FLOOR_MODE, false);
     }
 
     @Override
@@ -64,6 +66,7 @@ public class TimedoorEntity extends Entity {
         lifetimeTicks = compoundTag.contains("lifetime_ticks") ? Math.max(1, compoundTag.getInt("lifetime_ticks")) : TempadConfig.timedoorWait;
         if (compoundTag.hasUUID("owner")) this.setOwner(compoundTag.getUUID("owner"));
         this.setColor(compoundTag.getInt("outline_color"));
+        this.setFloorMode(compoundTag.getBoolean("floor_mode"));
         if (compoundTag.contains("linked_portal")) {
             this.setLinkedPortalId(compoundTag.getUUID("linked_portal"));
         }
@@ -78,6 +81,7 @@ public class TimedoorEntity extends Entity {
         compoundTag.putInt("lifetime_ticks", lifetimeTicks);
         if (owner != null) compoundTag.putUUID("owner", getOwner());
         compoundTag.putInt("outline_color", getColor());
+        compoundTag.putBoolean("floor_mode", isFloorMode());
         if (getLinkedPortalId() != null) {
             compoundTag.putUUID("linked_portal", getLinkedPortalId());
         }
@@ -90,15 +94,18 @@ public class TimedoorEntity extends Entity {
 
     @Override
     public void tick() {
-        AABB box = getBoundingBox();
-        if (getDirection() == Direction.NORTH || getDirection() == Direction.SOUTH) {
-            box = box.inflate(0.5, 0, 0);
-        }
-        if (getDirection() == Direction.EAST || getDirection() == Direction.WEST) {
-            box = box.inflate(0, 0, 0.5);
+        AABB box;
+        if (isFloorMode()) {
+            box = new AABB(getX() - 0.625, getY() - 0.1, getZ() - 0.625,
+                getX() + 0.625, getY() + 0.3, getZ() + 0.625);
+        } else {
+            box = new AABB(getX() - 1.1, getY(), getZ() - 1.1,
+                getX() + 1.1, getY() + 2.3, getZ() + 1.1);
         }
         if (getLocation() != null) {
-            Predicate<Entity> b = (entity) -> ((entity instanceof LivingEntity || entity instanceof ItemEntity) && !entity.getType().is(Tempad.TEMPAD_ENTITY_BLACKLIST)) || entity.getType().is(Tempad.TEMPAD_ENTITY_WHITELIST);
+            Predicate<Entity> b = (entity) -> (((entity instanceof LivingEntity || entity instanceof ItemEntity)
+                && !entity.getType().is(Tempad.TEMPAD_ENTITY_BLACKLIST)) || entity.getType().is(Tempad.TEMPAD_ENTITY_WHITELIST))
+                && isInsideDoor(entity);
             List<Entity> entities = this.level().getEntitiesOfClass(Entity.class, box, b);
             boolean destinationAllowed = !TeleportUtils.isDimensionBlacklisted(this.level(), getLocation().getLevelKey());
             if (destinationAllowed && !entities.isEmpty() && !level().isClientSide()) {
@@ -132,8 +139,12 @@ public class TimedoorEntity extends Entity {
                         recipientPortal.setClosingTime(TempadConfig.timedoorAddWaitTime);
                         recipientPortal.setLocation(null);
                         recipientPortal.setColor(this.getColor());
+                        recipientPortal.setFloorMode(isFloorMode());
                         recipientPortal.setLifetimeTicks(lifetimeTicks);
-                        if (getLocation().hasPreciseArrival()) {
+                        if (isFloorMode()) {
+                            Vec3 arrival = getLocation().getArrivalPosition();
+                            recipientPortal.setPos(arrival.x, arrival.y + 2.4, arrival.z);
+                        } else if (getLocation().hasPreciseArrival()) {
                             Vec3 arrival = getLocation().getArrivalPosition();
                             recipientPortal.setPos(arrival.x + this.getDirection().getStepX(), arrival.y, arrival.z + this.getDirection().getStepZ());
                         } else {
@@ -222,6 +233,20 @@ public class TimedoorEntity extends Entity {
 
     public int getColor() {
         return entityData.get(COLOR);
+    }
+
+    public boolean isFloorMode() { return entityData.get(FLOOR_MODE); }
+    public void setFloorMode(boolean floor) { entityData.set(FLOOR_MODE, floor); }
+
+    private boolean isInsideDoor(Entity entity) {
+        if (isFloorMode()) return true;
+        double angle = Math.toRadians(getYRot());
+        double dx = entity.getX() - getX();
+        double dz = entity.getZ() - getZ();
+        double normal = dx * Math.sin(angle) + dz * Math.cos(angle);
+        double lateral = dx * Math.cos(angle) - dz * Math.sin(angle);
+        double radius = entity.getBbWidth() * 0.5;
+        return Math.abs(normal) <= 0.2 + radius && Math.abs(lateral) <= 0.7 + radius;
     }
 
     public void resetClosingTime() {

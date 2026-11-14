@@ -10,6 +10,7 @@ import me.codexadrian.tempad.client.widgets.TextEntry;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.ConfigCache;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.items.TempadItem;
@@ -61,6 +62,8 @@ public class ConsolidatedScreen extends Screen {
     private final String defaultMacro;
     private final String locationOrder;
     private final UUID deviceId;
+    private final PortalSetupData portalSetup;
+    private final UUID selectedPortalLocation;
 
     public ConsolidatedScreen(OpenTempadScreenPacket packet) {
         super(Component.nullToEmpty(""));
@@ -73,6 +76,8 @@ public class ConsolidatedScreen extends Screen {
         this.defaultMacro = packet.defaultMacro();
         this.locationOrder = packet.locationOrder();
         this.deviceId = packet.deviceId();
+        this.portalSetup = packet.portalSetup();
+        this.selectedPortalLocation = packet.selectedPortalLocation();
         Comparator<LocationData> names = Comparator.comparing(LocationData::getName, String.CASE_INSENSITIVE_ORDER);
         Comparator<LocationData> ordering = switch (locationOrder) {
             case "dimension" -> Comparator.comparing((LocationData location) -> location.getLevelKey() == null ? "" : location.getLevelKey().location().toString()).thenComparing(names);
@@ -178,6 +183,8 @@ public class ConsolidatedScreen extends Screen {
         }).bounds(cornerX + 91, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("screen.tempad.time_twister.title"))).build());
         addRenderableWidget(Button.builder(Component.literal("S"), button -> minecraft.setScreen(new TempadSettingsScreen(this, deviceId, defaultApp, defaultMacro, locationOrder, hasTimeTwister, hasKnowledgeRepository)))
             .bounds(cornerX + 71, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("screen.tempad.settings.title"))).build());
+        addRenderableWidget(Button.builder(Component.literal("P"), button -> minecraft.setScreen(new PortalSetupScreen(this, deviceId, portalSetup, selectedPortalLocation, locations)))
+            .bounds(cornerX + 51, cornerY + 11, 16, 18).tooltip(Tooltip.create(Component.translatable("screen.tempad.portal_setup.title"))).build());
     }
 
     private void favoriteAction() {

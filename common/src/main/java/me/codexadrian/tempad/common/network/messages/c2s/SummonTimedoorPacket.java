@@ -47,8 +47,8 @@ public record SummonTimedoorPacket(UUID location, int color) implements Packet<S
                 ItemStack itemInHand = TeleportUtils.findTempad(player);
                 LocationData locationData = TempadLocationHandler.getLocation(level, player.getUUID(), message.location);
                 if (locationData != null && itemInHand.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(player, itemInHand) && TeleportUtils.mayTeleport(locationData.getLevelKey(), player)) {
-                    if (!player.getAbilities().instabuild) tempadItem.getOption().onTimedoorOpen(player);
-                    TempadItem.summonTimeDoor(locationData, player, message.color);
+                    if (TempadItem.summonTimeDoor(locationData, player, message.color) != null && !player.getAbilities().instabuild)
+                        tempadItem.getOption().onTimedoorOpen(player);
                 }
             };
         }

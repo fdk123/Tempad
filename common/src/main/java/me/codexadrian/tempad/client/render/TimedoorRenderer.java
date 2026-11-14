@@ -27,9 +27,10 @@ public class TimedoorRenderer extends EntityRenderer<TimedoorEntity> {
 
     @Override
     public void render(TimedoorEntity entity, float yaw, float deltaTime, @NotNull PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int light) {
-        float width = 1.4F;
-        float height = 2.3F;
-        float depth = .4F;
+        boolean floor = entity.isFloorMode();
+        float width = floor ? 1.25F : 1.4F;
+        float height = floor ? 1.25F : 2.3F;
+        float depth = floor ? .25F : .4F;
         int closingTime = entity.getClosingTime();
         int tickLength = TimedoorEntity.ANIMATION_LENGTH;
         int phaseLength = (tickLength) / 2;
@@ -58,7 +59,8 @@ public class TimedoorRenderer extends EntityRenderer<TimedoorEntity> {
 
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(entity.getYRot()));
-        poseStack.translate(0, 1.15F, 0);
+        poseStack.translate(0, floor ? 0.125F : 1.15F, 0);
+        if (floor) poseStack.mulPose(Axis.XP.rotationDegrees(90));
         var model = poseStack.last().pose();
         if (width >= 0)
             renderTimedoor(model, multiBufferSource, width, height, depth, light, entity.getColor());

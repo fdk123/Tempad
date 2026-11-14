@@ -125,6 +125,23 @@ does not edit or drain the wrong device. The 3.0 app and macro
 registries are represented by these currently available Forge 1.20.1 actions;
 future apps can extend the setting list as they are ported.
 
+### Workstation portal setup (Forge 1.20.1)
+
+The P button on the Tempad screen configures the portal that its Workstation
+will open. The device stores a selected location or follows its owner's current
+favorite, three offsets relative to the Workstation facing, an angle, and a
+vertical or floor door shape. Offsets are clamped to -5..5 blocks on the
+server; the selected location is checked against the player's available
+destinations. These settings stay with the Tempad when it is installed in or
+removed from the Workstation, and the target is resolved again on activation.
+Devices without saved portal settings keep the existing 1.20.1 placement.
+Floor doors have a flat renderer and a matching server interaction area; their
+exit portal appears overhead as in 3.0. The settings are edited while the
+Tempad is carried, before installation; the 1.20.1 Workstation still uses its
+existing inventory screen.
+Portable Tempads and Projectors also open a floor door when used while looking
+down more than 45 degrees, matching the 3.0 item behavior.
+
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |
 | NeoForge 21.1 / Minecraft 1.21.1 | Forge 47 / Minecraft 1.20.1 |
