@@ -30,9 +30,9 @@ public final class ChrononStorage {
     }
 
     public static int transfer(ItemStack source, ItemStack target, ChrononContainerItem targetContainer, int amount) {
-        if (source == target || amount <= 0) return 0;
-        int moved = targetContainer.insertChronons(target, Math.min(amount, get(source)));
-        if (moved > 0) extract(source, moved);
+        if (source == target || amount <= 0 || !(source.getItem() instanceof ChrononContainerItem sourceContainer)) return 0;
+        int moved = targetContainer.insertChronons(target, Math.min(amount, sourceContainer.getChronons(source)));
+        if (moved > 0) sourceContainer.extractChronons(source, moved);
         return moved;
     }
 }

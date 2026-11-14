@@ -10,6 +10,7 @@ import me.codexadrian.tempad.common.items.ChrononBatteryItem;
 import me.codexadrian.tempad.common.items.ChrononCellItem;
 import me.codexadrian.tempad.common.items.ChronometerItem;
 import me.codexadrian.tempad.common.items.ChrononGeneratorItem;
+import me.codexadrian.tempad.common.items.CreativeChronometerItem;
 import me.codexadrian.tempad.common.items.MetronomeItem;
 import me.codexadrian.tempad.common.block.MetronomeBlock;
 import me.codexadrian.tempad.common.block.MetronomeBlockEntity;
@@ -78,7 +79,8 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONON_GENERATOR = ITEMS.register("chronon_generator", () -> new ChrononGeneratorItem(new Item.Properties()));
     public static final RegistryEntry<Block> METRONOME_BLOCK = BLOCKS.register("metronome", () -> new MetronomeBlock(BlockBehaviour.Properties.of().strength(3.0F, 1200.0F)));
-    public static final RegistryEntry<Item> METRONOME = ITEMS.register("metronome", () -> new BlockItem(METRONOME_BLOCK.get(), new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<Item> METRONOME = ITEMS.register("metronome", () -> new MetronomeItem(METRONOME_BLOCK.get(), new Item.Properties()));
+    public static final RegistryEntry<Item> CREATIVE_CHRONOMETER = ITEMS.register("creative_chronometer", () -> new CreativeChronometerItem(new Item.Properties()));
     public static final RegistryEntry<BlockEntityType<MetronomeBlockEntity>> METRONOME_BLOCK_ENTITY = BLOCK_ENTITIES.register("metronome", () -> BlockEntityType.Builder.of(MetronomeBlockEntity::new, METRONOME_BLOCK.get()).build(null));
     public static final RegistryEntry<Item> CARD_WALLET = ITEMS.register("card_wallet", () -> new CardWalletItem(new Item.Properties()));
 

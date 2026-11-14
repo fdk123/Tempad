@@ -10,8 +10,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -68,13 +70,27 @@ public final class MetronomeBlock extends BaseEntityBlock {
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
         BlockEntity entity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (entity instanceof MetronomeBlockEntity metronome && metronome.getChronons() > 0 && !drops.isEmpty()) {
-            drops.get(0).getOrCreateTag().putInt("Chronons", metronome.getChronons());
-            metronome.writeIdentity(drops.get(0));
-        } else if (entity instanceof MetronomeBlockEntity metronome && !drops.isEmpty()) {
-            metronome.writeIdentity(drops.get(0));
-        }
+        if (entity instanceof MetronomeBlockEntity metronome && !drops.isEmpty()) metronome.writeIdentity(drops.get(0));
         return drops;
+    }
+
+    @Override public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative() && level.getBlockEntity(pos) instanceof MetronomeBlockEntity metronome) {
+            metronome.prepareRemoval();
+            ItemStack drop = new ItemStack(TempadRegistry.METRONOME.get());
+            metronome.writeIdentity(drop);
+            Block.popResource(level, pos, drop);
+        }
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState next, boolean moved) {
+        if (!state.is(next.getBlock()) && !level.isClientSide && level.getBlockEntity(pos) instanceof MetronomeBlockEntity metronome) {
+            metronome.prepareRemoval();
+            Containers.dropContents(level, pos, metronome.inventory());
+            level.updateNeighbourForOutputSignal(pos, this);
+        }
+        super.onRemove(state, level, pos, next, moved);
     }
 
     @Override

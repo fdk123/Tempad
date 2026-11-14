@@ -5,6 +5,7 @@ import com.teamresourceful.resourcefullib.common.registry.RegistryEntry;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.compat.curios.TempadCurioHandler;
 import me.codexadrian.tempad.common.config.TempadConfig;
+import me.codexadrian.tempad.common.data.MetronomeNetworkData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.InitConfigPacket;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
@@ -17,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import static me.codexadrian.tempad.common.Tempad.MODID;
 
@@ -49,6 +52,10 @@ public class ForgeTempad {
         NetworkHandler.register();
         MinecraftForge.EVENT_BUS.register(this);
         ForgeTravelHistoryEvents.register();
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END && ServerLifecycleHooks.getCurrentServer() != null)
+                MetronomeNetworkData.tick(ServerLifecycleHooks.getCurrentServer());
+        });
         MinecraftForge.EVENT_BUS.addListener((BlockEvent.BreakEvent event) -> {
             if (event.getState().getBlock() != TempadRegistry.METRONOME_BLOCK.get()) return;
             if (event.getLevel().getBlockEntity(event.getPos()) instanceof me.codexadrian.tempad.common.block.MetronomeBlockEntity metronome

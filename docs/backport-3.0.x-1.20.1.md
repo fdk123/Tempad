@@ -34,6 +34,26 @@ license metadata.
 
 ## Compatibility decisions
 
+### Shared Metronome chronons (Forge 1.20.1)
+
+Metronomes owned by one player now share a persistent, cross-dimensional
+chronon pool. Each booted block adds capacity; generation scales with the
+number of active blocks by default. A new block needs 500 chronons by default
+and 100 ticks to boot, as in 3.0. Existing 1.20.1 blocks without boot data start
+booted and transfer their stored charge into the network on first tick.
+Breaking a block removes its capacity and returns a proportional share of the
+pool in the dropped Metronome item. The other blocks retain the remaining
+charge. The item's charge can be transferred into other devices while carried.
+
+The Metronome now stores four input and four output chronon containers in a
+vanilla nine-slot screen with the middle slot disabled. These contents persist
+and drop when the block is removed. The network feeds adjacent Workstations
+and Projectors and preserves the existing nearby-owner charging behavior.
+The Creative Chronometer is an inexhaustible source for carried devices and
+placed chronon blocks. The 1.20.1 redstone pause is checked for loaded blocks;
+unloaded network positions keep generating, matching the 3.0 global pool.
+All new item models use vanilla textures.
+
 ### Upgrade download block (Forge 1.20.1)
 
 The Workstation now accepts data driven `tempad:upgrade` recipes. A right click

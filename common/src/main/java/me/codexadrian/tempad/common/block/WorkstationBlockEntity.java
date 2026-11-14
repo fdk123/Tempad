@@ -78,9 +78,9 @@ public final class WorkstationBlockEntity extends BlockEntity {
         return moved;
     }
     public int receiveFrom(ItemStack source) {
-        if (level == null || level.isClientSide || source == tempad || !(source.getItem() instanceof ChrononContainerItem)
+        if (level == null || level.isClientSide || source == tempad || !(source.getItem() instanceof ChrononContainerItem sourceContainer)
                 || !(tempad.getItem() instanceof ChrononContainerItem container)) return 0;
-        int moved = ChrononStorage.transfer(source, tempad, container, ChrononStorage.get(source));
+        int moved = ChrononStorage.transfer(source, tempad, container, sourceContainer.getChronons(source));
         if (moved > 0) markChanged();
         return moved;
     }

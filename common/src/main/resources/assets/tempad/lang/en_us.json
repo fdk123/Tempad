@@ -215,4 +215,12 @@
   ,"advancements.tempad.screening_device.description": "Obtain a Screening Device"
   ,"guide.tempad.page.7.title": "Player destinations"
   ,"guide.tempad.page.7.body": "Install the Player Teleport Upgrade in a Tempad at a Workstation to see available players. A Location Broadcaster lets everyone find its carrier while enabled. A Screening Device can be off, public, or limited to the carrier's FTB Team when FTB Teams is installed. Right-click either device to change its mode; carry it or equip it in a Curios charm slot. Player destinations update when the Tempad is opened and again when a Timedoor is used. They cannot be exported to cards."
+  ,"guide.tempad.page.8.title": "Starting a Metronome"
+  ,"guide.tempad.page.8.body": "Feed a new Metronome 500 chronons, then allow it 100 ticks to boot. A Metronome already placed in an older world remains booted. Its left four slots drain chronon containers; its right four slots fill them. You can also use a charged container directly on the block. Breaking it returns its share of energy in the item and drops its slotted items."
+  ,"guide.tempad.page.9.title": "Metronome network"
+  ,"guide.tempad.page.9.body": "Booted Metronomes owned by one player share a chronon pool across dimensions. Each adds capacity and, by default, generation. They charge adjacent Workstations and Projectors and continue to charge the owner's nearby devices. A Creative Chronometer supplies inexhaustible chronons to carried devices and to blocks when used on them."
+  ,"item.tempad.creative_chronometer": "Creative Chronometer"
+  ,"item.tempad.creative_chronometer.tooltip": "Unlimited chronons; fills carried devices and blocks"
+  ,"config.tempad.metronome_scale_generation": "Scale Metronome generation with network size"
+  ,"config.tempad.metronome_jump_start_amount": "Metronome start-up charge"
 }
