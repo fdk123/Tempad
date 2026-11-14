@@ -56,6 +56,18 @@ placed chronon blocks. The 1.20.1 redstone pause is checked for loaded blocks;
 unloaded network positions keep generating, matching the 3.0 global pool.
 All new item models use vanilla textures.
 
+### Optional Jade device readouts (Forge 1.20.1)
+
+Jade now shows server-supplied status for Metronomes, Workstations, Timedoor
+Projectors, markers, Chronomarks and Timedoors. The readouts include network
+charge and startup progress, upgrade download progress, Projector charge and
+destination, marker access and ID in detailed mode, and Timedoor destination
+and closing time. Projector destinations are sent only to players who can
+access that Projector. English and Russian text and Jade toggle labels are
+included. The integration compiles against Jade 11.13.3 for Forge 1.20.1 and
+does not make Jade a required runtime mod. It uses text rather than the 3.0
+custom Jade artwork.
+
 ### Upgrade download block (Forge 1.20.1)
 
 The Workstation now accepts data driven `tempad:upgrade` recipes. A right click

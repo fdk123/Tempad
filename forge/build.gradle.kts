@@ -26,9 +26,11 @@ dependencies {
     val minecraftVersion: String by project
     val forgeVersion: String by project
     val curiosVersion: String by project
+    val jadeVersion: String by project
 
     forge(group = "net.neoforged", name = "forge", version = "$minecraftVersion-$forgeVersion")
 
     "modRuntimeOnly"("top.theillusivec4.curios:curios-forge:${curiosVersion}")
     "modCompileOnly"("top.theillusivec4.curios:curios-forge:${curiosVersion}:api")
+    "modCompileOnly"("maven.modrinth:jade:$jadeVersion") { isTransitive = false }
 }
