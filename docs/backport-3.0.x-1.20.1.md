@@ -52,9 +52,10 @@ text guide from the Tempad screen. Its guide text and item models use only new
 text and vanilla Minecraft textures; the 1.21 guide artwork is not included.
 
 The Knowledge Repository crafting recipe uses a Chronometer in place of the
-1.21 Knowledge Projector, which has not been ported. The upstream
-`player_teleport_upgrade` is deliberately absent because the 1.21 branch does
-not register a matching install recipe or application for it.
+1.21 Knowledge Projector, which has not been ported. The Player Teleport
+Upgrade is installed through a new 1.20.1 workstation recipe. Upstream 1.21
+registers the item and location provider but does not provide a survival
+crafting or installation recipe, so this is an explicit modpack adaptation.
 
 ### Timedoor Projector block (Forge 1.20.1)
 
@@ -91,9 +92,7 @@ from the Tempad retain the link, and Projectors carrying those cards resolve
 the current marker position every time they open a portal. Removing the marker
 invalidates its link. The marker settings screen and network handler validate
 distance and edit access on the server. Owner-only and public access are
-available; upstream's extended PlayerAccess providers are not present in the
-1.20.1 backport yet. The block and item models use vanilla textures and new
-geometry.
+available. The block and item models use vanilla textures and new geometry.
 
 ### Time Twister and travel history (Forge 1.20.1)
 
@@ -141,6 +140,24 @@ Tempad is carried, before installation; the 1.20.1 Workstation still uses its
 existing inventory screen.
 Portable Tempads and Projectors also open a floor door when used while looking
 down more than 45 degrees, matching the 3.0 item behavior.
+
+### Live player destinations and access devices (Forge 1.20.1)
+
+The Location Broadcaster and Screening Device expose the carrier as an online,
+moving destination. The Broadcaster starts disabled and toggles public access
+on use. The Screening Device cycles Off, Public, and FTB Teams when that mod is
+loaded. Its FTB Teams check uses the installed 1.20.1 API through an optional
+Forge bridge. Both devices work from inventory or a Curios charm slot. Their
+models use vanilla textures with item state overrides.
+
+Player destinations appear only to a viewer carrying a Tempad with the Player
+Teleport Upgrade. They cannot be deleted or exported to cards. Favorite and
+Workstation portal targets can refer to a player; Workstations accept the
+upgrade on their stored Tempad. Timedoors recheck the target's online status,
+visibility, dimension and position while open. If access is revoked or the
+player disconnects, the door closes. Moving targets update the destination
+and receiving portal. The upgrade item, crafting recipe, and installation recipe
+are ported. Optional Odyssey Allies access modes are not present in this Forge port.
 
 | 3.0.x dependency/API | Forge 1.20.1 decision |
 | --- | --- |

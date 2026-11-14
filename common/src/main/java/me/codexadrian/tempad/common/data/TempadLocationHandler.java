@@ -41,16 +41,14 @@ public class TempadLocationHandler extends SaveHandler {
 
     public static void favoriteLocation(Level level, UUID player, UUID location) {
         TempadLocationHandler handler = read(level);
-        if (handler.locations.containsKey(player)) {
+        if (location != null && getLocation(level, player, location) != null) {
             handler.favorites.put(player, location);
         }
     }
 
     public static void unfavoriteLocation(Level level, UUID player) {
         TempadLocationHandler handler = read(level);
-        if (handler.locations.containsKey(player)) {
-            handler.favorites.remove(player);
-        }
+        handler.favorites.remove(player);
     }
 
     public static UUID getFavorite(Level level, UUID player) {

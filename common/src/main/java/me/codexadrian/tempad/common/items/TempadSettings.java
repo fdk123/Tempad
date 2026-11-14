@@ -4,6 +4,7 @@ import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.data.TravelHistoryData;
 import me.codexadrian.tempad.common.data.PortalSetupData;
+import me.codexadrian.tempad.common.data.PlayerLocationHandler;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
@@ -82,8 +83,11 @@ public final class TempadSettings {
     public static void openMain(ServerPlayer player, ItemStack stack) { openMain(player, stack, false); }
 
     private static void openMain(ServerPlayer player, ItemStack stack, boolean startGuide) {
+        var locations = TempadLocationHandler.getLocations(player.level(), player.getUUID());
+        if (!TempadUpgrades.has(stack, TempadUpgrades.PLAYER_TELEPORT))
+            locations.entrySet().removeIf(entry -> PlayerLocationHandler.isPlayerLocation(player.level(), entry.getKey()));
         NetworkHandler.CHANNEL.sendToPlayer(new OpenTempadScreenPacket(
-            new ArrayList<>(TempadLocationHandler.getLocations(player.level(), player.getUUID()).values()),
+            new ArrayList<>(locations.values()),
             TempadLocationHandler.getFavorite(player.level(), player.getUUID()), id(stack), TempadUpgrades.canSaveLocations(player),
             TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack),
             app(stack), macro(stack), order(stack), startGuide, PortalSetupData.get(stack), PortalSetupData.selected(stack)), player);

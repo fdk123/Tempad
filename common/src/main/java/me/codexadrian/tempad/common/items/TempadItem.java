@@ -9,6 +9,7 @@ import me.codexadrian.tempad.common.config.ConfigCache;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.data.PortalSetupData;
+import me.codexadrian.tempad.common.data.PlayerLocationHandler;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.network.NetworkHandler;
@@ -129,6 +130,7 @@ public class TempadItem extends Item implements TempadPower, ChrononContainerIte
         timedoor.setColor(locationData.getPortalColor() >= 0 ? locationData.getPortalColor() : color);
         timedoor.setLocation(locationData);
         timedoor.setOwner(player.getUUID());
+        timedoor.setTargetPlayer(PlayerLocationHandler.playerIdForLocation(sourceLevel, player.getUUID(), locationData.getId()));
         Vec3 offset = placement == null
             ? new Vec3(direction.getStepX() * TempadConfig.distanceFromPlayer, 0, direction.getStepZ() * TempadConfig.distanceFromPlayer)
             : placement.normalized().offset(direction);

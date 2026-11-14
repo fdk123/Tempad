@@ -6,6 +6,8 @@ import me.codexadrian.tempad.client.config.TempadClientConfig;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
 import me.codexadrian.tempad.common.items.TempadItem;
+import me.codexadrian.tempad.common.items.LocationBroadcasterItem;
+import me.codexadrian.tempad.common.items.ScreeningDeviceItem;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -29,6 +31,14 @@ public class TempadClient {
     public static void initItemProperties() {
         registerItemProperty(TempadRegistry.TEMPAD.get(), new ResourceLocation("usable"), CLAMPED_ITEM_PROPERTY_FUNCTION);
         registerItemProperty(TempadRegistry.CREATIVE_TEMPAD.get(), new ResourceLocation("usable"), CLAMPED_ITEM_PROPERTY_FUNCTION);
+        registerItemProperty(TempadRegistry.LOCATION_BROADCASTER.get(), new ResourceLocation(Tempad.MODID, "enabled"),
+            (stack, level, entity, seed) -> LocationBroadcasterItem.enabled(stack) ? 1.0F : 0.0F);
+        registerItemProperty(TempadRegistry.SCREENING_DEVICE.get(), new ResourceLocation(Tempad.MODID, "mode"),
+            (stack, level, entity, seed) -> switch (ScreeningDeviceItem.mode(stack)) {
+                case ScreeningDeviceItem.PUBLIC -> 0.5F;
+                case ScreeningDeviceItem.FTB_TEAMS -> 1.0F;
+                default -> 0.0F;
+            });
     }
 
     @ExpectPlatform

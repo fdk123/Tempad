@@ -15,6 +15,7 @@ import me.codexadrian.tempad.common.utils.TeleportUtils;
 public final class TempadUpgrades {
     public static final ResourceLocation NEW_LOCATION = new ResourceLocation(Tempad.MODID, "new_location");
     public static final ResourceLocation KNOWLEDGE_REPOSITORY = new ResourceLocation(Tempad.MODID, "knowledge_repository");
+    public static final ResourceLocation PLAYER_TELEPORT = new ResourceLocation(Tempad.MODID, "player_teleport");
     private static final String KEY = "InstalledUpgrades";
 
     private TempadUpgrades() {}
@@ -50,6 +51,16 @@ public final class TempadUpgrades {
                 || has(TeleportUtils.findTempad(player), NEW_LOCATION)) return true;
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             if (has(player.getInventory().getItem(i), NEW_LOCATION)) return true;
+        }
+        return false;
+    }
+
+    /** Any carried upgraded Tempad allows the player location provider to expose live entries. */
+    public static boolean canTeleportToPlayers(Player player) {
+        if (has(player.getMainHandItem(), PLAYER_TELEPORT) || has(player.getOffhandItem(), PLAYER_TELEPORT)
+                || has(TeleportUtils.findTempad(player), PLAYER_TELEPORT)) return true;
+        for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
+            if (has(player.getInventory().getItem(slot), PLAYER_TELEPORT)) return true;
         }
         return false;
     }

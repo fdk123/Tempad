@@ -7,7 +7,9 @@ import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
+import me.codexadrian.tempad.common.data.PlayerLocationHandler;
 import me.codexadrian.tempad.common.items.TempadSettings;
+import me.codexadrian.tempad.common.items.TempadUpgrades;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -43,6 +45,8 @@ public record SavePortalSetupPacket(UUID deviceId, PortalSetupData settings, UUI
                 var stack = TempadSettings.find(player, packet.deviceId);
                 if (stack.isEmpty()) return;
                 if (packet.location != null) {
+                    if (PlayerLocationHandler.isPlayerLocation(level, packet.location)
+                            && !TempadUpgrades.has(stack, TempadUpgrades.PLAYER_TELEPORT)) return;
                     LocationData target = TempadLocationHandler.getLocation(level, player.getUUID(), packet.location);
                     if (target == null || target.getLevelKey() == null || !target.isTeleportable()) return;
                 }

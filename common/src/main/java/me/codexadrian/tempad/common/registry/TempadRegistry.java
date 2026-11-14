@@ -23,6 +23,8 @@ import me.codexadrian.tempad.common.block.TimedoorMarkerBlock;
 import me.codexadrian.tempad.common.block.TimedoorMarkerBlockEntity;
 import me.codexadrian.tempad.common.items.MarkerBlockItem;
 import me.codexadrian.tempad.common.items.TimeTwisterItem;
+import me.codexadrian.tempad.common.items.LocationBroadcasterItem;
+import me.codexadrian.tempad.common.items.ScreeningDeviceItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -68,6 +70,9 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> TIME_TWISTER = ITEMS.register("time_twister", () -> new TimeTwisterItem(new Item.Properties()));
     public static final RegistryEntry<Item> NEW_LOCATION_UPGRADE = ITEMS.register("new_location_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> KNOWLEDGE_REPOSITORY_UPGRADE = ITEMS.register("knowledge_repository_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<Item> PLAYER_TELEPORT_UPGRADE = ITEMS.register("player_teleport_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<Item> LOCATION_BROADCASTER = ITEMS.register("location_broadcaster", () -> new LocationBroadcasterItem(new Item.Properties()));
+    public static final RegistryEntry<Item> SCREENING_DEVICE = ITEMS.register("screening_device", () -> new ScreeningDeviceItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONON_BATTERY = ITEMS.register("chronon_battery", () -> new ChrononBatteryItem(new Item.Properties(), 1000));
     public static final RegistryEntry<Item> CHRONON_CELL = ITEMS.register("chronon_cell", () -> new ChrononCellItem(new Item.Properties()));
     public static final RegistryEntry<Item> CHRONOMETER = ITEMS.register("chronometer", () -> new ChronometerItem(new Item.Properties()));

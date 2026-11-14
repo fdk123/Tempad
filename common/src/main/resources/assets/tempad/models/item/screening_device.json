@@ -1,0 +1,1 @@
+{"parent":"minecraft:item/generated","textures":{"layer0":"minecraft:block/tinted_glass"},"overrides":[{"predicate":{"tempad:mode":0.5},"model":"tempad:item/screening_device_public"},{"predicate":{"tempad:mode":1},"model":"tempad:item/screening_device_team"}]}

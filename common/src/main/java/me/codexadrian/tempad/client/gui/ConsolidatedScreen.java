@@ -14,6 +14,7 @@ import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.items.TempadItem;
+import me.codexadrian.tempad.common.items.TempadSettings;
 import me.codexadrian.tempad.common.network.messages.c2s.*;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.client.Minecraft;
@@ -125,7 +126,7 @@ public class ConsolidatedScreen extends Screen {
                 }
 
                 if (minecraft != null && minecraft.player != null) {
-                    ItemStack itemInHand = TeleportUtils.findTempad(minecraft.player);
+                    ItemStack itemInHand = TempadSettings.find(minecraft.player, deviceId);
                     boolean isTempadUsable = itemInHand.getItem() instanceof TempadItem tempadItem && tempadItem.getOption().canTimedoorOpen(minecraft.player, itemInHand);
                     teleportButton.active = selectedLocation.isTeleportable() && TeleportUtils.mayTeleport(selectedLocation.getLevelKey(), minecraft.player) && isTempadUsable;
                     if (selectedLocation.isTeleportable()) {
@@ -204,7 +205,7 @@ public class ConsolidatedScreen extends Screen {
 
     private void teleportAction() {
         if (minecraft != null && minecraft.player != null) {
-            NetworkHandler.CHANNEL.sendToServer(new SummonTimedoorPacket(selectedLocation.getId(), TempadClientConfig.color));
+            NetworkHandler.CHANNEL.sendToServer(new SummonTimedoorPacket(selectedLocation.getId(), TempadClientConfig.color, deviceId));
             Minecraft.getInstance().setScreen(null);
         }
     }
@@ -255,7 +256,7 @@ public class ConsolidatedScreen extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
 
         int barHeight = 0;
-        ItemStack tempad = TeleportUtils.findTempad(minecraft.player);
+        ItemStack tempad = TempadSettings.find(minecraft.player, deviceId);
         if (tempad.getItem() instanceof TempadItem item) {
             TempadOption option = item.getOption();
             if(option.isDurabilityBarVisible(tempad)) {

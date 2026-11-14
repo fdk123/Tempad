@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.LocationData;
+import me.codexadrian.tempad.common.data.PlayerLocationHandler;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,7 @@ public class TimedoorEntity extends Entity {
     private static final EntityDataAccessor<Boolean> FLOOR_MODE = SynchedEntityData.defineId(TimedoorEntity.class, EntityDataSerializers.BOOLEAN);
     private LocationData locationData = null;
     private UUID owner = null;
+    private UUID targetPlayer = null;
     private UUID linkedPortalId = null;
     private TimedoorEntity linkedPortalEntity = null;
     private int lifetimeTicks = TempadConfig.timedoorWait;
@@ -65,6 +67,7 @@ public class TimedoorEntity extends Entity {
         this.setClosingTime(compoundTag.getInt("closing_time"));
         lifetimeTicks = compoundTag.contains("lifetime_ticks") ? Math.max(1, compoundTag.getInt("lifetime_ticks")) : TempadConfig.timedoorWait;
         if (compoundTag.hasUUID("owner")) this.setOwner(compoundTag.getUUID("owner"));
+        if (compoundTag.hasUUID("target_player")) this.setTargetPlayer(compoundTag.getUUID("target_player"));
         this.setColor(compoundTag.getInt("outline_color"));
         this.setFloorMode(compoundTag.getBoolean("floor_mode"));
         if (compoundTag.contains("linked_portal")) {
@@ -80,6 +83,7 @@ public class TimedoorEntity extends Entity {
         compoundTag.putInt("closing_time", getClosingTime());
         compoundTag.putInt("lifetime_ticks", lifetimeTicks);
         if (owner != null) compoundTag.putUUID("owner", getOwner());
+        if (targetPlayer != null) compoundTag.putUUID("target_player", targetPlayer);
         compoundTag.putInt("outline_color", getColor());
         compoundTag.putBoolean("floor_mode", isFloorMode());
         if (getLinkedPortalId() != null) {
@@ -94,6 +98,11 @@ public class TimedoorEntity extends Entity {
 
     @Override
     public void tick() {
+        super.tick();
+        if (!level().isClientSide() && targetPlayer != null && !refreshPlayerTarget()) {
+            if (tickCount > getClosingTime() + ANIMATION_LENGTH) discard();
+            return;
+        }
         AABB box;
         if (isFloorMode()) {
             box = new AABB(getX() - 0.625, getY() - 0.1, getZ() - 0.625,
@@ -141,16 +150,7 @@ public class TimedoorEntity extends Entity {
                         recipientPortal.setColor(this.getColor());
                         recipientPortal.setFloorMode(isFloorMode());
                         recipientPortal.setLifetimeTicks(lifetimeTicks);
-                        if (isFloorMode()) {
-                            Vec3 arrival = getLocation().getArrivalPosition();
-                            recipientPortal.setPos(arrival.x, arrival.y + 2.4, arrival.z);
-                        } else if (getLocation().hasPreciseArrival()) {
-                            Vec3 arrival = getLocation().getArrivalPosition();
-                            recipientPortal.setPos(arrival.x + this.getDirection().getStepX(), arrival.y, arrival.z + this.getDirection().getStepZ());
-                        } else {
-                            var position = getLocation().getBlockPos().relative(this.getDirection(), 1);
-                            recipientPortal.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
-                        }
+                        placeRecipientPortal(recipientPortal, getLocation());
                         recipientPortal.setYRot(this.getYRot());
                         if (destinationLevel.addFreshEntity(recipientPortal)) {
                             this.setLinkedPortalId(recipientPortal.getUUID());
@@ -170,6 +170,45 @@ public class TimedoorEntity extends Entity {
 
     public void setLocation(LocationData location) {
         this.locationData = location;
+    }
+
+    public void setTargetPlayer(@Nullable UUID player) { targetPlayer = player; }
+
+    private boolean refreshPlayerTarget() {
+        if (!(level() instanceof ServerLevel serverLevel) || owner == null) return closeUnreachableTarget();
+        var accessor = serverLevel.getServer().getPlayerList().getPlayer(owner);
+        LocationData live = PlayerLocationHandler.live(serverLevel, owner, targetPlayer);
+        if (accessor == null || live == null || !TeleportUtils.mayTeleport(live.getLevelKey(), accessor))
+            return closeUnreachableTarget();
+        setLocation(live);
+        TimedoorEntity linked = getLinkedPortalEntity();
+        if (linked != null && !linked.level().dimension().equals(live.getLevelKey())) {
+            linked.discard();
+            setLinkedPortalId(null);
+        } else if (linked != null) {
+            placeRecipientPortal(linked, live);
+        }
+        return true;
+    }
+
+    private boolean closeUnreachableTarget() {
+        setLocation(null);
+        if (getClosingTime() == -1 || getClosingTime() > tickCount) setClosingTime(tickCount);
+        TimedoorEntity linked = getLinkedPortalEntity();
+        if (linked != null && (linked.getClosingTime() == -1 || linked.getClosingTime() > linked.tickCount))
+            linked.setClosingTime(linked.tickCount);
+        return false;
+    }
+
+    private void placeRecipientPortal(TimedoorEntity recipient, LocationData location) {
+        Vec3 arrival = location.getArrivalPosition();
+        if (isFloorMode()) recipient.setPos(arrival.x, arrival.y + 2.4, arrival.z);
+        else if (location.hasPreciseArrival())
+            recipient.setPos(arrival.x + getDirection().getStepX(), arrival.y, arrival.z + getDirection().getStepZ());
+        else {
+            BlockPos position = location.getBlockPos().relative(getDirection(), 1);
+            recipient.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
+        }
     }
 
     @Nullable

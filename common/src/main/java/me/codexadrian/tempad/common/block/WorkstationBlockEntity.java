@@ -4,6 +4,7 @@ import me.codexadrian.tempad.common.registry.TempadRegistry;
 import me.codexadrian.tempad.common.items.TempadItem;
 import me.codexadrian.tempad.common.data.LocationData;
 import me.codexadrian.tempad.common.data.PortalSetupData;
+import me.codexadrian.tempad.common.data.PlayerLocationHandler;
 import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.entity.TimedoorEntity;
 import me.codexadrian.tempad.common.config.TempadConfig;
@@ -174,7 +175,14 @@ public final class WorkstationBlockEntity extends BlockEntity {
         if (!(workstation.tempad.getItem() instanceof TempadItem tempad)) { workstation.setStatus("invalid_tempad"); return; }
         UUID selected = PortalSetupData.selected(workstation.tempad);
         if (selected == null) selected = TempadLocationHandler.getFavorite(serverLevel, player.getUUID());
-        LocationData location = selected == null ? null : TempadLocationHandler.getLocation(serverLevel, player.getUUID(), selected);
+        boolean playerTarget = selected != null && PlayerLocationHandler.isPlayerLocation(serverLevel, selected);
+        if (playerTarget && !TempadUpgrades.has(workstation.tempad, TempadUpgrades.PLAYER_TELEPORT)) {
+            workstation.setStatus("blocked");
+            return;
+        }
+        LocationData location = selected == null ? null : playerTarget
+            ? PlayerLocationHandler.resolveForDevice(serverLevel, player.getUUID(), selected)
+            : TempadLocationHandler.getLocation(serverLevel, player.getUUID(), selected);
         if (location == null) { workstation.setStatus(PortalSetupData.selected(workstation.tempad) == null ? "no_favorite" : "no_target"); return; }
         if (!TeleportUtils.mayTeleport(location.getLevelKey(), player)) { workstation.setStatus("blocked"); return; }
         if (!tempad.getOption().canTimedoorOpen(player, workstation.tempad)) { workstation.setStatus("no_fuel"); return; }
