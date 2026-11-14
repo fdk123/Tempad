@@ -5,6 +5,7 @@ import me.codexadrian.tempad.client.gui.ConsolidatedScreen;
 import me.codexadrian.tempad.client.gui.MarkerEditScreen;
 import me.codexadrian.tempad.client.gui.TimeTwisterScreen;
 import me.codexadrian.tempad.client.gui.KnowledgeRepositoryScreen;
+import me.codexadrian.tempad.client.gui.PortalSetupScreen;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenMarkerScreenPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
 import me.codexadrian.tempad.common.network.NetworkHandler;
@@ -21,6 +22,11 @@ public class ClientUtils {
     }
 
     public static void openScreen(OpenTempadScreenPacket packet) {
+        if (packet.workstationPos() != null) {
+            Minecraft.getInstance().setScreen(new PortalSetupScreen(null, packet.deviceId(), packet.portalSetup(),
+                packet.selectedPortalLocation(), packet.locationData(), packet.workstationPos()));
+            return;
+        }
         ConsolidatedScreen screen = new ConsolidatedScreen(packet);
         Minecraft.getInstance().setScreen(packet.startGuide() ? new KnowledgeRepositoryScreen(screen) : screen);
     }

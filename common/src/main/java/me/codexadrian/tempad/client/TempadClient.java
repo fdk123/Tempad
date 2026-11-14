@@ -37,6 +37,7 @@ public class TempadClient {
             (stack, level, entity, seed) -> switch (ScreeningDeviceItem.mode(stack)) {
                 case ScreeningDeviceItem.PUBLIC -> 0.5F;
                 case ScreeningDeviceItem.FTB_TEAMS -> 1.0F;
+                case ScreeningDeviceItem.GUILD, ScreeningDeviceItem.PARTY -> 1.0F;
                 default -> 0.0F;
             });
     }

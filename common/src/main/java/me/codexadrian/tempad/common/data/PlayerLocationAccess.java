@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import me.codexadrian.tempad.common.items.LocationBroadcasterItem;
 import me.codexadrian.tempad.common.items.ScreeningDeviceItem;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
@@ -18,6 +19,8 @@ public final class PlayerLocationAccess {
         return switch (ScreeningDeviceItem.mode(stack)) {
             case ScreeningDeviceItem.PUBLIC -> true;
             case ScreeningDeviceItem.FTB_TEAMS -> sameFtbTeam(owner.getUUID(), accessor);
+            case ScreeningDeviceItem.GUILD, ScreeningDeviceItem.PARTY ->
+                sameArgonautsGroup(owner.level(), owner.getUUID(), accessor, ScreeningDeviceItem.mode(stack));
             default -> false;
         };
     }
@@ -35,6 +38,10 @@ public final class PlayerLocationAccess {
     }
 
     @ExpectPlatform public static boolean sameFtbTeam(UUID owner, UUID accessor) {
+        throw new AssertionError("Platform implementation missing");
+    }
+
+    @ExpectPlatform public static boolean sameArgonautsGroup(Level level, UUID owner, UUID accessor, String mode) {
         throw new AssertionError("Platform implementation missing");
     }
 }

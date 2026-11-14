@@ -5,6 +5,7 @@ import me.codexadrian.tempad.common.data.TempadLocationHandler;
 import me.codexadrian.tempad.common.data.TravelHistoryData;
 import me.codexadrian.tempad.common.data.PortalSetupData;
 import me.codexadrian.tempad.common.data.PlayerLocationHandler;
+import me.codexadrian.tempad.common.block.WorkstationBlockEntity;
 import me.codexadrian.tempad.common.network.NetworkHandler;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import me.codexadrian.tempad.common.network.messages.s2c.OpenTimeTwisterPacket;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import me.codexadrian.tempad.common.utils.TeleportUtils;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 /** Per-device settings; values from the network are restricted to known options. */
@@ -90,6 +92,25 @@ public final class TempadSettings {
             new ArrayList<>(locations.values()),
             TempadLocationHandler.getFavorite(player.level(), player.getUUID()), id(stack), TempadUpgrades.canSaveLocations(player),
             TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack),
-            app(stack), macro(stack), order(stack), startGuide, PortalSetupData.get(stack), PortalSetupData.selected(stack)), player);
+            app(stack), macro(stack), order(stack), startGuide, PortalSetupData.get(stack), PortalSetupData.selected(stack), null), player);
+    }
+
+    public static void openWorkstationPortal(ServerPlayer player, WorkstationBlockEntity workstation) {
+        if (workstation.isRemoved() || workstation.getLevel() != player.level() || !workstation.canAccess(player)
+                || workstation.getTempad().isEmpty() || player.distanceToSqr(
+                    workstation.getBlockPos().getX() + 0.5, workstation.getBlockPos().getY() + 0.5,
+                    workstation.getBlockPos().getZ() + 0.5) > 64) return;
+        ItemStack stack = workstation.getTempad();
+        Map<UUID, me.codexadrian.tempad.common.data.LocationData> locations =
+            TempadLocationHandler.getLocations(player.level(), player.getUUID());
+        if (TempadUpgrades.has(stack, TempadUpgrades.PLAYER_TELEPORT))
+            locations.putAll(PlayerLocationHandler.visibleLocationsForDevice(player.level(), player.getUUID()));
+        else locations.entrySet().removeIf(entry -> PlayerLocationHandler.isPlayerLocation(player.level(), entry.getKey()));
+        NetworkHandler.CHANNEL.sendToPlayer(new OpenTempadScreenPacket(
+            new ArrayList<>(locations.values()), TempadLocationHandler.getFavorite(player.level(), player.getUUID()),
+            id(stack), false, TempadUpgrades.has(stack, TempadUpgrades.KNOWLEDGE_REPOSITORY), TimeTwisterData.equipped(stack),
+            app(stack), macro(stack), order(stack), false, PortalSetupData.get(stack), PortalSetupData.selected(stack),
+            workstation.getBlockPos()), player);
+        workstation.notifyTempadChanged();
     }
 }

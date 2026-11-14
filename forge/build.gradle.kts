@@ -33,4 +33,6 @@ dependencies {
     "modRuntimeOnly"("top.theillusivec4.curios:curios-forge:${curiosVersion}")
     "modCompileOnly"("top.theillusivec4.curios:curios-forge:${curiosVersion}:api")
     "modCompileOnly"("maven.modrinth:jade:$jadeVersion") { isTransitive = false }
+    "modCompileOnly"("earth.terrarium.cadmus:cadmus-forge-1.20.1:1.0.8") { isTransitive = false }
+    "modCompileOnly"("earth.terrarium.argonauts:argonauts-forge-1.20.1:1.0.10") { isTransitive = false }
 }

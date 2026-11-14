@@ -12,6 +12,8 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Native 1.20.1 settings screen for both marker blocks. */
 public final class MarkerEditScreen extends Screen {
@@ -41,11 +43,10 @@ public final class MarkerEditScreen extends Screen {
         color = field(x + 110, y + 53, 130, String.format("#%06X", marker.color() & 0xFFFFFF), 7);
         accessButton = addRenderableWidget(Button.builder(accessLabel(), button -> {
             if (marker.chronomark()) {
-                accessMode = switch (accessMode) {
-                    case "private" -> "public";
-                    case "public" -> PlatformUtils.isModLoaded("ftbteams") ? "ftbteams" : "private";
-                    default -> "private";
-                };
+                List<String> modes = new ArrayList<>(List.of("private", "public"));
+                if (PlatformUtils.isModLoaded("ftbteams")) modes.add("ftbteams");
+                if (PlatformUtils.isModLoaded("argonauts")) { modes.add("guild"); modes.add("party"); }
+                accessMode = modes.get((modes.indexOf(accessMode) + 1) % modes.size());
                 publicAccess = "public".equals(accessMode);
             } else {
                 publicAccess = !publicAccess;

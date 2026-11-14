@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.teamresourceful.resourcefullib.common.registry.RegistryEntry;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.compat.curios.TempadCurioHandler;
+import me.codexadrian.tempad.common.compat.cadmus.CadmusCompat;
 import me.codexadrian.tempad.common.config.TempadConfig;
 import me.codexadrian.tempad.common.data.MetronomeNetworkData;
 import me.codexadrian.tempad.common.network.NetworkHandler;
@@ -112,5 +113,6 @@ public class ForgeTempad {
         if (PlatformUtils.isModLoaded("curios")) {
             TempadCurioHandler.init();
         }
+        if (PlatformUtils.isModLoaded("cadmus")) evt.enqueueWork(CadmusCompat::init);
     }
 }

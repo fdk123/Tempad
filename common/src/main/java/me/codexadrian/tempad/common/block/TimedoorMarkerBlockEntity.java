@@ -73,8 +73,10 @@ public final class TimedoorMarkerBlockEntity extends BlockEntity {
         this.name = cleanName(name);
         if (this.name.isEmpty()) this.name = isChronomark() ? "Chronomark" : "Timedoor Marker";
         this.color = color & 0xFFFFFF;
-        this.accessMode = isChronomark() && "ftbteams".equals(accessMode) && PlatformUtils.isModLoaded("ftbteams")
-            ? "ftbteams" : publicAccess ? "public" : "private";
+        this.accessMode = cleanAccessMode(accessMode);
+        if ("ftbteams".equals(this.accessMode) && !PlatformUtils.isModLoaded("ftbteams")) this.accessMode = "private";
+        if (("guild".equals(this.accessMode) || "party".equals(this.accessMode)) && !PlatformUtils.isModLoaded("argonauts"))
+            this.accessMode = "private";
         this.publicAccess = "public".equals(this.accessMode);
         this.locked = owner != null && owner.equals(player.getUUID()) && lock;
         if (isChronomark()) {
@@ -153,6 +155,7 @@ public final class TimedoorMarkerBlockEntity extends BlockEntity {
     private String cleanAccessMode(String value) {
         if ("public".equals(value)) return "public";
         if (isChronomark() && "ftbteams".equals(value)) return "ftbteams";
+        if (isChronomark() && ("guild".equals(value) || "party".equals(value))) return value;
         return "private";
     }
 }

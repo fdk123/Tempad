@@ -21,7 +21,8 @@ import java.util.UUID;
 public record OpenTempadScreenPacket(List<LocationData> locationData,
                                      UUID favorite, UUID deviceId, boolean canSaveLocations, boolean hasKnowledgeRepository, boolean hasTimeTwister,
                                      String defaultApp, String defaultMacro, String locationOrder, boolean startGuide,
-                                     PortalSetupData portalSetup, UUID selectedPortalLocation) implements Packet<OpenTempadScreenPacket> {
+                                     PortalSetupData portalSetup, UUID selectedPortalLocation,
+                                     BlockPos workstationPos) implements Packet<OpenTempadScreenPacket> {
     public static Handler HANDLER = new Handler();
     public static final ResourceLocation ID = new ResourceLocation(Tempad.MODID, "open_screen");
 
@@ -72,6 +73,7 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
             buffer.writeVarInt(message.portalSetup.angle());
             buffer.writeBoolean(message.portalSetup.upright());
             buffer.writeOptional(Optional.ofNullable(message.selectedPortalLocation), FriendlyByteBuf::writeUUID);
+            buffer.writeOptional(Optional.ofNullable(message.workstationPos), FriendlyByteBuf::writeBlockPos);
         }
 
         @Override
@@ -91,7 +93,8 @@ public record OpenTempadScreenPacket(List<LocationData> locationData,
             }), buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null), buffer.readUUID(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(),
                 buffer.readUtf(32), buffer.readUtf(32), buffer.readUtf(32), buffer.readBoolean(),
                 new PortalSetupData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readVarInt(), buffer.readBoolean()),
-                buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null));
+                buffer.readOptional(FriendlyByteBuf::readUUID).orElse(null),
+                buffer.readOptional(FriendlyByteBuf::readBlockPos).orElse(null));
         }
 
         @Override

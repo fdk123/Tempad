@@ -36,6 +36,7 @@ public final class MarkerIndex extends SavedData {
             return switch (accessMode) {
                 case "public" -> true;
                 case "ftbteams" -> PlayerLocationAccess.sameFtbTeam(owner, player);
+                case "guild", "party" -> PlayerLocationAccess.sameArgonautsGroup(level, owner, player, accessMode);
                 default -> false;
             };
         }
@@ -90,7 +91,7 @@ public final class MarkerIndex extends SavedData {
 
         private static String savedAccessMode(CompoundTag tag) {
             String mode = tag.contains("AccessMode") ? tag.getString("AccessMode") : tag.getBoolean("Public") ? "public" : "private";
-            return "public".equals(mode) || "ftbteams".equals(mode) ? mode : "private";
+            return "public".equals(mode) || "ftbteams".equals(mode) || "guild".equals(mode) || "party".equals(mode) ? mode : "private";
         }
     }
 

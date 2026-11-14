@@ -6,6 +6,7 @@ import me.codexadrian.tempad.client.TempadClient;
 import me.codexadrian.tempad.client.render.TimedoorRenderer;
 import me.codexadrian.tempad.client.render.WorkstationRenderer;
 import me.codexadrian.tempad.client.forge.MetronomeScreen;
+import me.codexadrian.tempad.client.forge.ArsCompat;
 import me.codexadrian.tempad.common.BlurReloader;
 import me.codexadrian.tempad.common.Tempad;
 import me.codexadrian.tempad.common.registry.TempadRegistry;
@@ -26,6 +27,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
@@ -66,6 +69,9 @@ public class ForgeTempadClient {
         BlockEntityRenderers.register(TempadRegistry.WORKSTATION_BLOCK_ENTITY.get(), WorkstationRenderer::new);
         event.enqueueWork(() -> MenuScreens.register(ForgeTempad.METRONOME_MENU.get(), MetronomeScreen::new));
         event.enqueueWork(TempadClient::initItemProperties);
+        if (ModList.get().isLoaded("ars_nouveau")) event.enqueueWork(ArsCompat::init);
+        if (ModList.get().isLoaded("darkmodeeverywhere"))
+            InterModComms.sendTo("darkmodeeverywhere", "dme-shaderblacklist", () -> "tempad");
         bus.register(ForgeTempadClient.class);
         MinecraftForge.EVENT_BUS.addListener(ForgeTempadClient::onClientTick);
     }

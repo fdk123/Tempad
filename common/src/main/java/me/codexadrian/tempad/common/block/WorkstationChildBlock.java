@@ -1,6 +1,8 @@
 package me.codexadrian.tempad.common.block;
 
 import me.codexadrian.tempad.common.registry.TempadRegistry;
+import me.codexadrian.tempad.common.items.TempadSettings;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -56,6 +58,14 @@ public final class WorkstationChildBlock extends Block {
         BlockPos parentPos = parentPos(state, pos);
         BlockState parent = level.getBlockState(parentPos);
         if (!matchesParent(state, parent)) return InteractionResult.PASS;
+        if (player.getItemInHand(hand).isEmpty() && !player.isShiftKeyDown()
+                && level.getBlockEntity(parentPos) instanceof WorkstationBlockEntity workstation
+                && !workstation.getTempad().isEmpty()) {
+            if (level.isClientSide) return InteractionResult.SUCCESS;
+            if (!workstation.canAccess(player)) return InteractionResult.FAIL;
+            if (player instanceof ServerPlayer serverPlayer) TempadSettings.openWorkstationPortal(serverPlayer, workstation);
+            return InteractionResult.CONSUME;
+        }
         return ((WorkstationBlock) parent.getBlock()).use(parent, level, parentPos, player, hand, hit);
     }
 

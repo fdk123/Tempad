@@ -37,6 +37,17 @@ public final class PlayerLocationHandler {
         return locations;
     }
 
+    /** Used by a Workstation whose installed Tempad owns the upgrade. */
+    public static Map<UUID, LocationData> visibleLocationsForDevice(Level level, UUID accessor) {
+        if (!(level instanceof ServerLevel serverLevel)) return Map.of();
+        Map<UUID, LocationData> locations = new HashMap<>();
+        for (ServerPlayer target : serverLevel.getServer().getPlayerList().getPlayers()) {
+            LocationData location = live(serverLevel, accessor, target.getUUID());
+            if (location != null) locations.put(location.getId(), location);
+        }
+        return locations;
+    }
+
     public static LocationData resolveForDevice(Level level, UUID accessor, UUID location) {
         if (!(level instanceof ServerLevel serverLevel)) return null;
         ServerPlayer target = playerForLocation(serverLevel.getServer(), location);

@@ -274,9 +274,12 @@ destinations. These settings stay with the Tempad when it is installed in or
 removed from the Workstation, and the target is resolved again on activation.
 Devices without saved portal settings keep the existing 1.20.1 placement.
 Floor doors have a flat renderer and a matching server interaction area; their
-exit portal appears overhead as in 3.0. The settings are edited while the
-Tempad is carried, before installation; the 1.20.1 Workstation still uses its
-existing inventory screen.
+exit portal appears overhead as in 3.0. The settings can be edited on a carried
+Tempad or directly on the Workstation's left half after installation. Its right
+half retains the inventory screen for inserting and removing the Tempad. The
+portal screen has a searchable destination list, favorite fallback, offsets,
+angle and door shape. A stationary save is accepted only while the player is
+near the same unlocked Workstation and the same installed Tempad remains there.
 Portable Tempads and Projectors also open a floor door when used while looking
 down more than 45 degrees, matching the 3.0 item behavior.
 
@@ -284,19 +287,35 @@ down more than 45 degrees, matching the 3.0 item behavior.
 
 The Location Broadcaster and Screening Device expose the carrier as an online,
 moving destination. The Broadcaster starts disabled and toggles public access
-on use. The Screening Device cycles Off, Public, and FTB Teams when that mod is
-loaded. Its FTB Teams check uses the installed 1.20.1 API through an optional
-Forge bridge. Both devices work from inventory or a Curios charm slot. Their
+on use. The Screening Device cycles Off, Public, FTB Teams, Argonauts Guild,
+and Argonauts Party, including only modes whose optional mod is loaded. The
+Chronomark supports the same team, guild and party access modes. Argonauts
+1.20.1 has no Friends API, so the 1.21 Friends mode is unavailable. Both access
+devices work from inventory or a Curios charm slot. Their
 models use vanilla textures with item state overrides.
 
-Player destinations appear only to a viewer carrying a Tempad with the Player
-Teleport Upgrade. They cannot be deleted or exported to cards. Favorite and
+Player destinations appear to a viewer carrying a Tempad with the Player
+Teleport Upgrade, or while setting up a Workstation containing one. They cannot
+be deleted or exported to cards. Favorite and
 Workstation portal targets can refer to a player; Workstations accept the
 upgrade on their stored Tempad. Timedoors recheck the target's online status,
 visibility, dimension and position while open. If access is revoked or the
 player disconnects, the door closes. Moving targets update the destination
 and receiving portal. The upgrade item, crafting recipe, and installation recipe
-are ported. Optional Odyssey Allies access modes are not present in this Forge port.
+are ported.
+
+### Optional Forge integrations (Forge 1.20.1)
+
+Cadmus 1.0.8 checks the claim at both ends when a Timedoor opens. Its
+`allowTimedoorsInClaims` game rule defaults to true. With the rule disabled,
+members may still open doors in ordinary claims; admin claims use the
+`timedoors-summoning` flag. Known marker destinations keep their marker access
+rules. Cadmus 1.20.1 lacks the generic per-claim custom setting and Prometheus
+permission hooks used by the 1.21 integration, so those controls are not
+available here. Ars Nouveau 4.12.7 can light a Timedoor during its opening
+animation. Dark Mode Everywhere receives the 1.20.1 shader-blacklist IMC for
+Tempad screens. All integrations are optional and inactive when their mod is
+absent.
 
 ### Recipe discovery and device advancements (Forge 1.20.1)
 
@@ -332,9 +351,10 @@ license, not a blanket All Rights Reserved license:
   some artwork and other non-code assets.
 
 Keep the upstream copyright/license notice in the fork. Port the MIT-licensed
-code and data with attribution, but do not redistribute protected upstream
-textures, models, audio or other non-code assets without permission. The
-backport should use original or separately licensed 1.20.1 assets where needed.
+code and data with attribution. The user reports permission from the authors
+to use 3.0 assets; no protected 3.0 assets were added in this stage. The user
+also states that a public backport `.jar` may not yet be released. Local builds
+are for development and testing only.
 
 The CurseForge project labels this as a Custom License; the exact definitions
 are in the upstream `LICENSE` file and must be treated as authoritative.
