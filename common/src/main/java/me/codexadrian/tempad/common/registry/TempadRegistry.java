@@ -25,6 +25,7 @@ import me.codexadrian.tempad.common.block.TimedoorMarkerBlockEntity;
 import me.codexadrian.tempad.common.items.MarkerBlockItem;
 import me.codexadrian.tempad.common.items.TimeTwisterItem;
 import me.codexadrian.tempad.common.items.LocationBroadcasterItem;
+import me.codexadrian.tempad.common.items.KnowledgeProjectorItem;
 import me.codexadrian.tempad.common.items.ScreeningDeviceItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -71,6 +72,7 @@ public class TempadRegistry {
     public static final RegistryEntry<Item> TIME_TWISTER = ITEMS.register("time_twister", () -> new TimeTwisterItem(new Item.Properties()));
     public static final RegistryEntry<Item> NEW_LOCATION_UPGRADE = ITEMS.register("new_location_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> KNOWLEDGE_REPOSITORY_UPGRADE = ITEMS.register("knowledge_repository_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryEntry<Item> KNOWLEDGE_PROJECTOR = ITEMS.register("knowledge_projector", () -> new KnowledgeProjectorItem(new Item.Properties()));
     public static final RegistryEntry<Item> PLAYER_TELEPORT_UPGRADE = ITEMS.register("player_teleport_upgrade", () -> new Item(new Item.Properties().stacksTo(1)));
     public static final RegistryEntry<Item> LOCATION_BROADCASTER = ITEMS.register("location_broadcaster", () -> new LocationBroadcasterItem(new Item.Properties()));
     public static final RegistryEntry<Item> SCREENING_DEVICE = ITEMS.register("screening_device", () -> new ScreeningDeviceItem(new Item.Properties()));

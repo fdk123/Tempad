@@ -67,14 +67,24 @@ The New Location upgrade can gate location saving when
 `requireNewLocationUpgrade` is enabled. It defaults to disabled to preserve
 existing 1.20.1 worlds and match the upstream unflagged behavior. Locations in
 this branch are still player scoped, so any carried upgraded Tempad grants
-access to saving locations. The Knowledge Repository upgrade opens a compact
-text guide from the Tempad screen. Its guide text and item models use only new
-text and vanilla Minecraft textures; the 1.21 guide artwork is not included.
+access to saving locations. The Knowledge Repository upgrade opens the guide
+from the Tempad screen. The Player Teleport Upgrade uses the upstream survival
+crafting pattern and workstation download recipe, adapted to 1.20.1.
 
-The Knowledge Repository crafting recipe uses a Chronometer in place of the
-1.21 Knowledge Projector, which has not been ported. The Player Teleport
-Upgrade uses the upstream survival crafting pattern and workstation download
-recipe, adapted to the 1.20.1 recipe format.
+### Knowledge Projector and guide (Forge 1.20.1)
+
+The Knowledge Projector is a standalone guide item. Its glass, book and copper
+ingot recipe follows the 3.0 layout. The Knowledge Repository Upgrade recipe
+now uses the Projector in its center, restoring the upstream ingredient layout.
+Existing upgrades retain their item ID and installed state.
+
+The guide can be opened directly from the Projector or through an installed
+Knowledge Repository upgrade in a Tempad. It has ten overview pages plus Iron
+and Steel device chapters with sixteen item pages. Chapters, topics and page
+text are scrollable. All guide text is newly written for the working Forge
+1.20.1 features, with English and Russian translations. The screen and item
+model use vanilla Minecraft rendering and textures; the 1.21 artwork is not
+included.
 
 ### Timedoor Projector block (Forge 1.20.1)
 

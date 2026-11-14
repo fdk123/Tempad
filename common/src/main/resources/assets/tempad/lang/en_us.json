@@ -222,5 +222,26 @@
   ,"item.tempad.creative_chronometer": "Creative Chronometer"
   ,"item.tempad.creative_chronometer.tooltip": "Unlimited chronons; fills carried devices and blocks"
   ,"config.tempad.metronome_scale_generation": "Scale Metronome generation with network size"
-  ,"config.tempad.metronome_jump_start_amount": "Metronome start-up charge"
+  ,"config.tempad.metronome_jump_start_amount": "Metronome start-up charge",
+  "guide.tempad.title": "Knowledge Repository",
+  "guide.tempad.chapter.overview": "Overview",
+  "guide.tempad.chapter.iron": "Iron Devices",
+  "guide.tempad.chapter.steel": "Steel Devices",
+  "item.tempad.knowledge_projector": "Knowledge Projector",
+  "guide.tempad.entry.chronon_cell": "A portable chronon container. Charge it from a Metronome or another charged container, then use it or right-click it onto a device in your inventory to transfer energy.",
+  "guide.tempad.entry.chronon_generator": "This portable generator produces chronons while carried and charges compatible devices in your inventory. It has a configurable generation rate. Carrying multiple generators does not multiply their output.",
+  "guide.tempad.entry.location_card": "Use an empty card to record your current position, or export a saved Tempad destination to one. Use a filled card to import its destination. A card bound to a marker tracks that marker while you have access.",
+  "guide.tempad.entry.card_wallet": "The wallet stores up to eighteen Location Cards. Use it to open its inventory and keep destination cards together.",
+  "guide.tempad.entry.timedoor_marker": "Place a marker to make a live destination available in your Tempad. Use an empty hand to edit its name, color and access. A Location Card can be bound to it; removing the marker invalidates that live target.",
+  "guide.tempad.entry.timedoor_projector": "Attach a filled Location Card to the portable Projector in your inventory. Use the item to open a Timedoor or sneak-use it to place the block. A placed Projector opens on a redstone pulse and can be charged from a battery or Metronome.",
+  "guide.tempad.entry.location_broadcaster": "Carry this device to appear as a live player destination for others with the Player Teleport Upgrade. Use it to toggle broadcasting. It can also be equipped in a Curios charm slot.",
+  "guide.tempad.entry.time_steel": "A crafted material used by the more advanced Tempad devices. Check the recipe viewer for the available 1.20.1 recipes.",
+  "guide.tempad.entry.chronon_battery": "A larger portable chronon store. Charge it from a Metronome, then use it or right-click it onto another chronon device in your inventory to transfer charge.",
+  "guide.tempad.entry.chronometer": "A portable chronon generator that charges compatible inventory devices while carried. Its production rate is configurable. Only one carried generator works at a time.",
+  "guide.tempad.entry.chronomark": "A configurable live destination for your Tempad. Set its name, color, arrival height and angle. Access can be private, public, or shared with your FTB Team when FTB Teams is installed.",
+  "guide.tempad.entry.tempad": "The Tempad saves destinations and opens Timedoors to them. Mark a destination as favorite for quick travel and Workstation portals. Add upgrades at a Workstation, and use Settings to choose the start app and location order.",
+  "guide.tempad.entry.workstation": "Insert a Tempad, then apply an upgrade item and wait for the download. Configure the station portal with the P button on the Tempad. A redstone pulse opens a door to its selected destination when the station has enough charge.",
+  "guide.tempad.entry.time_twister": "Install the Time Twister into a Tempad by right-clicking it onto the Tempad in your inventory. It records deaths, respawns and dimension travel. Open Timeline to return to a marked event for a chronon cost.",
+  "guide.tempad.entry.screening_device": "Carry this device to control who can see you as a live destination. Use it to cycle Off, Public and FTB Team access when FTB Teams is installed. A Player Teleport Upgrade is needed to find player destinations.",
+  "guide.tempad.entry.metronome": "A Metronome needs an initial charge and startup time. Booted Metronomes of one owner share a chronon pool across dimensions. Their left slots drain containers, right slots charge them, and they power nearby owner devices and adjacent Workstations."
 }

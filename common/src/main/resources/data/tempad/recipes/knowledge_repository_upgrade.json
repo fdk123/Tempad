@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","pattern":["KKK","BCB","KKK"],"key":{"K":{"item":"minecraft:dried_kelp"},"B":{"item":"minecraft:book"},"C":{"item":"tempad:chronometer"}},"result":{"item":"tempad:knowledge_repository_upgrade"}}
+{"type":"minecraft:crafting_shaped","pattern":["KKK","BPB","KKK"],"key":{"K":{"item":"minecraft:dried_kelp"},"B":{"item":"minecraft:book"},"P":{"item":"tempad:knowledge_projector"}},"result":{"item":"tempad:knowledge_repository_upgrade"}}

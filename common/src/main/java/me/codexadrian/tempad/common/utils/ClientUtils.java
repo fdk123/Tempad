@@ -16,6 +16,10 @@ import me.codexadrian.tempad.common.network.messages.s2c.OpenTempadScreenPacket;
 import net.minecraft.client.Minecraft;
 
 public class ClientUtils {
+    public static void openGuide() {
+        Minecraft.getInstance().setScreen(new KnowledgeRepositoryScreen(null));
+    }
+
     public static void openScreen(OpenTempadScreenPacket packet) {
         ConsolidatedScreen screen = new ConsolidatedScreen(packet);
         Minecraft.getInstance().setScreen(packet.startGuide() ? new KnowledgeRepositoryScreen(screen) : screen);
