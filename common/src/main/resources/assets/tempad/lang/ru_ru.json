@@ -147,5 +147,12 @@
   "guide.tempad.entry.screening_device": "Носите устройство, чтобы управлять доступом к вашей живой точке. Используйте его для смены режимов: выключено, все игроки или команда FTB при установленном FTB Teams. Для поиска игроков нужно соответствующее улучшение Tempad.",
   "guide.tempad.entry.metronome": "Метроном требует начального заряда и времени запуска. Запущенные метрономы одного владельца делят запас хрононов между измерениями. Левые слоты разряжают предметы, правые заряжают, а сеть питает устройства владельца и соседние станции.",
   "item.tempad.card_wallet.count": "Занято ячеек карт: %s/%s",
-  "item.tempad.location_card.stored": "Карта точки помещена в кошелёк"
+  "item.tempad.location_card.stored": "Карта точки помещена в кошелёк",
+  "screen.tempad.metronome.input": "Разрядка",
+  "screen.tempad.metronome.output": "Зарядка",
+  "screen.tempad.metronome.charge": "Хрононы: %s/%s",
+  "screen.tempad.metronome.startup": "Заряд для запуска: %s/%s",
+  "screen.tempad.metronome.booting": "Запуск: %s%%",
+  "screen.tempad.metronome.locked": "Закрыт",
+  "screen.tempad.metronome.unlocked": "Открыт"
 }

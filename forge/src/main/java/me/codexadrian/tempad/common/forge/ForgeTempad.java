@@ -14,8 +14,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -37,6 +39,8 @@ import static me.codexadrian.tempad.common.Tempad.MODID;
 public class ForgeTempad {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
+    public static final RegistryObject<MenuType<MetronomeMenu>> METRONOME_MENU = MENUS.register("metronome", () -> IForgeMenuType.create(MetronomeMenu::new));
 
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_TABLES = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MODID);
 
@@ -47,6 +51,7 @@ public class ForgeTempad {
         Tempad.init();
         ITEMS.register(bus);
         ENTITIES.register(bus);
+        MENUS.register(bus);
         LOOT_TABLES.register(bus);
         TempadImpl.SOUND_EVENTS.register(bus);
         NetworkHandler.register();

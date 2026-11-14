@@ -244,5 +244,12 @@
   "guide.tempad.entry.time_twister": "Install the Time Twister into a Tempad by right-clicking it onto the Tempad in your inventory. It records deaths, respawns and dimension travel. Open Timeline to return to a marked event for a chronon cost.",
   "guide.tempad.entry.screening_device": "Carry this device to control who can see you as a live destination. Use it to cycle Off, Public and FTB Team access when FTB Teams is installed. A Player Teleport Upgrade is needed to find player destinations.",
   "guide.tempad.entry.metronome": "A Metronome needs an initial charge and startup time. Booted Metronomes of one owner share a chronon pool across dimensions. Their left slots drain containers, right slots charge them, and they power nearby owner devices and adjacent Workstations.",
-  "item.tempad.location_card.stored": "Location Card stored in wallet"
+  "item.tempad.location_card.stored": "Location Card stored in wallet",
+  "screen.tempad.metronome.input": "Drain",
+  "screen.tempad.metronome.output": "Charge",
+  "screen.tempad.metronome.charge": "Chronons: %s/%s",
+  "screen.tempad.metronome.startup": "Start charge: %s/%s",
+  "screen.tempad.metronome.booting": "Starting: %s%%",
+  "screen.tempad.metronome.locked": "Locked",
+  "screen.tempad.metronome.unlocked": "Public"
 }

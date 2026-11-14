@@ -45,10 +45,12 @@ Breaking a block removes its capacity and returns a proportional share of the
 pool in the dropped Metronome item. The other blocks retain the remaining
 charge. The item's charge can be transferred into other devices while carried.
 
-The Metronome now stores four input and four output chronon containers in a
-vanilla nine-slot screen with the middle slot disabled. These contents persist
-and drop when the block is removed. The network feeds adjacent Workstations
-and Projectors and preserves the existing nearby-owner charging behavior.
+The Metronome now stores four input and four output chronon containers. Its
+Forge menu shows live network charge, startup progress and an owner-only lock
+button; the server validates lock changes. The screen uses vanilla rendering
+instead of 3.0 artwork. Inventory contents persist and drop when the block is
+removed. The network feeds adjacent Workstations and Projectors and preserves
+the existing nearby-owner charging behavior.
 The Creative Chronometer is an inexhaustible source for carried devices and
 placed chronon blocks. The 1.20.1 redstone pause is checked for loaded blocks;
 unloaded network positions keep generating, matching the 3.0 global pool.
